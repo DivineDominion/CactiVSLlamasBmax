@@ -3,4 +3,7 @@ BlitzMax/
 
 # Build artefacts
 .bmx/
-
+*/**/.bmx/
+main.app/
+main
+main.debug
