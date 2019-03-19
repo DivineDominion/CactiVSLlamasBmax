@@ -11,4 +11,11 @@ Type CTScreen
         Graphics width, height, 0
         Return result
     End Function
+
+    Method Update(block:Int())
+        Cls
+        block()
+        Flip
+    End Method
 End Type
+
