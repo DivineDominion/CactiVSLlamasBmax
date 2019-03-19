@@ -5,5 +5,6 @@ BlitzMax/
 .bmx/
 */**/.bmx/
 main.app/
+main.debug.app/
 main
-main.debug
+
