@@ -1,17 +1,12 @@
 SuperStrict
 
 import "src/CTScreen.bmx"
-import "src/CTDisplayLog.bmx"
+import "src/CTLogging.bmx"
 
-Local mainScreen:CTScreen = CTScreen.Create(800, 800)
-Local log:CTDisplayLog = CTDisplayLog.Create()
+Global mainScreen:CTScreen = CTScreen.Create(800, 800)
 
 Repeat
     Cls
-
-    log.Draw(0, 0, 20)
-    log.Append("Hello,")
-    log.Append("World!")
-
+    displayLog.Draw(0, 0, 20)
     Flip
-Until KeyDown(Key_Escape)
+Until KeyDown(Key_Escape) Or AppTerminate()
