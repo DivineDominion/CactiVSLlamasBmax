@@ -8,6 +8,8 @@ Type CTWindow
     Global windows:CTWindow[]
 
     Public
+    Field drawContentBlock:Int()
+
     Function SetDefaultColor(newColor:CTColor)
         defaultColor = newColor
     End Function
@@ -48,7 +50,7 @@ Type CTWindow
     Method Draw()
         ' Shadow
         SetColor 0, 0, 0
-        rect.Translate(2, 2).Draw()
+        rect.Translate(1, 1).Draw()
 
         ' Frame
         SetColor 255, 255, 255
@@ -56,7 +58,17 @@ Type CTWindow
 
         ' Content
         color.Set()
-        rect.Inset(2, 2).Draw()
+        rect.Inset(1, 1).Draw(drawContentBlock)
+    End Method
+
+    Function DrawAllWindows()
+        For Local win:CTWindow = EachIn windows
+            win.Draw()
+        Next
+    End Function
+
+    Method GetMaxY:Int()
+        Return rect.GetMaxY()
     End Method
 End Type
 
@@ -106,7 +118,29 @@ Type CTRect
         Return CTRect.Create(Self.x + dx, Self.y + dy, Self.w, Self.h)
     End Method
 
-    Method Draw()
+    Method Draw(block:Int() = Null)
         DrawRect x, y, w, h
+
+        If block = Null Then
+            Return
+        EndIf
+
+        ' Cache viewport
+        Local oldX%, oldY%, oldW%, oldH%
+        GetViewport oldX, oldY, oldW, oldH
+        ' Cache origin
+        Local oldOrX#, oldOrY#
+        GetOrigin oldOrX, oldOrY
+
+        SetViewport x, y, w, h
+        SetOrigin x-1, y-1      ' Don't know why it is 1px off without this offset
+        block()
+        ' Reset to cached values
+        SetOrigin oldOrX, oldOrY
+        SetViewport oldX, oldY, oldW, oldH
+    End Method
+
+    Method GetMaxY:Int()
+        Return y + h
     End Method
 End Type

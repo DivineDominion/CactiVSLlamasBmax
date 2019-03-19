@@ -8,7 +8,8 @@ Type CTScreen
         Local result:CTScreen = New CTScreen
         result.width = width
         result.height = height
-        Graphics width, height, 0
+        Graphics width * 2, height * 2, 0
+        SetVirtualResolution width, height
         Return result
     End Function
 
