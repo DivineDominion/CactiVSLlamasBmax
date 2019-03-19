@@ -37,14 +37,19 @@ Type CTDisplayLog
         Self.SetLog(result)
     End Method
 
-    Method Draw(x:Int, y:Int)
+    Method Draw(x:Int, y:Int, limit:Int = -1)
         Local lineHeight:Int = TextHeight("x")
         Local lineCount:Int = Self._lines.length
         Local lineCountStringLen:Int = String(lineCount).length
         Local lineNoWidth:Int = TextWidth(String(lineCount) + ": ")
 
-        Local lineNo:Int = 0
-        For Local line:String = EachIn Self._lines
+        Local lineStart:Int = 0
+        Local lineEnd:Int = lineCount
+        If limit > 0 And lineCount > limit Then
+            lineStart = lineCount - limit
+            lineEnd = lineCount
+        EndIf
+        For Local lineNo:Int = lineStart Until lineEnd Step 1
             Rem
                 Pad line numbers with spaces and right-align the counter:
                 "  1: ..."
@@ -59,11 +64,9 @@ Type CTDisplayLog
             For Local i:Int = 0 Until paddingLength Step 1
                 padding = padding + " "
             Next
-            line = padding + String(lineNo) + ": " + line
+            Local line:String = padding + String(lineNo) + ": " + Self._lines[lineNo]
 
-            DrawText line, x, y + lineNo * lineHeight
-
-            lineNo = lineNo + 1
+            DrawText line, x, y + (lineNo - lineStart) * lineHeight
         Next
     End Method
 End Type
