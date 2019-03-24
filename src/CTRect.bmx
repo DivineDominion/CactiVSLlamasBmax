@@ -24,29 +24,31 @@ Type CTRect
         Return CTRect.Create(Self.x + dx, Self.y + dy, Self.w, Self.h)
     End Method
 
-    Method Draw(block:Int() = Null)
+    Method Draw()
         DrawRect x, y, w, h
+    End Method
 
-        If block = Null Then
-            Return
-        EndIf
+    Method GetViewport(x:Int Var, y:Int Var, w:Int Var, h:Int Var)
+        x = Self.x
+        y = Self.y
+        w = Self.w
+        h = Self.h
+    End Method
 
-        ' Cache viewport
-        Local oldX%, oldY%, oldW%, oldH%
-        GetViewport oldX, oldY, oldW, oldH
-        ' Cache origin
-        Local oldOrX#, oldOrY#
-        GetOrigin oldOrX, oldOrY
+    Method GetX:Int()
+        Return x
+    End Method
 
-        SetViewport x, y, w, h
-        SetOrigin x-1, y-1      ' Don't know why it is 1px off without this offset
-        block()
-        ' Reset to cached values
-        SetOrigin oldOrX, oldOrY
-        SetViewport oldX, oldY, oldW, oldH
+    Method GetY:Int()
+        Return y
+    End Method
+
+    Method GetMaxX:Int()
+        Return x + w
     End Method
 
     Method GetMaxY:Int()
         Return y + h
     End Method
+
 End Type

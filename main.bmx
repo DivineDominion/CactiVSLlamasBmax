@@ -4,29 +4,34 @@ import "src/CTScreen.bmx"
 import "src/CTLogging.bmx"
 import "src/CTDraw.bmx"
 import "src/CTWindow.bmx"
+import "src/CTView.bmx"
 
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
 displayLog.Append("ESC to Quit")
 
 Local bgColor:CTColor = CTColor.Create(128, 128, 128)
 bgColor.SetCls()
-CTWindow.SetDefaultColor(bgColor)
+CTView.defaultBgColor = bgColor
 
-Local logWin:CTWindow = CTWindow.Create(0, 0, 400, TextHeight("x") * 3)
-logWin.drawContentBlock = DrawLogContent
+Type CTLogView Extends CTView
+    Method Draw(dirtyRect:CTRect)
+        Super.Draw(dirtyRect)
+        displayLog.Draw(1, 0, 3)
+    End Method
+End Type
 
-Function DrawLogContent:Int()
-    displayLog.Draw(1, 0, 3)
-End Function
+Local logWin:CTWindow = CTWindow.Create(0, 0, 400, TextHeight("x") * 3, New CTLogView())
 
-Local win:CTWindow = CTWindow.Create(10, logWin.GetMaxY() + 2, 380, 100)
-win.drawContentBlock = DrawContent
+Type CTTestView Extends CTView
+    Method Draw(dirtyRect:CTRect)
+        Super.Draw(dirtyRect)
+        SetColor 255,255,0
+        SetLineWidth 1
+        DrawLine 0,0,100,100
+    End Method
+End Type
 
-Function DrawContent:Int()
-    SetColor 255,255,0
-    SetLineWidth 1
-    DrawLine 0,0,100,100
-End Function
+Local characterWindow:CTWindow = CTWindow.Create(10, logWin.GetMaxY() + 2, 380, 100, New CTTestView())
 
 Repeat
     mainScreen.Update(Draw)
