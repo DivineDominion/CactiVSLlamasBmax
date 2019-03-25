@@ -1,7 +1,6 @@
 SuperStrict
 
-import "CTLogging.bmx"
-import "CTWindow.bmx"
+import "View/CTWindow.bmx"
 
 Function Draw:Int()
     ' Big pixel content

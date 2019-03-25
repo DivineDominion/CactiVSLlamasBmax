@@ -1,26 +1,17 @@
 SuperStrict
 
-import "src/CTScreen.bmx"
-import "src/CTLogging.bmx"
-import "src/CTDraw.bmx"
-import "src/CTWindow.bmx"
-import "src/CTView.bmx"
+Import "src/Logging.bmx"
+Import "src/View/CTScreen.bmx"
+Import "src/View/CTWindow.bmx"
+Import "src/View/CTView.bmx"
+Import "src/Draw.bmx"
 
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
-displayLog.Append("ESC to Quit")
+mainLog.Append("ESC to Quit")
 
 Local bgColor:CTColor = CTColor.Create(128, 128, 128)
 bgColor.SetCls()
 CTView.defaultBgColor = bgColor
-
-Type CTLogView Extends CTView
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
-        displayLog.Draw(1, 0, 3)
-    End Method
-End Type
-
-Local logWin:CTWindow = CTWindow.Create(0, 0, 400, TextHeight("x") * 3, New CTLogView())
 
 Type CTTestView Extends CTView
     Method Draw(dirtyRect:CTRect)
@@ -31,7 +22,8 @@ Type CTTestView Extends CTView
     End Method
 End Type
 
-Local characterWindow:CTWindow = CTWindow.Create(10, logWin.GetMaxY() + 2, 380, 100, New CTTestView())
+Local logWindow:CTWindow = CreateLogWindow(mainLog)
+Local characterWindow:CTWindow = CTWindow.Create(10, logWindow.GetMaxY() + 2, 380, 100, New CTTestView())
 
 Repeat
     mainScreen.Update(Draw)
