@@ -24,7 +24,7 @@ Type CTView Implements IDrawable
         If Self.bgColor = Null Then Return
 
         bgColor.Set()
-        dirtyRect.Draw()
+        dirtyRect.Fill()
     End Method
 End Type
 

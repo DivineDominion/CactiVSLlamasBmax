@@ -24,7 +24,7 @@ Type CTRect
         Return CTRect.Create(Self.x + dx, Self.y + dy, Self.w, Self.h)
     End Method
 
-    Method Draw()
+    Method Fill()
         DrawRect x, y, w, h
     End Method
 

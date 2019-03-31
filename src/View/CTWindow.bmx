@@ -37,11 +37,11 @@ Type CTWindow
     Method Draw()
         ' Shadow
         SetColor 0, 0, 0
-        rect.Translate(1, 1).Draw()
+        rect.Translate(1, 1).Fill()
 
         ' Frame
         SetColor 255, 255, 255
-        rect.Draw()
+        rect.Fill()
 
         ' Content
         contentViewport.Draw(contentView)
