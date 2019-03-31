@@ -1,8 +1,11 @@
 SuperStrict
 
 Type CTScreen
+    Private
     Field width:Int
     Field height:Int
+
+    Public
 
     Function Create:CTScreen(width:Int, height:Int)
         Local result:CTScreen = New CTScreen
@@ -17,6 +20,14 @@ Type CTScreen
         Cls
         block()
         Flip
+    End Method
+
+    Method GetWidth:Int()
+        Return width
+    End Method
+
+    Method GetHeight:Int()
+        Return height
     End Method
 End Type
 
