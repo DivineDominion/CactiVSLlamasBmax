@@ -6,6 +6,8 @@ Import "CTColor.bmx"
 Rem
 Treat `CTView` drawing as if it's the only thing on screen. The `dirtyRect`
 is supposed to start at (0,0) in a viewport, so you don't need to worry about offsets.
+
+Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
 EndRem
 Type CTView Implements IDrawable
     Private

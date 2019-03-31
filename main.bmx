@@ -26,6 +26,9 @@ End Type
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
 Local characterWindow:CTWindow = CTWindow.Create(10, logWindow.GetMaxY() + 2, 380, 100, New CTTestView())
 
+windowManager.AddWindow(logWindow)
+windowManager.AddWindow(characterWindow)
+
 Repeat
     mainScreen.Update(Draw)
 Until KeyDown(Key_Escape) Or AppTerminate()

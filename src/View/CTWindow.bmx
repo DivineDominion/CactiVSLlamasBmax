@@ -1,7 +1,6 @@
 SuperStrict
 
 Import "CTView.bmx"
-Import "CTColor.bmx"
 Import "CTRect.bmx"
 Import "CTViewport.bmx"
 
@@ -9,21 +8,14 @@ Type CTWindow
     Private
     Field rect:CTRect
     Field contentViewport:CTViewport
-    Global windows:CTWindow[]
 
     Public
     Field contentView:CTView
-    Field drawContentBlock:Int()
 
-    Function AllWindows:CTWindow[]()
-        Return windows
-    End Function
-
-    Method New()
-        AppendSelfToGlobalWindowList()
-    End Method
-
-    ' Width and height (w,h) include the borders, so the content rect is 2px smaller in each direction.
+    Rem
+    bbdoc: Width and height (`w`, `h`) include the borders, so the content rect
+    is 2px smaller in each dimension.
+    EndRem
     Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null)
         Local win:CTWindow = New CTWindow
         win.rect = CTRect.Create(x, y, w, h)
@@ -55,25 +47,7 @@ Type CTWindow
         contentViewport.Draw(contentView)
     End Method
 
-    Function DrawAllWindows()
-        For Local win:CTWindow = EachIn windows
-            win.Draw()
-        Next
-    End Function
-
     Method GetMaxY:Int()
         Return rect.GetMaxY()
-    End Method
-
-    Private
-    Method AppendSelfToGlobalWindowList()
-        ' Resize array
-        Local oldWins:CTWindow[] = CTWindow.windows
-        Local newWins:CTWindow[] = New CTWindow[oldWins.length + 1]
-        ArrayCopy(oldWins, 0, newWins, 0, oldWins.length)
-
-        ' Append new element
-        newWins[newWins.length - 1] = Self
-        CTWindow.windows = newWins
     End Method
 End Type

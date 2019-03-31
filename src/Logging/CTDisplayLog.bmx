@@ -27,7 +27,7 @@ Type CTDisplayLog
     End Method
 
     Method Append(line:String)
-        ' Replace instead of append to empty log
+        ' Replace when empty so the empty first entry is discarded
         If Self._log.length = 0 Then
             Self.SetLog(line)
             Return
