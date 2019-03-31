@@ -38,9 +38,10 @@ windowManager.AddWindow(characterWindow)
 
 cursorImage = LoadImage("img/cursor.png")
 Local actionWindow:CTWindow = CTWindow.Create(windowOffset, characterWindow.GetMaxY() + 2, windowWidth, 100)
-Local actionMenu:CTMenu = CTMenu.Create(["Fight", "Run"])
+Local actionMenu:CTMenu = CTMenu.Create(["Fight", "Move", "Run"])
 actionWindow.ReplaceContentView(actionMenu)
 windowManager.AddWindow(actionWindow)
+actionMenu.MakeFirstResponder()
 
 Repeat
     mainScreen.Update(Draw)

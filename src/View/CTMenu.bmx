@@ -1,12 +1,12 @@
 SuperStrict
 
+Import "CTControl.bmx"
 Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
-Import "CTView.bmx"
 
 Global cursorImage:TImage = Null
 
-Type CTMenu Extends CTView
+Type CTMenu Extends CTControl
     Field selectedIndex:Int = 0
     Field menuItems:CTMutableArray = New CTMutableArray
 
@@ -24,6 +24,20 @@ Type CTMenu Extends CTView
         Local item:CTMenuItem = CTMenuItem.Create(label)
         menuItems.Append(item)
         Return item
+    End Method
+
+    Method MoveUp()
+        selectedIndex :- 1
+        If selectedIndex < 0
+            selectedIndex = max(0, menuItems.Count() - 1)
+        End If
+    End Method
+
+    Method MoveDown()
+        selectedIndex :+ 1
+        If selectedIndex >= menuItems.Count()
+            selectedIndex = 0
+        End If
     End Method
 
     '#Region Drawing
