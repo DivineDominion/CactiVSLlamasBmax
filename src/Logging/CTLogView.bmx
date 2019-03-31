@@ -9,7 +9,7 @@ Type CTLogView Extends CTView
 
     Public
     Function Create:CTLogView(displayLog:CTDisplayLog)
-        Assert(displayLog)
+        Assert displayLog Else "CTLogView.Create required displayLog"
         Local view:CTLogView = New CTLogView()
         view.displayLog = displayLog
         Return view
