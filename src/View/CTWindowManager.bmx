@@ -12,7 +12,7 @@ at all. The compiler fails to build, that's it.
 EndRem
 Type CTWindowManager
     Private
-    Field windows:CTMutableArray<CTWindow> = New CTMutableArray<CTWindow>
+    Field windows:CTMutableArray = New CTMutableArray
 
     Public
     Method AllWindows:CTWindow[]()
