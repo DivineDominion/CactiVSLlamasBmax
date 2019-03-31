@@ -37,6 +37,11 @@ Type CTWindow
         Return win
     End Function
 
+    Method ReplaceContentView(newContentView:CTView)
+        Assert newContentView Else "CTWindow.ReplaceContentView requires newContentView"
+        Self.contentView = newContentView
+    End Method
+
     Method Draw()
         ' Shadow
         SetColor 0, 0, 0
