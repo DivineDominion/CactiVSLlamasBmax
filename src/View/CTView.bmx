@@ -1,7 +1,7 @@
 SuperStrict
 
-import "IDrawable.bmx"
-import "CTColor.bmx"
+Import "IDrawable.bmx"
+Import "CTColor.bmx"
 
 Rem
 Treat `CTView` drawing as if it's the only thing on screen. The `dirtyRect`

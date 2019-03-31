@@ -1,9 +1,9 @@
 SuperStrict
 
-import "CTView.bmx"
-import "CTColor.bmx"
-import "CTRect.bmx"
-import "CTViewport.bmx"
+Import "CTView.bmx"
+Import "CTColor.bmx"
+Import "CTRect.bmx"
+Import "CTViewport.bmx"
 
 Type CTWindow
     Private

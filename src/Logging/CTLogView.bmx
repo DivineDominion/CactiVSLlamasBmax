@@ -1,7 +1,7 @@
 SuperStrict
 
-import "CTDisplayLog.bmx"
-import "../View/CTView.bmx"
+Import "CTDisplayLog.bmx"
+Import "../View/CTView.bmx"
 
 Type CTLogView Extends CTView
     Private

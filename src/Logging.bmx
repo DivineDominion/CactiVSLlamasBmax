@@ -1,8 +1,8 @@
 SuperStrict
 
-import "Logging/CTDisplayLog.bmx"
-import "Logging/CTLogView.bmx"
-import "View/CTWindow.bmx"
+Import "Logging/CTDisplayLog.bmx"
+Import "Logging/CTLogView.bmx"
+Import "View/CTWindow.bmx"
 
 Global mainLog:CTDisplayLog = CTDisplayLog.Create()
 

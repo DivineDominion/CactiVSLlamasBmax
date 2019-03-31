@@ -1,6 +1,6 @@
 SuperStrict
 
-import "CTRect.bmx"
+Import "CTRect.bmx"
 
 Interface IDrawable
     Method Draw(dirtyRect:CTRect)

@@ -1,7 +1,7 @@
 SuperStrict
 
-import "CTRect.bmx"
-import "IDrawable.bmx"
+Import "CTRect.bmx"
+Import "IDrawable.bmx"
 
 Type CTViewport
     Private
