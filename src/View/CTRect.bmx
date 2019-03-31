@@ -5,13 +5,15 @@ Type CTRect
     Field x%, y%, w%, h%
 
     Public
+    Method New(x%, y%, w%, h%)
+        Self.x = x
+        Self.y = y
+        Self.w = w
+        Self.h = h
+    End Method
+
     Function Create:CTRect(x%, y%, w%, h%)
-        Local rect:CTRect = New CTRect
-        rect.x = x
-        rect.y = y
-        rect.w = w
-        rect.h = h
-        Return rect
+        Return New CTRect(x, y, w, h)
     End Function
 
     Method Inset:CTRect(dx%, dy%)
