@@ -18,7 +18,8 @@ Type CTTestView Extends CTView
         Super.Draw(dirtyRect)
         SetColor 255,255,0
         SetLineWidth 1
-        DrawLine 0,0,100,100
+        Local size:Int = min(dirtyRect.GetWidth(), dirtyRect.GetHeight()) - 2
+        DrawRect 1, 1, size, size
     End Method
 End Type
 

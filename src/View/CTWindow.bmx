@@ -23,6 +23,7 @@ Type CTWindow
         AppendSelfToGlobalWindowList()
     End Method
 
+    ' Width and height (w,h) include the borders, so the content rect is 2px smaller in each direction.
     Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null)
         Local win:CTWindow = New CTWindow
         win.rect = CTRect.Create(x, y, w, h)

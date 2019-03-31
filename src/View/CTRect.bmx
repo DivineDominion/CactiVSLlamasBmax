@@ -15,8 +15,8 @@ Type CTRect
     End Function
 
     Method Inset:CTRect(dx%, dy%)
-        Local w% = max(Self.w - dx, 0)
-        Local h% = max(Self.h - dy, 0)
+        Local w% = max(Self.w - (2 * dx), 0)
+        Local h% = max(Self.h - (2 * dy), 0)
         Return CTRect.Create(Self.x + dx, Self.y + dy, w, h)
     End Method
 
@@ -41,6 +41,14 @@ Type CTRect
 
     Method GetY:Int()
         Return y
+    End Method
+
+    Method GetWidth:Int()
+        Return w
+    End Method
+
+    Method GetHeight:Int()
+        Return h
     End Method
 
     Method GetMaxX:Int()

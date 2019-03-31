@@ -34,7 +34,7 @@ Type CTViewport
         Local x%, y%, w%, h%
         contentRect.GetViewport(x, y, w, h)
         SetViewport x, y, w, h
-        SetOrigin x-1, y-1      ' Don't know why it is 1px off without this offset
+        SetOrigin x, y      ' Don't know why it is 1px off without this offset
 
         Local contentRect:CTRect = CTRect.Create(0, 0, w, h)
         drawable.Draw(contentRect)
