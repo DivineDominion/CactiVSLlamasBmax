@@ -3,6 +3,7 @@ SuperStrict
 Import "CTControl.bmx"
 Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
+Import "../Logging.bmx"
 
 Global cursorImage:TImage = Null
 
@@ -26,6 +27,10 @@ Type CTMenu Extends CTControl
         Return item
     End Method
 
+    Method GetSelectedMenuItem:CTMenuItem()
+        Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
+    End Method
+
     Method MoveUp()
         selectedIndex :- 1
         If selectedIndex < 0
@@ -38,6 +43,10 @@ Type CTMenu Extends CTControl
         If selectedIndex >= menuItems.Count()
             selectedIndex = 0
         End If
+    End Method
+
+    Method ConfirmSelection()
+        mainLog.Append(GetSelectedMenuItem().label)
     End Method
 
     '#Region Drawing

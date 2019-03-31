@@ -30,10 +30,14 @@ Type CTControl Extends CTView Implements CTResponder
 
         Case KEY_DOWN
             MoveDown()
+
+        Case KEY_SPACE, KEY_ENTER
+            ConfirmSelection()
         End Select
     End Method
 
     Method MoveUp(); End Method
     Method MoveDown(); End Method
+    Method ConfirmSelection(); End Method
     '#End Region
 End Type
