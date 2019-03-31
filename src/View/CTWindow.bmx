@@ -70,9 +70,8 @@ Type CTWindow
         ' Resize array
         Local oldWins:CTWindow[] = CTWindow.windows
         Local newWins:CTWindow[] = New CTWindow[oldWins.length + 1]
-        For Local i:Int = 0 Until oldWins.length
-            newWins[i] = oldWins[i]
-        Next
+        ArrayCopy(oldWins, 0, newWins, 0, oldWins.length)
+
         ' Append new element
         newWins[newWins.length - 1] = Self
         CTWindow.windows = newWins
