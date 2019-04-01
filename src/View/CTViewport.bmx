@@ -1,7 +1,7 @@
 SuperStrict
 
 Import "CTRect.bmx"
-Import "IDrawable.bmx"
+Import "CTDrawable.bmx"
 
 Type CTViewport
     Private
@@ -18,7 +18,7 @@ Type CTViewport
         Return viewport
     End Function
 
-    Method Draw(drawable:IDrawable)
+    Method Draw(drawable:CTDrawable)
         If drawable = Null Then
             Return
         EndIf

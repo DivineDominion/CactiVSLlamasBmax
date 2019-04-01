@@ -1,6 +1,6 @@
 SuperStrict
 
-Import "IDrawable.bmx"
+Import "CTDrawable.bmx"
 Import "CTColor.bmx"
 
 Rem
@@ -9,7 +9,7 @@ is supposed to start at (0,0) in a viewport, so you don't need to worry about of
 
 Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
 EndRem
-Type CTView Implements IDrawable
+Type CTView Implements CTDrawable
     Private
 
     Public
