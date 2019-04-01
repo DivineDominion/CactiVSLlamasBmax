@@ -1,11 +1,14 @@
 SuperStrict
 
-Import "../View/CTView.bmx"
+Import "../View/CTControl.bmx"
 Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
 Import "CTTokenHighlighter.bmx"
 
-Type CTBattlefieldView Extends CTView
+CONST BATTLEFIELD_COLUMNS% = 3
+CONST BATTLEFIELD_ROWS% = 3
+
+Type CTBattlefieldView Extends CTControl
     Private
     Field battlefield:CTBattlefield
     Field tokenHighlighter:CTTokenHighlighter = New CTTokenHighlighter
@@ -22,6 +25,28 @@ Type CTBattlefieldView Extends CTView
         Self.battlefield = battlefield
     End Method
 
+    '#Region CTKeyInterpreter
+    Public
+    Method MoveUp()
+        Self.selectedTokenPosition = selectedTokenPosition.MovedUp(BATTLEFIELD_ROWS)
+    End Method
+
+    Method MoveDown()
+        Self.selectedTokenPosition = selectedTokenPosition.MovedDown(BATTLEFIELD_ROWS)
+    End Method
+
+    Method MoveLeft()
+        Self.selectedTokenPosition = selectedTokenPosition.MovedLeft(BATTLEFIELD_COLUMNS)
+    End Method
+
+    Method MoveRight()
+        Self.selectedTokenPosition = selectedTokenPosition.MovedRight(BATTLEFIELD_COLUMNS)
+    End Method
+
+    Private
+    Field selectedTokenPosition:CTTokenPosition = New CTTokenPosition(0, 0)
+    '#End Region
+
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
@@ -36,7 +61,7 @@ Type CTBattlefieldView Extends CTView
     End Method
 
     Method DrawTokenHighlighter()
-        Local highlighterRect:CTRect = Self.battleField.RectForColumnRow(0, 0)
+        Local highlighterRect:CTRect = Self.battleField.RectForPosition(Self.selectedTokenPosition)
         Self.tokenHighlighter.DrawOnBattlefield(highlighterRect)
     End Method
     '#End Region

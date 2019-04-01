@@ -34,6 +34,7 @@ Type CTShowBattlefield
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldView)
+        Self.battlefieldView.MakeFirstResponder()
         windowManager.AddWindow(currentWindow)
     End Method
 
