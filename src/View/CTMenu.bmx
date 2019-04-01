@@ -43,6 +43,10 @@ Type CTMenu Extends CTControl
         Return menu
     End Function
 
+    Method ResetSelection()
+        Self.selectedIndex = 0
+    End Method
+
     Method RemoveDelegate()
         Self.delegate = Null
     End Method
@@ -56,6 +60,7 @@ Type CTMenu Extends CTControl
     Method GetSelectedMenuItem:CTMenuItem()
         Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
     End Method
+
 
     '#Region CTKeyInterpreter
     Method MoveUp()

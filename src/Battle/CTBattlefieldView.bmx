@@ -4,6 +4,7 @@ Import "../View/CTControl.bmx"
 Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
 Import "CTTokenHighlighter.bmx"
+Import "CTShowActionMenu.bmx"
 
 CONST BATTLEFIELD_COLUMNS% = 3
 CONST BATTLEFIELD_ROWS% = 3
@@ -27,6 +28,10 @@ Type CTBattlefieldView Extends CTControl
 
     '#Region CTKeyInterpreter
     Public
+    Method ConfirmSelection()
+        CTShowActionMenu.Instance().ShowMenu()
+    End Method
+
     Method MoveUp()
         Self.selectedTokenPosition = selectedTokenPosition.MovedUp(BATTLEFIELD_ROWS)
         ResetTokenHighlighterAnimation()
