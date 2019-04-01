@@ -1,5 +1,7 @@
 SuperStrict
 
+Const CT_NOT_FOUND:Int = -1
+
 Type CTMutableArray
     Private
     Field base:Object[]
@@ -40,6 +42,30 @@ Type CTMutableArray
         ' Append new element
         newBase[newBase.length - 1] = element
         Self.base = newBase
+    End Method
+
+    Rem
+    returns: CT_NOT_FOUND if not found, the index otherwise
+    End Rem
+    Method IndexOf:Int(element:Object)
+        If Not element Then
+            Throw New TNoSuchElementException
+        End If
+
+        For Local i:Int = 0 Until Count()
+            If base[i] = element
+                Return i
+            End If
+        Next
+        Return CT_NOT_FOUND
+    End Method
+
+    Method RemoveFirst(element:Object)
+        Local index:Int = IndexOf(element)
+        If index = CT_NOT_FOUND
+            Return
+        End If
+        RemoveElementAt(index)
     End Method
 
     Method RemoveElementAt:Object(index:Int)

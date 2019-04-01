@@ -23,6 +23,10 @@ Type CTWindowManager
         Self.windows.Append(win)
     End Method
 
+    Method RemoveWindow(win:CTWindow)
+        Self.windows.RemoveFirst(win)
+    End Method
+
     Method DrawAllWindows()
         For Local win:CTWindow = EachIn Self.windows
             win.Draw()
