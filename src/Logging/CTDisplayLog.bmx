@@ -1,5 +1,7 @@
 SuperStrict
 
+Import "../View/DrawContrastText.bmx"
+
 Type CTDisplayLog
     Private
     Field _log:String
@@ -70,11 +72,3 @@ Type CTDisplayLog
         Next
     End Method
 End Type
-
-' Text with a drop shadow
-Function DrawContrastText(line$, x%, y%)
-    SetColor 0, 0, 0
-    DrawText line, x + 1, y + 1
-    SetColor 255, 255, 255
-    DrawText line, x, y
-End Function
