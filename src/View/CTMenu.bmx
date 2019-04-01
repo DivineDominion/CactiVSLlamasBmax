@@ -77,7 +77,7 @@ Type CTMenu Extends CTControl
         End If
     End Method
 
-    '#Region Drawing
+    '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)

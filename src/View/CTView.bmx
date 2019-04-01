@@ -1,6 +1,7 @@
 SuperStrict
 
 Import "CTDrawable.bmx"
+Import "CTAnimatable.bmx"
 Import "CTColor.bmx"
 
 Rem
@@ -9,7 +10,7 @@ is supposed to start at (0,0) in a viewport, so you don't need to worry about of
 
 Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
 EndRem
-Type CTView Implements CTDrawable
+Type CTView Implements CTDrawable, CTAnimatable
     Private
 
     Public
@@ -29,6 +30,10 @@ Type CTView Implements CTDrawable
         backgroundColor.Set()
         dirtyRect.Fill()
     End Method
+    '#End Region
+
+    '#Region CTAnimatable
+    Method UpdateAnimation(delta:Float); End Method
     '#End Region
 End Type
 

@@ -1,9 +1,9 @@
 SuperStrict
 
 Import "src/Logging.bmx"
+Import "src/View/CTAnimatable.bmx"
 Import "src/View/CTScreen.bmx"
 Import "src/View/CTWindow.bmx"
-Import "src/View/CTView.bmx"
 Import "src/Draw.bmx"
 Import "src/Battle/CTShowActionMenu.bmx"
 Import "src/Battle/CTShowBattlefield.bmx"
@@ -31,6 +31,13 @@ Local showMenu:CTShowActionMenu = CTShowActionMenu.Create(actionWindowFrameRect)
 showBattlefield.ShowBattlefield()
 showMenu.ShowMenu()
 
+Local delta:Float = MSEC_PER_SEC / FRAME_RATE
+Local lastTime:Int = MilliSecs()
+
 Repeat
+    Update(delta)
     mainScreen.Update(Draw)
+
+    delta = MilliSecs() - lastTime
+    lastTime = MilliSecs()
 Until KeyDown(Key_Escape) Or AppTerminate()

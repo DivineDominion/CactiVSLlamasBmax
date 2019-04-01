@@ -1,10 +1,11 @@
 SuperStrict
 
+Import "CTAnimatable.bmx"
 Import "CTView.bmx"
 Import "CTRect.bmx"
 Import "CTViewport.bmx"
 
-Type CTWindow
+Type CTWindow Implements CTAnimatable
     Private
     Field rect:CTRect
     Field contentViewport:CTViewport
@@ -38,6 +39,10 @@ Type CTWindow
         Self.contentView = newContentView
     End Method
 
+    Method GetMaxY:Int()
+        Return rect.GetMaxY()
+    End Method
+
     Method Draw()
         ' Shadow
         SetColor 0, 0, 0
@@ -51,7 +56,9 @@ Type CTWindow
         contentViewport.Draw(contentView)
     End Method
 
-    Method GetMaxY:Int()
-        Return rect.GetMaxY()
+    '#Region CTAnimatable
+    Method UpdateAnimation(delta:Float)
+        Self.contentView.UpdateAnimation(delta)
     End Method
+    '#End Region
 End Type

@@ -22,7 +22,7 @@ Type CTBattlefieldView Extends CTView
         Self.battlefield = battlefield
     End Method
 
-    '#Region Drawing
+    '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
@@ -38,6 +38,13 @@ Type CTBattlefieldView Extends CTView
     Method DrawTokenHighlighter()
         Local highlighterRect:CTRect = Self.battleField.RectForColumnRow(0, 0)
         Self.tokenHighlighter.DrawOnBattlefield(highlighterRect)
+    End Method
+    '#End Region
+
+    '#Region CTAnimatable
+    Public
+    Method UpdateAnimation(delta:Float)
+        Self.tokenHighlighter.UpdateAnimation(delta)
     End Method
     '#End Region
 End Type

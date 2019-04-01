@@ -32,4 +32,10 @@ Type CTWindowManager
             win.Draw()
         Next
     End Method
+
+    Method UpdateAllAnimations(delta:Float)
+        For Local win:CTWindow = EachIn Self.windows
+            win.UpdateAnimation(delta)
+        Next
+    End Method
 End Type
