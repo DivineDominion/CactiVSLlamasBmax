@@ -23,13 +23,12 @@ Local windowOffset:Int = 10
 Local windowWidth:Int = mainScreen.GetWidth() - (2 * windowOffset)
 
 Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, logWindow.GetMaxY() + 2, windowWidth, 200)
-Local showBattlefield:CTShowBattlefield = CTShowBattlefield.Create(battlefieldWindowFrameRect)
+Local showBattlefield:CTShowBattlefield = CTShowBattlefield.Instance(battlefieldWindowFrameRect)
 
 Local actionWindowFrameRect:CTRect = CTRect.Create(windowOffset, battlefieldWindowFrameRect.GetMaxY() + 2, windowWidth, 100)
-Local showMenu:CTShowActionMenu = CTShowActionMenu.Create(actionWindowFrameRect)
+Local showMenu:CTShowActionMenu = CTShowActionMenu.Instance(actionWindowFrameRect)
 
 showBattlefield.ShowBattlefield()
-showMenu.ShowMenu()
 
 Local delta:Float = MSEC_PER_SEC / FRAME_RATE
 Local lastTime:Int = MilliSecs()

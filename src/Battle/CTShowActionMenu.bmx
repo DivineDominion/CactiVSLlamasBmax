@@ -13,14 +13,31 @@ Type CTShowActionMenu Implements CTMenuDelegate
     Field currentWindow:CTWindow = Null
 
 
+    '#Region Singleton
     Public
+    Function Instance:CTShowActionMenu(initialFrameRect:CTRect = Null)
+        If Not _instance
+            Assert initialFrameRect Else "CTShowActionMenu singleton needs initialFrameRect once"
+            _instance = Create(initialFrameRect)
+        End If
+        Return _instance
+    End Function
+
+    Private
+    Global _instance:CTShowActionMenu = Null
+
+    Method New(); End Method
+
     Function Create:CTShowActionMenu(frameRect:CTRect)
         Local service:CTShowActionMenu = New CTShowActionMenu
         service.frameRect = frameRect
         service.menu = CTMenu.Create(["Fight", "Move", "Run"])
         Return service
     End Function
+    '#End Region
 
+
+    Public
     Method ShowMenu()
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 

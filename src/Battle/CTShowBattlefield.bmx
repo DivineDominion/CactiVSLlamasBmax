@@ -16,7 +16,21 @@ Type CTShowBattlefield
     Field currentWindow:CTWindow = Null
 
 
+    '#Region Singleton
     Public
+    Function Instance:CTShowBattlefield(initialFrameRect:CTRect = Null)
+        If Not _instance
+            Assert initialFrameRect Else "CTShowBattlefield singleton needs initialFrameRect once"
+            _instance = Create(initialFrameRect)
+        End If
+        Return _instance
+    End Function
+
+    Private
+    Global _instance:CTShowBattlefield = Null
+
+    Method New(); End Method
+
     Function Create:CTShowBattlefield(frameRect:CTRect)
         Local service:CTShowBattlefield = New CTShowBattlefield
         service.frameRect = frameRect
@@ -29,7 +43,10 @@ Type CTShowBattlefield
 
         Return service
     End Function
+    '#End Region
 
+
+    Public
     Method ShowBattlefield()
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 
