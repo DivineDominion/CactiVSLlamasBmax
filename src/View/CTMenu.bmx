@@ -57,6 +57,7 @@ Type CTMenu Extends CTControl
         Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
     End Method
 
+    '#Region CTKeyInterpreter
     Method MoveUp()
         selectedIndex :- 1
         If selectedIndex < 0
@@ -76,6 +77,7 @@ Type CTMenu Extends CTControl
             Self.delegate.menuDidSelectMenuItem(Self, GetSelectedMenuItem())
         End If
     End Method
+    '#End Region
 
     '#Region CTDrawable
     Public
