@@ -9,8 +9,8 @@ Type CTBattlefield
     Field tokenPositionsTokens:TMap = New TMap
 
     Public
-    Method PutTokenAtXY(token:CTToken, x:Int, y:Int)
-        PutTokenAtPosition(token, New CTTokenPosition(x, y))
+    Method PutTokenAtColumnRow(token:CTToken, column:Int, row:Int)
+        PutTokenAtPosition(token, New CTTokenPosition(column, row))
     End Method
 
     Method PutTokenAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
