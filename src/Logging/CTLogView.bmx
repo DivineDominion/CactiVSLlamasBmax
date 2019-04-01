@@ -10,6 +10,7 @@ Type CTLogView Extends CTView
     Public
     Method New()
         Self.bgColor = CTColor.DarkGray()
+        Self.isOpaque = True
     End Method
 
     Function Create:CTLogView(displayLog:CTDisplayLog)

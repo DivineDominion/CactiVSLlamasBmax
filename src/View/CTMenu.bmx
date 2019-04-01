@@ -30,6 +30,7 @@ Type CTMenu Extends CTControl
 
     Method New()
         Self.bgColor = CTColor.Black()
+        Self.isOpaque = True
     End Method
 
     Function Create:CTMenu(labels:String[])

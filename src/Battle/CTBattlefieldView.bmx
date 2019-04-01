@@ -14,6 +14,7 @@ Type CTBattlefieldView Extends CTView
     Public
     Method New()
         Self.bgColor = CTColor.Black()
+        Self.isOpaque = True
     End Method
 
     Method New(battlefield:CTBattlefield)

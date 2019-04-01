@@ -13,6 +13,7 @@ Type CTView Implements CTDrawable
     Private
 
     Public
+    Field isOpaque:Int = True
     Global defaultBgColor:CTColor = CTColor.Blue()
     Field bgColor:CTColor
 
@@ -22,6 +23,7 @@ Type CTView Implements CTDrawable
 
     '#Region CTDrawable
     Method Draw(dirtyRect:CTRect)
+        If Not Self.isOpaque Then Return
         If Not Self.bgColor Then Return
 
         bgColor.Set()
