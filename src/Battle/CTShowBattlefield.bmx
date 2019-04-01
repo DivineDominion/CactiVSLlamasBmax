@@ -22,9 +22,9 @@ Type CTShowBattlefield
         service.frameRect = frameRect
 
         Local battlefield:CTBattlefield = New CTBattlefield
-        battlefield.AddToken(New CTCactusToken(New CTTokenPosition(0, 0)))
-        battlefield.AddToken(New CTCactusToken(New CTTokenPosition(1, 0)))
-        battlefield.AddToken(New CTCactusToken(New CTTokenPosition(1, 1)))
+        battlefield.PutTokenAtXY(New CTCactusToken, 0, 0)
+        battlefield.PutTokenAtXY(New CTCactusToken, 1, 0)
+        battlefield.PutTokenAtXY(New CTCactusToken, 1, 1)
         service.battlefieldView = New CTBattlefieldView(battlefield)
 
         Return service

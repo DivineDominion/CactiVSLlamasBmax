@@ -1,28 +1,22 @@
 SuperStrict
 
 Import "../View/CTRect.bmx"
-Import "../Util/CTMutableArray.bmx"
+Import "CTToken.bmx"
 Import "CTTokenPosition.bmx"
-
-Type CTToken Abstract
-    Field position:CTTokenPosition
-
-    ' FIXME: You need to duplicate the constructor in the concrete type, see: https://github.com/bmx-ng/bcc/issues/417
-    Method New(position:CTTokenPosition)
-        Self.position = position
-    End Method
-
-    Method Draw(battleField:CTBattlefield) Abstract
-End Type
 
 Type CTBattlefield
     Private
-    Field tokens:CTMutableArray = New CTMutableArray
+    Field tokenPositionsTokens:TMap = New TMap
 
     Public
-    Method AddToken(token:CTToken)
-        Assert token Else "AddToken requires token"
-        tokens.Append(token)
+    Method PutTokenAtXY(token:CTToken, x:Int, y:Int)
+        PutTokenAtPosition(token, New CTTokenPosition(x, y))
+    End Method
+
+    Method PutTokenAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
+        Assert token Else "PutTokenAtPosition requires token"
+        Assert tokenPosition Else "PutTokenAtPosition requires tokenPosition"
+        tokenPositionsTokens.Insert(tokenPosition, token)
     End Method
 
     Method RectForPosition:CTRect(position:CTTokenPosition)
@@ -32,8 +26,11 @@ Type CTBattlefield
     End Method
 
     Method DrawTokens()
-        For Local token:CTToken = EachIn Self.tokens
-            token.Draw(Self)
+        For Local node:TKeyValue = EachIn Self.tokenPositionsTokens
+            Local token:CTToken = CTToken(node.Value())
+            Local tokenPosition:CTTokenPosition = CTTokenPosition(node.Key())
+            Local tokenRect:CTRect = Self.RectForPosition(tokenPosition)
+            token.DrawOnBattlefield(tokenRect)
         Next
     End Method
 End Type
