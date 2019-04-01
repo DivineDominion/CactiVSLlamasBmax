@@ -42,5 +42,21 @@ Type CTColor
     Function Black:CTColor()
         Return CTColor.Create(0, 0, 0)
     End Function
+
+    Function Red:CTColor()
+        Return CTColor.Create(255, 0, 0)
+    End Function
+
+    Function Green:CTColor()
+        Return CTColor.Create(0, 255, 0)
+    End Function
+
+    Function Blue:CTColor()
+        Return CTColor.Create(0, 0, 255)
+    End Function
+
+    Function Yellow:CTColor()
+        Return CTColor.Create(255, 255, 0)
+    End Function
     '#End Region
 End Type

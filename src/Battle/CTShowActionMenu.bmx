@@ -4,6 +4,7 @@ Import "../View/CTMenu.bmx"
 Import "../View/CTRect.bmx"
 Import "../View/CTWindow.bmx"
 Import "../View/CTWindowManager.bmx"
+Import "../Logging.bmx"
 
 Type CTShowActionMenu Implements CTMenuDelegate
     Private

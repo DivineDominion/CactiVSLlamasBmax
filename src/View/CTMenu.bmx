@@ -3,7 +3,7 @@ SuperStrict
 Import "CTControl.bmx"
 Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
-Import "../Logging.bmx"
+Import "DrawContrastText.bmx"
 
 Global cursorImage:TImage = Null
 
@@ -18,6 +18,10 @@ Type CTMenu Extends CTControl
 
 
     Public
+    Field backgroundColor:CTColor = CTColor.Black()
+    Field textColor:CTColor = CTColor.LightGray()
+    Field selectedTextColor:CTColor = CTColor.White()
+
     Rem
     Warning: setting this to the owner of the menu creates a retain cycle.
     Make sure to call `RemoveDelegate()` in `MenuDidSelectMenuItem(menu,menuItem)`
@@ -78,7 +82,7 @@ Type CTMenu Extends CTControl
 
     Private
     Method DrawBackground(dirtyRect:CTRect)
-        SetColor 0,0,0
+        Self.backgroundColor.Set()
         dirtyRect.Fill()
     End Method
 
@@ -89,12 +93,21 @@ Type CTMenu Extends CTControl
         Local x%, y% = 0
         Local i% = 0
         For Local menuItem:CTMenuItem = EachIn menuItems
-            SetColor 255, 255, 255
-            DrawText menuItem.label, x + cursorWidth, y
+            ' Draw label text with varying font color depending on selection
+            Local textColor:CTColor
+            If Self.selectedIndex = i
+                textColor = Self.selectedTextColor
+            Else
+                textColor = Self.textColor
+            End If
 
+            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+
+            ' Draw cursor on top
             If Self.selectedIndex = i
                 DrawCursor(x, y)
             End If
+
 
             y :+ lineHeight
             i :+ 1
