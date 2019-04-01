@@ -8,6 +8,10 @@ Type CTLogView Extends CTView
     Field displayLog:CTDisplayLog
 
     Public
+    Method New()
+        Self.bgColor = CTColor.DarkGray()
+    End Method
+
     Function Create:CTLogView(displayLog:CTDisplayLog)
         Assert displayLog Else "CTLogView.Create required displayLog"
         Local view:CTLogView = New CTLogView()

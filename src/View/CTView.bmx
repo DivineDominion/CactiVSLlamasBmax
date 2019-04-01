@@ -13,19 +13,21 @@ Type CTView Implements CTDrawable
     Private
 
     Public
-    Global defaultBgColor:CTColor = CTColor.Create(0,0,255)
+    Global defaultBgColor:CTColor = CTColor.Blue()
     Field bgColor:CTColor
 
     Method New()
         Self.bgColor = defaultBgColor
     End Method
 
+    '#Region CTDrawable
     Method Draw(dirtyRect:CTRect)
-        If Self.bgColor = Null Then Return
+        If Not Self.bgColor Then Return
 
         bgColor.Set()
         dirtyRect.Fill()
     End Method
+    '#End Region
 End Type
 
 Function fallback:CTColor(lhs:CTColor, rhs:CTColor)

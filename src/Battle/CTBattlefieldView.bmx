@@ -7,30 +7,29 @@ Import "CTTokenHighlighter.bmx"
 
 Type CTBattlefieldView Extends CTView
     Private
-    Field backgroundColor:CTColor = CTColor.Black()
     Field battlefield:CTBattlefield
     Field tokenHighlighter:CTTokenHighlighter = New CTTokenHighlighter
 
 
     Public
+    Method New()
+        Self.bgColor = CTColor.Black()
+    End Method
+
     Method New(battlefield:CTBattlefield)
+        New()
         Self.battlefield = battlefield
     End Method
 
     '#Region Drawing
     Public
     Method Draw(dirtyRect:CTRect)
-        DrawBackdrop(dirtyRect)
+        Super.Draw(dirtyRect)
         DrawTokens()
         DrawTokenHighlighter()
     End Method
 
     Private
-    Method DrawBackdrop(rect:CTRect)
-        Self.backgroundColor.Set()
-        rect.Fill()
-    End Method
-
     Method DrawTokens()
         Self.battlefield.DrawTokens()
     End Method

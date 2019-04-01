@@ -18,7 +18,6 @@ Type CTMenu Extends CTControl
 
 
     Public
-    Field backgroundColor:CTColor = CTColor.Black()
     Field textColor:CTColor = CTColor.LightGray()
     Field selectedTextColor:CTColor = CTColor.White()
 
@@ -28,6 +27,10 @@ Type CTMenu Extends CTControl
     so the menu can close.
     End Rem
     Field delegate:CTMenuDelegate = Null
+
+    Method New()
+        Self.bgColor = CTColor.Black()
+    End Method
 
     Function Create:CTMenu(labels:String[])
         Local menu:CTMenu = New CTMenu()
@@ -76,16 +79,11 @@ Type CTMenu Extends CTControl
     '#Region Drawing
     Public
     Method Draw(dirtyRect:CTRect)
-        DrawBackground(dirtyRect)
+        Super.Draw(dirtyRect)
         DrawLabels(dirtyRect)
     End Method
 
     Private
-    Method DrawBackground(dirtyRect:CTRect)
-        Self.backgroundColor.Set()
-        dirtyRect.Fill()
-    End Method
-
     Method DrawLabels(dirtyRect:CTRect)
         Local lineHeight% = TextHeight("x")
         Local cursorWidth% = Self.GetCursorWidth()
