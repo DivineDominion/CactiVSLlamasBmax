@@ -5,7 +5,7 @@ Import "src/View/CTScreen.bmx"
 Import "src/View/CTWindow.bmx"
 Import "src/View/CTView.bmx"
 Import "src/Draw.bmx"
-Import "src/View/CTMenu.bmx"
+Import "src/Battle/CTShowActionMenu.bmx"
 
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
 mainLog.Append("ESC to Quit")
@@ -37,11 +37,10 @@ characterWindow.ReplaceContentView(New CTTestView())
 windowManager.AddWindow(characterWindow)
 
 cursorImage = LoadImage("img/cursor.png")
-Local actionWindow:CTWindow = CTWindow.Create(windowOffset, characterWindow.GetMaxY() + 2, windowWidth, 100)
-Local actionMenu:CTMenu = CTMenu.Create(["Fight", "Move", "Run"])
-actionWindow.ReplaceContentView(actionMenu)
-windowManager.AddWindow(actionWindow)
-actionMenu.MakeFirstResponder()
+
+Local actionWindowFrameRect:CTRect = CTRect.Create(windowOffset, characterWindow.GetMaxY() + 2, windowWidth, 100)
+Local showMenu:CTShowActionMenu = CTShowActionMenu.Create(actionWindowFrameRect)
+showMenu.ShowMenu()
 
 Repeat
     mainScreen.Update(Draw)

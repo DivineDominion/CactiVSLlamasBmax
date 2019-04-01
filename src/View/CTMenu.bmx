@@ -7,9 +7,23 @@ Import "../Logging.bmx"
 
 Global cursorImage:TImage = Null
 
+Interface CTMenuDelegate
+    Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
+End Interface
+
 Type CTMenu Extends CTControl
+    Private
     Field selectedIndex:Int = 0
     Field menuItems:CTMutableArray = New CTMutableArray
+
+
+    Public
+    Rem
+    Warning: setting this to the owner of the menu creates a retain cycle.
+    Make sure to call `RemoveDelegate()` in `MenuDidSelectMenuItem(menu,menuItem)`
+    so the menu can close.
+    End Rem
+    Field delegate:CTMenuDelegate = Null
 
     Function Create:CTMenu(labels:String[])
         Local menu:CTMenu = New CTMenu()
@@ -20,6 +34,10 @@ Type CTMenu Extends CTControl
 
         Return menu
     End Function
+
+    Method RemoveDelegate()
+        Self.delegate = Null
+    End Method
 
     Method AddMenuItem:CTMenuItem(label:String)
         Local item:CTMenuItem = CTMenuItem.Create(label)
@@ -46,7 +64,9 @@ Type CTMenu Extends CTControl
     End Method
 
     Method ConfirmSelection()
-        mainLog.Append(GetSelectedMenuItem().label)
+        If Self.delegate
+            Self.delegate.menuDidSelectMenuItem(Self, GetSelectedMenuItem())
+        End If
     End Method
 
     '#Region Drawing
