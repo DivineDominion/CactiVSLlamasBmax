@@ -11,13 +11,13 @@ Import "src/Battle/CTShowBattlefield.bmx"
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
 mainLog.Append("ESC to Quit")
 
-Local screenColor:CTColor = CTColor.Create(128, 128, 128)
+Local screenColor:CTColor = CTColor.Gray()
 screenColor.SetCls()
-CTView.defaultBgColor = CTColor.Create(0, 0, 0)
+CTView.defaultBgColor = CTColor.Black()
 cursorImage = LoadImage("img/cursor.png")
 
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
-logWindow.contentView.bgColor = CTColor.Create(64, 64, 64)
+logWindow.contentView.bgColor = CTColor.DarkGray()
 windowManager.AddWindow(logWindow)
 
 Local windowOffset:Int = 10

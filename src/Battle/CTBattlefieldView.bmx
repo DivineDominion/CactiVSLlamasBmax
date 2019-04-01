@@ -5,9 +5,12 @@ Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
 
 Type CTBattlefieldView Extends CTView
-    Field backgroundColor:CTColor = CTColor.Create(0, 0, 0)
+    Private
+    Field backgroundColor:CTColor = CTColor.Black()
     Field battlefield:CTBattlefield
 
+
+    Public
     Method New(battlefield:CTBattlefield)
         Self.battlefield = battlefield
     End Method
