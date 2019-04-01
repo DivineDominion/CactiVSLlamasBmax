@@ -17,9 +17,13 @@ Type CTWindow
     is 2px smaller in each dimension.
     EndRem
     Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null)
+        Return Self.Create(New CTRect(x, y, w, h), contentView)
+    End Function
+
+    Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null)
         Local win:CTWindow = New CTWindow
-        win.rect = CTRect.Create(x, y, w, h)
-        win.contentViewport = CTViewport.Create(win.rect.inset(1, 1))
+        win.rect = frameRect
+        win.contentViewport = CTViewport.Create(frameRect.inset(1, 1))
 
         win.contentView = contentView
         If contentView = Null Then
