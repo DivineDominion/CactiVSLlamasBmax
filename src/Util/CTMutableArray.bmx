@@ -62,9 +62,7 @@ Type CTMutableArray
 
     Method RemoveFirst(element:Object)
         Local index:Int = IndexOf(element)
-        If index = CT_NOT_FOUND
-            Return
-        End If
+        If index = CT_NOT_FOUND Then Return
         RemoveElementAt(index)
     End Method
 

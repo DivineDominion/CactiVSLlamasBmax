@@ -30,6 +30,13 @@ Type CTRect
         DrawRect x, y, w, h
     End Method
 
+    Method Stroke(strokeWidth:Int=1)
+        DrawRect x, y, w, strokeWidth
+        DrawRect x, y, strokeWidth, h
+        DrawRect x+w-strokeWidth, y, strokeWidth, h
+        DrawRect x, y+h-strokeWidth, w, strokeWidth
+    End Method
+
     Method GetViewport(x:Int Var, y:Int Var, w:Int Var, h:Int Var)
         x = Self.x
         y = Self.y

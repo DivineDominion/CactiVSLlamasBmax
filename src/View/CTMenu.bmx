@@ -3,7 +3,7 @@ SuperStrict
 Import "CTControl.bmx"
 Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
-Import "../Logging.bmx"
+Import "DrawContrastText.bmx"
 
 Global cursorImage:TImage = Null
 
@@ -18,12 +18,20 @@ Type CTMenu Extends CTControl
 
 
     Public
+    Field textColor:CTColor = CTColor.LightGray()
+    Field selectedTextColor:CTColor = CTColor.White()
+
     Rem
     Warning: setting this to the owner of the menu creates a retain cycle.
     Make sure to call `RemoveDelegate()` in `MenuDidSelectMenuItem(menu,menuItem)`
     so the menu can close.
     End Rem
     Field delegate:CTMenuDelegate = Null
+
+    Method New()
+        Self.backgroundColor = CTColor.Black()
+        Self.isOpaque = True
+    End Method
 
     Function Create:CTMenu(labels:String[])
         Local menu:CTMenu = New CTMenu()
@@ -34,6 +42,10 @@ Type CTMenu Extends CTControl
 
         Return menu
     End Function
+
+    Method ResetSelection()
+        Self.selectedIndex = 0
+    End Method
 
     Method RemoveDelegate()
         Self.delegate = Null
@@ -49,6 +61,8 @@ Type CTMenu Extends CTControl
         Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
     End Method
 
+
+    '#Region CTKeyInterpreter
     Method MoveUp()
         selectedIndex :- 1
         If selectedIndex < 0
@@ -68,20 +82,16 @@ Type CTMenu Extends CTControl
             Self.delegate.menuDidSelectMenuItem(Self, GetSelectedMenuItem())
         End If
     End Method
+    '#End Region
 
-    '#Region Drawing
+    '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
-        DrawBackground(dirtyRect)
+        Super.Draw(dirtyRect)
         DrawLabels(dirtyRect)
     End Method
 
     Private
-    Method DrawBackground(dirtyRect:CTRect)
-        SetColor 0,0,0
-        dirtyRect.Fill()
-    End Method
-
     Method DrawLabels(dirtyRect:CTRect)
         Local lineHeight% = TextHeight("x")
         Local cursorWidth% = Self.GetCursorWidth()
@@ -89,12 +99,21 @@ Type CTMenu Extends CTControl
         Local x%, y% = 0
         Local i% = 0
         For Local menuItem:CTMenuItem = EachIn menuItems
-            SetColor 255, 255, 255
-            DrawText menuItem.label, x + cursorWidth, y
+            ' Draw label text with varying font color depending on selection
+            Local textColor:CTColor
+            If Self.selectedIndex = i
+                textColor = Self.selectedTextColor
+            Else
+                textColor = Self.textColor
+            End If
 
+            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+
+            ' Draw cursor on top
             If Self.selectedIndex = i
                 DrawCursor(x, y)
             End If
+
 
             y :+ lineHeight
             i :+ 1
@@ -102,9 +121,7 @@ Type CTMenu Extends CTControl
     End Method
 
     Method DrawCursor(x%, y%)
-        If Not cursorImage
-            Return
-        End If
+        If Not cursorImage Then Return
         DrawImage cursorImage, x, y
     End Method
 

@@ -1,47 +1,42 @@
 SuperStrict
 
 Import "src/Logging.bmx"
+Import "src/View/CTAnimatable.bmx"
 Import "src/View/CTScreen.bmx"
 Import "src/View/CTWindow.bmx"
-Import "src/View/CTView.bmx"
 Import "src/Draw.bmx"
 Import "src/Battle/CTShowActionMenu.bmx"
+Import "src/Battle/CTShowBattlefield.bmx"
 
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
 mainLog.Append("ESC to Quit")
 
-Local screenColor:CTColor = CTColor.Create(128, 128, 128)
+Local screenColor:CTColor = CTColor.Gray()
 screenColor.SetCls()
-
-CTView.defaultBgColor = CTColor.Create(0, 0, 0)
-
-Type CTTestView Extends CTView
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
-        SetColor 255,255,0
-        SetLineWidth 1
-        Local size:Int = min(dirtyRect.GetWidth(), dirtyRect.GetHeight()) - 2
-        DrawRect 1, 1, size, size
-    End Method
-End Type
+CTView.defaultBgColor = CTColor.Black()
+cursorImage = LoadImage("img/cursor.png")
 
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
-logWindow.contentView.bgColor = CTColor.Create(64, 64, 64)
 windowManager.AddWindow(logWindow)
 
 Local windowOffset:Int = 10
 Local windowWidth:Int = mainScreen.GetWidth() - (2 * windowOffset)
 
-Local characterWindow:CTWindow = CTWindow.Create(windowOffset, logWindow.GetMaxY() + 2, windowWidth, 200)
-characterWindow.ReplaceContentView(New CTTestView())
-windowManager.AddWindow(characterWindow)
+Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, logWindow.GetMaxY() + 2, windowWidth, 200)
+Local showBattlefield:CTShowBattlefield = CTShowBattlefield.Instance(battlefieldWindowFrameRect)
 
-cursorImage = LoadImage("img/cursor.png")
+Local actionWindowFrameRect:CTRect = CTRect.Create(windowOffset, battlefieldWindowFrameRect.GetMaxY() + 2, windowWidth, 100)
+Local showMenu:CTShowActionMenu = CTShowActionMenu.Instance(actionWindowFrameRect)
 
-Local actionWindowFrameRect:CTRect = CTRect.Create(windowOffset, characterWindow.GetMaxY() + 2, windowWidth, 100)
-Local showMenu:CTShowActionMenu = CTShowActionMenu.Create(actionWindowFrameRect)
-showMenu.ShowMenu()
+showBattlefield.ShowBattlefield()
+
+Local delta:Float = MSEC_PER_SEC / FRAME_RATE
+Local lastTime:Int = MilliSecs()
 
 Repeat
+    Update(delta)
     mainScreen.Update(Draw)
+
+    delta = MilliSecs() - lastTime
+    lastTime = MilliSecs()
 Until KeyDown(Key_Escape) Or AppTerminate()

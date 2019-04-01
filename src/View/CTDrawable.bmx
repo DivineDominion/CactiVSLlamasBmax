@@ -2,6 +2,6 @@ SuperStrict
 
 Import "CTRect.bmx"
 
-Interface IDrawable
+Interface CTDrawable
     Method Draw(dirtyRect:CTRect)
 End Interface
