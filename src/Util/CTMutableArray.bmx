@@ -42,16 +42,29 @@ Type CTMutableArray
         Self.base = newBase
     End Method
 
-    Method DeleteElement:Int(index:Int)
+    Method RemoveElementAt:Object(index:Int)
         If index < 0 Or Count() = 0 Or index >= Count()
             Throw New TNoSuchElementException
         End If
+
+        Local removedElement:Object = GetElementAt(index)
+
         ' Resize array
         Local oldBase:Object[] = Self.base
         Local newBase:Object[] = New Object[oldBase.length - 1]
-        ArrayCopy(oldBase, 0, newBase, 0, index + 1)
-        ArrayCopy(oldBase, index + 1, newBase, index, (oldBase.length - index -1))
+
+        If index = Count() - 1
+            ' Remove last
+            ArrayCopy(oldBase, 0, newBase, 0, index)
+        Else
+            ' Remove from middle
+            ArrayCopy(oldBase, 0, newBase, 0, index + 1)
+            ArrayCopy(oldBase, index + 1, newBase, index, (oldBase.length - index - 1))
+        End If
+
         Self.base = newBase
+
+        Return removedElement
     End Method
 
     Method ObjectEnumerator:CTMutableArrayEnumerator()
