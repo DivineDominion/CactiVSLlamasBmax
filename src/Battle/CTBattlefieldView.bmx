@@ -3,11 +3,13 @@ SuperStrict
 Import "../View/CTView.bmx"
 Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
+Import "CTTokenHighlighter.bmx"
 
 Type CTBattlefieldView Extends CTView
     Private
     Field backgroundColor:CTColor = CTColor.Black()
     Field battlefield:CTBattlefield
+    Field tokenHighlighter:CTTokenHighlighter = New CTTokenHighlighter
 
 
     Public
@@ -20,6 +22,7 @@ Type CTBattlefieldView Extends CTView
     Method Draw(dirtyRect:CTRect)
         DrawBackdrop(dirtyRect)
         DrawTokens()
+        DrawTokenHighlighter()
     End Method
 
     Private
@@ -30,6 +33,11 @@ Type CTBattlefieldView Extends CTView
 
     Method DrawTokens()
         Self.battlefield.DrawTokens()
+    End Method
+
+    Method DrawTokenHighlighter()
+        Local highlighterRect:CTRect = Self.battleField.RectForColumnRow(0, 0)
+        Self.tokenHighlighter.DrawOnBattlefield(highlighterRect)
     End Method
     '#End Region
 End Type

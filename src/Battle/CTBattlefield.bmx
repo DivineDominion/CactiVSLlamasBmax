@@ -20,8 +20,12 @@ Type CTBattlefield
     End Method
 
     Method RectForPosition:CTRect(position:CTTokenPosition)
-        Local x:Int = position.column * 50
-        Local y:Int = position.row * 50
+        Return RectForColumnRow(position.column, position.row)
+    End Method
+
+    Method RectForColumnRow:CTRect(column:Int, row:Int)
+        Local x:Int = column * 50
+        Local y:Int = row * 50
         Return CTRect.Create(x, y, 50, 50)
     End Method
 
