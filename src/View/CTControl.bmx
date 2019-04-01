@@ -8,7 +8,11 @@ Type CTControl Extends CTView Implements CTResponder
 
     '#Region CTResponder
     Method MakeFirstResponder()
-        firstResponder = Self
+        PushResponder(Self)
+    End Method
+
+    Method ResignFirstResponder()
+        If FirstResponder() = Self Then PopFirstResponder()
     End Method
 
     Rem

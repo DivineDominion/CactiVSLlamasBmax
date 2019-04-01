@@ -37,6 +37,7 @@ Type CTShowActionMenu Implements CTMenuDelegate
         mainLog.Append("PICK: " + menuItem.label)
 
         menu.RemoveDelegate() ' Breaks the retain cycle
+        menu.ResignFirstResponder()
         windowManager.RemoveWindow(currentWindow)
         Self.currentWindow = Null
     End Method
