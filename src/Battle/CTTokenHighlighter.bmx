@@ -31,13 +31,17 @@ Type CTTokenHighlighter Implements CTAnimatable
     End Method
 
     Private
-    Field interval:Float = 0.25 * MSEC_PER_SEC
+    Field interval:Float = 0.1 * MSEC_PER_SEC
     Field timeSinceLastUpdate:Float = 0
     Field currentFrame:Int = 0
     Field colors:CTColor[] = [CTColor.White(), ..
                               CTColor.LightGray(), ..
                               CTColor.Gray(), ..
-                              CTColor.DarkGray()]
+                              CTColor.DarkGray(), ..
+                              CTColor.DarkGray(), ..
+                              CTColor.Gray(), ..
+                              CTColor.LightGray(), ..
+                              CTColor.White()]
 
     Method GetCurrentStrokeColor:CTColor()
         Return Self.colors[Self.currentFrame]
