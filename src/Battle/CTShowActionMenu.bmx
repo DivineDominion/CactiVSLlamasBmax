@@ -32,9 +32,7 @@ Type CTShowActionMenu Implements CTMenuDelegate
 
     '#Region CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
-        If Self.menu <> menu
-            Return
-        End If
+        If Self.menu <> menu Then Return
 
         mainLog.Append("PICK: " + menuItem.label)
 

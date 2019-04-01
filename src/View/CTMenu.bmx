@@ -115,9 +115,7 @@ Type CTMenu Extends CTControl
     End Method
 
     Method DrawCursor(x%, y%)
-        If Not cursorImage
-            Return
-        End If
+        If Not cursorImage Then Return
         DrawImage cursorImage, x, y
     End Method
 
