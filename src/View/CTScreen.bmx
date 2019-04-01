@@ -13,6 +13,7 @@ Type CTScreen
         result.height = height
         Graphics width * 2, height * 2, 0
         SetVirtualResolution width, height
+        AutoImageFlags MASKEDIMAGE ' Disable smoothing
         Return result
     End Function
 
