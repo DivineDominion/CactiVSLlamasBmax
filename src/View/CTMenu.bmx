@@ -29,7 +29,7 @@ Type CTMenu Extends CTControl
     Field delegate:CTMenuDelegate = Null
 
     Method New()
-        Self.bgColor = CTColor.Black()
+        Self.backgroundColor = CTColor.Black()
         Self.isOpaque = True
     End Method
 

@@ -17,7 +17,6 @@ CTView.defaultBgColor = CTColor.Black()
 cursorImage = LoadImage("img/cursor.png")
 
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
-logWindow.contentView.bgColor = CTColor.DarkGray()
 windowManager.AddWindow(logWindow)
 
 Local windowOffset:Int = 10

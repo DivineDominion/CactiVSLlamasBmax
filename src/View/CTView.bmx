@@ -15,18 +15,18 @@ Type CTView Implements CTDrawable
     Public
     Field isOpaque:Int = True
     Global defaultBgColor:CTColor = CTColor.Blue()
-    Field bgColor:CTColor
+    Field backgroundColor:CTColor
 
     Method New()
-        Self.bgColor = defaultBgColor
+        Self.backgroundColor = defaultBgColor
     End Method
 
     '#Region CTDrawable
     Method Draw(dirtyRect:CTRect)
         If Not Self.isOpaque Then Return
-        If Not Self.bgColor Then Return
+        If Not Self.backgroundColor Then Return
 
-        bgColor.Set()
+        backgroundColor.Set()
         dirtyRect.Fill()
     End Method
     '#End Region
