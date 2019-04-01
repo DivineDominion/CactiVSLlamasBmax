@@ -29,22 +29,30 @@ Type CTBattlefieldView Extends CTControl
     Public
     Method MoveUp()
         Self.selectedTokenPosition = selectedTokenPosition.MovedUp(BATTLEFIELD_ROWS)
+        ResetTokenHighlighterAnimation()
     End Method
 
     Method MoveDown()
         Self.selectedTokenPosition = selectedTokenPosition.MovedDown(BATTLEFIELD_ROWS)
+        ResetTokenHighlighterAnimation()
     End Method
 
     Method MoveLeft()
         Self.selectedTokenPosition = selectedTokenPosition.MovedLeft(BATTLEFIELD_COLUMNS)
+        ResetTokenHighlighterAnimation()
     End Method
 
     Method MoveRight()
         Self.selectedTokenPosition = selectedTokenPosition.MovedRight(BATTLEFIELD_COLUMNS)
+        ResetTokenHighlighterAnimation()
     End Method
 
     Private
     Field selectedTokenPosition:CTTokenPosition = New CTTokenPosition(0, 0)
+
+    Method ResetTokenHighlighterAnimation()
+        Self.tokenHighlighter.ResetAnimation()
+    End Method
     '#End Region
 
     '#Region CTDrawable

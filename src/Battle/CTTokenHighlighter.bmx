@@ -13,6 +13,11 @@ Type CTTokenHighlighter Implements CTAnimatable
 
     '#Region CTAnimatable
     Public
+    Method ResetAnimation()
+        Self.timeSinceLastUpdate = 0
+        Self.currentFrame = 0
+    End Method
+
     Method UpdateAnimation(delta:Float)
         Self.timeSinceLastUpdate :+ delta
 
@@ -26,7 +31,7 @@ Type CTTokenHighlighter Implements CTAnimatable
     End Method
 
     Private
-    Field interval:Float = 0.3 * MSEC_PER_SEC
+    Field interval:Float = 0.25 * MSEC_PER_SEC
     Field timeSinceLastUpdate:Float = 0
     Field currentFrame:Int = 0
     Field colors:CTColor[] = [CTColor.White(), ..
