@@ -26,6 +26,10 @@ Type CTRect
         Return CTRect.Create(Self.x + dx, Self.y + dy, Self.w, Self.h)
     End Method
 
+    Method SettingSize:CTRect(newWidth%, newHeight%)
+        Return CTRect.Create(Self.x, Self.y, newWidth, newHeight)
+    End Method
+
     Method Fill()
         DrawRect x, y, w, h
     End Method
