@@ -30,13 +30,17 @@ Local showMenu:CTShowActionMenu = CTShowActionMenu.Instance(actionWindowFrameRec
 
 showBattlefield.ShowBattlefield()
 
-Local delta:Float = MSEC_PER_SEC / FRAME_RATE
-Local lastTime:Int = MilliSecs()
+Function GameLoop()
+    Local delta:Float = MSEC_PER_SEC / FRAME_RATE
+    Local lastTime:Int = MilliSecs()
 
-Repeat
-    Update(delta)
-    mainScreen.Update(Draw)
+    Repeat
+        Update(delta)
+        mainScreen.Update(Draw)
 
-    delta = MilliSecs() - lastTime
-    lastTime = MilliSecs()
-Until KeyDown(Key_Escape) Or AppTerminate()
+        delta = MilliSecs() - lastTime
+        lastTime = MilliSecs()
+    Until KeyDown(Key_Escape) Or AppTerminate()
+End Function
+
+GameLoop()
