@@ -25,7 +25,7 @@ Local windowWidth:Int = mainScreen.GetWidth() - (2 * windowOffset)
 Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, logWindow.GetMaxY() + 2, windowWidth, 200)
 Local showBattlefield:CTShowBattlefield = CTShowBattlefield.Instance(battlefieldWindowFrameRect)
 
-Local actionWindowFrameRect:CTRect = CTRect.Create(windowOffset, battlefieldWindowFrameRect.GetMaxY() + 2, windowWidth, 100)
+Local actionWindowFrameRect:CTRect = CTWindow.FameRectFittingLines(windowOffset, battlefieldWindowFrameRect.GetMaxY() + 2, windowWidth, 3)
 Local showMenu:CTShowActionMenu = CTShowActionMenu.Instance(actionWindowFrameRect)
 
 showBattlefield.ShowBattlefield()

@@ -7,11 +7,17 @@ Import "CTViewport.bmx"
 
 Type CTWindow Implements CTAnimatable
     Private
+    Const BORDER_WIDTH:Int = 1
     Field rect:CTRect
     Field contentViewport:CTViewport
 
     Public
     Field contentView:CTView
+
+    Function FameRectFittingLines:CTRect(x%, y%, w%, textLines%)
+        Local contentHeight% = textLines * TextHeight("x")
+        Return New CTRect(x, y, w, contentHeight + BORDER_WIDTH)
+    End Function
 
     Rem
     bbdoc: Width and height (`w`, `h`) include the borders, so the content rect
