@@ -5,10 +5,33 @@ Import "../View/CTColor.bmx"
 Import "../View/CTRect.bmx"
 
 Type CTTokenHighlighter Implements CTAnimatable
+    Private
+    Field strokeWidth:Int = 2
+
     Public
     Method DrawOnBattlefield(tokenRect:CTRect)
+        Local x%, y%, w%, h%
+        tokenRect.GetViewport(x, y, w, h)
+        Local cornerWidth% = tokenRect.GetWidth() / 4
+        Local cornerHeight% = tokenRect.GetHeight() / 4
+
         Self.GetCurrentStrokeColor.Set()
-        tokenRect.Stroke()
+
+        ' Top left
+        DrawRect x, y, cornerWidth, strokeWidth
+        DrawRect x, y, strokeWidth, cornerHeight
+
+        ' Top right
+        DrawRect x+w, y, -cornerWidth, strokeWidth
+        DrawRect x+w, y, -strokeWidth, cornerHeight
+
+        ' Bottom left
+        DrawRect x, y+h, cornerWidth, -strokeWidth
+        DrawRect x, y+h, strokeWidth, -cornerHeight
+
+        ' Bottom right
+        DrawRect x+w, y+h, -cornerWidth, -strokeWidth
+        DrawRect x+w, y+h, -strokeWidth, -cornerHeight
     End Method
 
     '#Region CTAnimatable
