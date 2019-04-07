@@ -12,6 +12,10 @@ Type CTRect
         Self.h = h
     End Method
 
+    Method Copy:CTRect()
+        Return New CTRect(x, y, w, h)
+    End Method
+
     Function Create:CTRect(x%, y%, w%, h%)
         Return New CTRect(x, y, w, h)
     End Function

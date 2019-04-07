@@ -45,6 +45,10 @@ Type CTWindow Implements CTAnimatable
         Self.contentView = newContentView
     End Method
 
+    Method FrameRect:CTRect()
+        Return Self.rect.Copy()
+    End Method
+
     Method GetMaxY:Int()
         Return rect.GetMaxY()
     End Method
