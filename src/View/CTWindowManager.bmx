@@ -21,7 +21,10 @@ Type CTWindowManager
         Return Self.windows.ToArray()
     End Method
 
-    Method WindowWithContentView(contentView:CTView)
+    Rem
+    returns: Window from the window list where #contentView is the same object, or Null.
+    EndRem
+    Method WindowWithContentView:CTWindow(contentView:Object)
         For Local win:CTWindow = EachIn self.windows
             If win.contentView = contentView Then Return win
         Next

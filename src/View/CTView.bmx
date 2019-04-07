@@ -11,8 +11,6 @@ is supposed to start at (0,0) in a viewport, so you don't need to worry about of
 Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
 EndRem
 Type CTView Implements CTDrawable, CTAnimatable
-    Private
-
     Public
     Field isOpaque:Int = True
     Global defaultBgColor:CTColor = CTColor.Blue()

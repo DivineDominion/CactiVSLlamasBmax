@@ -5,7 +5,6 @@ Import "src/View/CTAnimatable.bmx"
 Import "src/View/CTScreen.bmx"
 Import "src/View/CTWindow.bmx"
 Import "src/Draw.bmx"
-Import "src/Battle/CTShowActionMenu.bmx"
 Import "src/Battle/CTShowBattlefield.bmx"
 
 Global mainScreen:CTScreen = CTScreen.Create(400, 400)
@@ -26,7 +25,6 @@ Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, logWindow.
 Local showBattlefield:CTShowBattlefield = CTShowBattlefield.Instance(battlefieldWindowFrameRect)
 
 Local actionWindowFrameRect:CTRect = CTWindow.FrameRectFittingLines(windowOffset, battlefieldWindowFrameRect.GetMaxY() + 2, windowWidth, 3)
-Local showMenu:CTShowActionMenu = CTShowActionMenu.Instance(actionWindowFrameRect)
 
 showBattlefield.ShowBattlefield()
 

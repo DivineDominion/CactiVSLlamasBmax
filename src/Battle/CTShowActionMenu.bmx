@@ -4,7 +4,10 @@ Import "../View/CTMenu.bmx"
 Import "../View/CTRect.bmx"
 Import "../View/CTWindow.bmx"
 Import "../View/CTWindowManager.bmx"
-Import "../Logging.bmx"
+
+Interface CTShowActionMenuDelegate
+    Method showActionMenuDidSelectMenuItem(showActionMenu:CTShowActionMenu, menuItem:CTMenuItem)
+End Interface
 
 Type CTShowActionMenu Implements CTMenuDelegate
     Private
@@ -12,32 +15,19 @@ Type CTShowActionMenu Implements CTMenuDelegate
     Field menu:CTMenu
     Field currentWindow:CTWindow = Null
 
-
-    '#Region Singleton
-    Public
-    Function Instance:CTShowActionMenu(initialFrameRect:CTRect = Null)
-        If Not _instance
-            Assert initialFrameRect Else "CTShowActionMenu singleton needs initialFrameRect once"
-            _instance = Create(initialFrameRect)
-        End If
-        Return _instance
-    End Function
-
-    Private
-    Global _instance:CTShowActionMenu = Null
-
     Method New(); End Method
 
-    Function Create:CTShowActionMenu(frameRect:CTRect)
-        Local service:CTShowActionMenu = New CTShowActionMenu
-        service.frameRect = frameRect
-        service.menu = CTMenu.Create(["Fight", "Move", "Run"])
-        Return service
-    End Function
-    '#End Region
-
 
     Public
+    Field delegate:CTShowActionMenuDelegate = Null
+
+    Function Create:CTShowActionMenu(frameRect:CTRect, lines:String[])
+        Local service:CTShowActionMenu = New CTShowActionMenu
+        service.frameRect = frameRect
+        service.menu = CTMenu.Create(lines)
+        Return service
+    End Function
+
     Method ShowMenu()
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 
@@ -51,13 +41,15 @@ Type CTShowActionMenu Implements CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
         If Self.menu <> menu Then Return
 
-        mainLog.Append("PICK: " + menuItem.label)
-
         menu.RemoveDelegate() ' Breaks the retain cycle
         menu.ResignFirstResponder()
         menu.ResetSelection()
         CTWindowManager.GetInstance().RemoveWindow(currentWindow)
         Self.currentWindow = Null
+
+        If Self.delegate
+            Self.delegate.showActionMenuDidSelectMenuItem(Self, menuItem)
+        End If
     End Method
     '#End Redion
 End Type

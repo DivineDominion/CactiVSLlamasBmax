@@ -4,16 +4,16 @@ Import "../View/CTControl.bmx"
 Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
 Import "CTTokenHighlighter.bmx"
-Import "CTShowActionMenu.bmx"
+Import "CTSelectToken.bmx"
 
 CONST BATTLEFIELD_COLUMNS% = 3
 CONST BATTLEFIELD_ROWS% = 3
 
-Type CTBattlefieldView Extends CTControl
+Type CTBattlefieldView Extends CTControl Implements CTSelectTokenDelegate
     Private
     Field battlefield:CTBattlefield
     Field tokenHighlighter:CTTokenHighlighter = New CTTokenHighlighter
-
+    Field currentTokenSelector:CTSelectToken = Null
 
     Public
     Method New()
@@ -29,7 +29,7 @@ Type CTBattlefieldView Extends CTControl
     '#Region CTKeyInterpreter
     Public
     Method ConfirmSelection()
-        CTShowActionMenu.Instance().ShowMenu()
+        Self.ShowTokenSelection()
     End Method
 
     Method MoveUp()
@@ -83,6 +83,21 @@ Type CTBattlefieldView Extends CTControl
     Public
     Method UpdateAnimation(delta:Float)
         Self.tokenHighlighter.UpdateAnimation(delta)
+    End Method
+    '#End Region
+
+    '#Region CTSelectTokenDelegate
+    Method ShowTokenSelection()
+        Local window:CTWindow = CTWindowManager.GetInstance().WindowWithContentView(Self)
+        Self.currentTokenSelector = CTSelectToken.CreateWithActionMenuRelativeToRect(window.FrameRect())
+        Self.currentTokenSelector.ShowMenu()
+    End Method
+
+    Method SelectTokenDidSelectAction(selectToken:CTSelectToken, action:String)
+        If Self.currentTokenSelector <> selectToken Then Return
+        ' Free up connection to subcomponent to break reference cycle
+        Self.currentTokenSelector.delegate = Null
+        Self.currentTokenSelector = Null
     End Method
     '#End Region
 End Type
