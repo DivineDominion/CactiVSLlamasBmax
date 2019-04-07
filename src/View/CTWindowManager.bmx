@@ -3,8 +3,6 @@ SuperStrict
 Import "../Util/CTMutableArray.bmx"
 Import "CTWindow.bmx"
 
-Global windowManager:CTWindowManager = New CTWindowManager
-
 Rem
 Yeah, I know, a "Manager" class ... I tried to keep the `windows` collection
 a private global/static class variable in `CTWindow`, but that didn't work
@@ -15,8 +13,19 @@ Type CTWindowManager
     Field windows:CTMutableArray = New CTMutableArray
 
     Public
+    Function GetInstance:CTWindowManager()
+        Return windowManager
+    End Function
+
     Method AllWindows:CTWindow[]()
         Return Self.windows.ToArray()
+    End Method
+
+    Method WindowWithContentView(contentView:CTView)
+        For Local win:CTWindow = EachIn self.windows
+            If win.contentView = contentView Then Return win
+        Next
+        Return Null
     End Method
 
     Method AddWindow(win:CTWindow)
@@ -39,3 +48,6 @@ Type CTWindowManager
         Next
     End Method
 End Type
+
+Private
+Global windowManager:CTWindowManager = New CTWindowManager

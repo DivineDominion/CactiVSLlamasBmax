@@ -17,7 +17,7 @@ CTView.defaultBgColor = CTColor.Black()
 cursorImage = LoadImage("img/cursor.png")
 
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
-windowManager.AddWindow(logWindow)
+CTWindowManager.GetInstance().AddWindow(logWindow)
 
 Local windowOffset:Int = 10
 Local windowWidth:Int = mainScreen.GetWidth() - (2 * windowOffset)

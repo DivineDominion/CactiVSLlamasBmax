@@ -42,7 +42,7 @@ Type CTShowActionMenu Implements CTMenuDelegate
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.menu)
-        windowManager.AddWindow(currentWindow)
+        CTWindowManager.GetInstance().AddWindow(currentWindow)
         menu.delegate = Self ' Creates a retain cycle
         menu.MakeFirstResponder()
     End Method
@@ -56,7 +56,7 @@ Type CTShowActionMenu Implements CTMenuDelegate
         menu.RemoveDelegate() ' Breaks the retain cycle
         menu.ResignFirstResponder()
         menu.ResetSelection()
-        windowManager.RemoveWindow(currentWindow)
+        CTWindowManager.GetInstance().RemoveWindow(currentWindow)
         Self.currentWindow = Null
     End Method
     '#End Redion

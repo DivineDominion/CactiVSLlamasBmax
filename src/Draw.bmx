@@ -3,9 +3,9 @@ SuperStrict
 Import "View/CTWindowManager.bmx"
 
 Function Update(delta:Float)
-    windowManager.UpdateAllAnimations(delta)
+    CTWindowManager.GetInstance().UpdateAllAnimations(delta)
 End Function
 
 Function Draw:Int()
-    windowManager.DrawAllWindows()
+    CTWindowManager.GetInstance().DrawAllWindows()
 End Function

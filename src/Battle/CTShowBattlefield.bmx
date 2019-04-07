@@ -52,7 +52,7 @@ Type CTShowBattlefield
 
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldView)
         Self.battlefieldView.MakeFirstResponder()
-        windowManager.AddWindow(currentWindow)
+        CTWindowManager.GetInstance().AddWindow(currentWindow)
     End Method
 
 End Type
