@@ -14,7 +14,7 @@ Type CTWindow Implements CTAnimatable
     Public
     Field contentView:CTView
 
-    Function FameRectFittingLines:CTRect(x%, y%, w%, textLines%)
+    Function FrameRectFittingLines:CTRect(x%, y%, w%, textLines%)
         Local contentHeight% = textLines * TextHeight("x")
         Return New CTRect(x, y, w, contentHeight + BORDER_WIDTH)
     End Function
