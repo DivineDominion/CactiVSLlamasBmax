@@ -8,7 +8,7 @@ Import "CTResponder.bmx"
 
 Type CTWindow Implements CTAnimatable
     Private
-    Const BORDER_WIDTH:Int = 1
+    Const BORDER_WIDTH:Int = 2
     Field rect:CTRect
     Field contentViewport:CTViewport
 
@@ -31,7 +31,7 @@ Type CTWindow Implements CTAnimatable
     Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null)
         Local win:CTWindow = New CTWindow
         win.rect = frameRect
-        win.contentViewport = CTViewport.Create(frameRect.inset(1, 1))
+        win.contentViewport = CTViewport.Create(frameRect.inset(BORDER_WIDTH, BORDER_WIDTH))
 
         win.contentView = contentView
         If contentView = Null Then
