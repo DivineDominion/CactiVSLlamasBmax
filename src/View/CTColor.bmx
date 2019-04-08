@@ -4,14 +4,18 @@ Type CTColor
     Private
     Field r%, g%, b%
 
+    Method New(); End Method
 
     Public
+    Method New(r%, g%, b%)
+        New()
+        Self.r = r
+        Self.g = g
+        Self.b = b
+    End Method
+
     Function Create:CTColor(r%, g%, b%)
-        Local color:CTColor = New CTColor
-        color.r = r
-        color.g = g
-        color.b = b
-        Return color
+        Return New CTColor(r, g, b)
     End Function
 
     Method Set()
