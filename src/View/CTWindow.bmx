@@ -74,7 +74,7 @@ Type CTWindow Implements CTAnimatable
     Method Draw()
         ' Shadow
         SetColor 0, 0, 0
-        rect.Translate(1, 1).Fill()
+        rect.Translating(1, 1).Fill()
 
         ' Frame
         SetColor 255, 255, 255

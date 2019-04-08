@@ -26,7 +26,7 @@ Type CTRect
         Return CTRect.Create(Self.x + dx, Self.y + dy, w, h)
     End Method
 
-    Method Translate:CTRect(dx%, dy%)
+    Method Translating:CTRect(dx%, dy%)
         Return CTRect.Create(Self.x + dx, Self.y + dy, Self.w, Self.h)
     End Method
 
