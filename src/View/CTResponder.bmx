@@ -35,4 +35,4 @@ Function PopFirstResponder:CTResponder()
 End Function
 
 Private
-Global _responderStack:Tlist = New TList
+Global _responderStack:TList = New TList
