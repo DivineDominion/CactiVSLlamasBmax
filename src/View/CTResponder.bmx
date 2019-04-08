@@ -1,6 +1,5 @@
 SuperStrict
 
-
 Interface CTResponder
     Method KeyUp(key:Int)
     Method MakeFirstResponder()
@@ -25,6 +24,10 @@ Function FirstResponder:CTResponder()
     Return CTResponder(_responderStack.Last())
 End Function
 
+Function IsFirstResponder:Int(responder:CTResponder)
+    Return FirstResponder() = responder
+End Function
+
 Function PushResponder(responder:CTResponder)
     _responderStack.AddLast(responder)
 End Function
@@ -32,6 +35,21 @@ End Function
 Function PopFirstResponder:CTResponder()
     If _responderStack.Last() = Null Then Return Null
     Return CTResponder(_responderStack.RemoveLast())
+End Function
+
+Rem
+Replaces `responder` with `newResponder` in the stack if both parameters are
+present. Removes `responder` at the least, if possible.
+EndRem
+Function ReplaceResponderWithNewResponder(responder:CTResponder, newResponder:CTResponder)
+    If responder = Null Then Return
+    Local link:TLink = _responderStack.FindLink(responder)
+    If link
+        If newResponder <> Null
+            _responderStack.InsertAfterLink(newResponder, link)
+        End If
+        link.Remove()
+    End If
 End Function
 
 Private

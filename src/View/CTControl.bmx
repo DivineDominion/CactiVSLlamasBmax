@@ -13,7 +13,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     End Method
 
     Method ResignFirstResponder()
-        If FirstResponder() = Self Then PopFirstResponder()
+        If IsFirstResponder(Self) Then PopFirstResponder()
     End Method
 
     Rem
