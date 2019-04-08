@@ -8,7 +8,7 @@ Import "src/Game/Game.bmx"
 mainLog.Append("ESC to Quit")
 
 Local screenColor:CTColor = CTColor.Gray()
-screenColor.SetCls()
+screenColor.SetBackground()
 CTView.defaultBgColor = CTColor.Black()
 CTMenu.cursorImage = LoadImage("img/cursor.png")
 

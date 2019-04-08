@@ -18,7 +18,7 @@ Type CTColor
         SetColor r, g, b
     End Method
 
-    Method SetCls()
+    Method SetBackground()
         SetClsColor r, g, b
     End Method
 
