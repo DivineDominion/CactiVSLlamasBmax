@@ -5,7 +5,6 @@ Import "src/Battle/CTShowBattlefield.bmx"
 Import "src/GameLoop.bmx"
 Import "src/View/View.bmx"
 
-Global mainScreen:CTScreen = CTScreen.Create(400, 400)
 mainLog.Append("ESC to Quit")
 
 Local screenColor:CTColor = CTColor.Gray()

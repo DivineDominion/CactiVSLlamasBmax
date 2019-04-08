@@ -6,6 +6,7 @@ Type CTScreen
     Field height:Int
 
     Public
+    Global main:CTScreen = CTScreen.Create(400, 400)
 
     Function Create:CTScreen(width:Int, height:Int)
         Local result:CTScreen = New CTScreen

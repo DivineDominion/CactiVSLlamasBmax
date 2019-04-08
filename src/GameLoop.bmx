@@ -17,7 +17,7 @@ Function GameLoop()
 
     Repeat
         Update(delta)
-        mainScreen.Update(Draw)
+        CTScreen.main.Update(Draw)
 
         delta = MilliSecs() - lastTime
         lastTime = MilliSecs()
