@@ -34,11 +34,3 @@ Type CTView Implements CTDrawable, CTAnimatable
     Method UpdateAnimation(delta:Float); End Method
     '#End Region
 End Type
-
-Function fallback:CTColor(lhs:CTColor, rhs:CTColor)
-    If rhs = Null RuntimeError "default()'s rhs may not be Null"
-    If lhs = Null Then
-        Return rhs
-    EndIf
-    Return lhs
-End Function
