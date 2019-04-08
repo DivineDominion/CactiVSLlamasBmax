@@ -37,6 +37,10 @@ Function PopFirstResponder:CTResponder()
     Return CTResponder(_responderStack.RemoveLast())
 End Function
 
+Function RemoveResponder(responder:CTResponder)
+    _responderStack.Remove(responder)
+End Function
+
 Rem
 Replaces `responder` with `newResponder` in the stack if both parameters are
 present. Removes `responder` at the least, if possible.

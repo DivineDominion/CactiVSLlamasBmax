@@ -47,6 +47,22 @@ Type CTWindow Implements CTAnimatable
         Self.contentView = newContentView
     End Method
 
+    Method MakeKey()
+        Local responder:CTResponder = CTResponder(Self.contentView)
+        If responder Then responder.MakeFirstResponder()
+    End Method
+
+    Method IsKey:Int()
+        Local responder:CTResponder = CTResponder(Self.contentView)
+        If responder = Null Then Return False
+        Return IsFirstResponder(responder)
+    End Method
+
+    Method Close()
+        Local responder:CTResponder = CTResponder(Self.contentView)
+        If responder Then RemoveResponder(responder)
+    End Method
+
     Method FrameRect:CTRect()
         Return Self.rect.Copy()
     End Method
