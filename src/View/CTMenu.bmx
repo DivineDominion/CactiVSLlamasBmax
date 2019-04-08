@@ -68,12 +68,20 @@ Type CTMenu Extends CTControl
         If selectedIndex < 0
             selectedIndex = max(0, menuItems.Count() - 1)
         End If
+        ' Skip Separators
+        If GetSelectedMenuItem().IsSkippable()
+            MoveUp()
+        End If
     End Method
 
     Method MoveDown()
         selectedIndex :+ 1
         If selectedIndex >= menuItems.Count()
             selectedIndex = 0
+        End If
+        ' Skip Separators
+        If GetSelectedMenuItem().IsSkippable()
+            MoveDown()
         End If
     End Method
 
