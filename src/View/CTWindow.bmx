@@ -5,6 +5,7 @@ Import "CTView.bmx"
 Import "CTRect.bmx"
 Import "CTViewport.bmx"
 Import "CTResponder.bmx"
+Import "CTLabel.bmx"
 
 Type CTWindow Implements CTAnimatable
     Private
@@ -14,8 +15,10 @@ Type CTWindow Implements CTAnimatable
     Field contentViewport:CTViewport
     Field contentView:CTView
 
-    Public
+    Field titleViewport:CTViewport
+    Field titleLabel:CTLabel
 
+    Public
     Function FrameRectFittingLines:CTRect(x%, y%, w%, textLines%)
         Local contentHeight% = textLines * TextHeight("x")
         Return New CTRect(x, y, w, contentHeight + BORDER_WIDTH)
@@ -25,14 +28,23 @@ Type CTWindow Implements CTAnimatable
     bbdoc: Width and height (`w`, `h`) include the borders, so the content rect
     is 2px smaller in each dimension.
     EndRem
-    Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null)
-        Return Self.Create(New CTRect(x, y, w, h), contentView)
+    Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null, title:String = Null)
+        Return Self.Create(New CTRect(x, y, w, h), contentView, title)
     End Function
 
-    Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null)
+    Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null, title:String = Null)
         Local win:CTWindow = New CTWindow
         win.rect = frameRect
-        win.contentViewport = CTViewport.Create(frameRect.inset(BORDER_WIDTH, BORDER_WIDTH))
+
+        Local contentFrameRect:CTRect = frameRect.inset(BORDER_WIDTH, BORDER_WIDTH)
+        If title
+            Local titleHeight:Int = TextHeight(title)
+            Local titleRect:CTRect = contentFrameRect.SettingHeight(titleHeight)
+            win.titleViewport = CTViewport.Create(titleRect)
+            win.titleLabel = CTLabel.Create(title, True)
+            contentFrameRect = contentFrameRect.Translating(0, titleHeight).Resizing(0, -titleHeight)
+        End If
+        win.contentViewport = CTViewport.Create(contentFrameRect)
 
         win.contentView = contentView
         If contentView = Null Then
@@ -84,6 +96,11 @@ Type CTWindow Implements CTAnimatable
         ' Frame
         SetColor 255, 255, 255
         rect.Fill()
+
+        ' Title
+        If titleViewport And titleLabel
+            titleViewport.Draw(titleLabel)
+        End If
 
         ' Content
         contentViewport.Draw(contentView)
