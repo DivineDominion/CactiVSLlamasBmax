@@ -26,7 +26,7 @@ Type CTWindowManager
     EndRem
     Method WindowWithContentView:CTWindow(contentView:Object)
         For Local win:CTWindow = EachIn self.windows
-            If win.contentView = contentView Then Return win
+            If win.GetContentView() = contentView Then Return win
         Next
         Return Null
     End Method

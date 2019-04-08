@@ -10,10 +10,11 @@ Type CTWindow Implements CTAnimatable
     Private
     Const BORDER_WIDTH:Int = 2
     Field rect:CTRect
+
     Field contentViewport:CTViewport
+    Field contentView:CTView
 
     Public
-    Field contentView:CTView
 
     Function FrameRectFittingLines:CTRect(x%, y%, w%, textLines%)
         Local contentHeight% = textLines * TextHeight("x")
@@ -40,6 +41,10 @@ Type CTWindow Implements CTAnimatable
 
         Return win
     End Function
+
+    Method GetContentView:CTView()
+        Return Self.contentView
+    End Method
 
     Method ReplaceContentView(newContentView:CTView)
         Assert newContentView Else "CTWindow.ReplaceContentView requires newContentView"
