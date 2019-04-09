@@ -33,6 +33,9 @@ Type CTViewport
         ' Set viewport to contentRect
         Local x%, y%, w%, h%
         contentRect.GetViewport(x, y, w, h)
+        ' Treat coordiantes as relative
+        x :+ oldX
+        y :+ oldY
         SetViewport x, y, w, h
         SetOrigin x, y      ' Don't know why it is 1px off without this offset
 
@@ -43,5 +46,4 @@ Type CTViewport
         SetOrigin oldOrX, oldOrY
         SetViewport oldX, oldY, oldW, oldH
     End Method
-
 End Type
