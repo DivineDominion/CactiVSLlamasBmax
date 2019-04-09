@@ -13,7 +13,6 @@ Type CTShowBattlefield
     Private
     Field frameRect:CTRect
     Field battlefieldView:CTBattlefieldView
-    Field currentWindow:CTWindow = Null
 
     Method New(); End Method
 
@@ -33,6 +32,11 @@ Type CTShowBattlefield
         Return service
     End Function
 
+    '#Region Window lifecycle management
+    Private
+    Field currentWindow:CTWindow = Null
+
+    Public
     Method ShowBattlefield()
         Assert Not Self.currentWindow Else "#ShowBattlefield called before closing the window"
 
@@ -47,4 +51,5 @@ Type CTShowBattlefield
         Self.currentWindow.Close()
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
     End Method
+    '#End Region
 End Type

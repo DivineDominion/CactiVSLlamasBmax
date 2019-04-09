@@ -30,6 +30,10 @@ Type CTMutableArray
         Return base.length
     End Method
 
+    Method IsEmpty:Int()
+        Return Count() = 0
+    End Method
+
     Method GetElementAt:Object(index:Int)
         Return base[index]
     End Method

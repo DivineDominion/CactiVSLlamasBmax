@@ -42,6 +42,10 @@ Type CTRect
         Return CTRect.Create(Self.x, Self.y, Self.w, newHeight)
     End Method
 
+    Method SettingWidth:CTRect(newWidth%)
+        Return CTRect.Create(Self.x, Self.y, newWidth, Self.h)
+    End Method
+
     Method Fill()
         DrawRect x, y, w, h
     End Method

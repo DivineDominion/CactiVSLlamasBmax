@@ -36,11 +36,15 @@ Type CTMenu Extends CTControl
         Local menu:CTMenu = New CTMenu()
 
         For Local label:String = EachIn labels
-            menu.AddMenuItem(label)
+            menu.AddMenuItemWithLabel(label)
         Next
 
         Return menu
     End Function
+
+    Method IsEmpty:Int()
+        Return Self.menuItems.IsEmpty()
+    End Method
 
     Method ResetSelection()
         Self.selectedIndex = 0
@@ -50,19 +54,26 @@ Type CTMenu Extends CTControl
         Self.delegate = Null
     End Method
 
-    Method AddMenuItem:CTMenuItem(label:String)
-        Local item:CTMenuItem = CTMenuItem.Create(label)
-        menuItems.Append(item)
-        Return item
+    Method AddMenuItemWithLabel:CTMenuItem(label:String)
+        Local menuItem:CTMenuItem = CTMenuItem.Create(label)
+        AddMenuItem(menuItem)
+        Return menuItem
+    End Method
+
+    Method AddMenuItem(menuItem:CTMenuITem)
+        menuItems.Append(menuItem)
     End Method
 
     Method GetSelectedMenuItem:CTMenuItem()
+        Assert Not IsEmpty() Else "Cannot GetSelectedMenuItem in empty menu"
         Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
     End Method
 
 
     '#Region CTKeyInterpreter
     Method MoveUp()
+        If IsEmpty() Then Return
+
         selectedIndex :- 1
         If selectedIndex < 0
             selectedIndex = max(0, menuItems.Count() - 1)
@@ -74,6 +85,8 @@ Type CTMenu Extends CTControl
     End Method
 
     Method MoveDown()
+        If IsEmpty() Then Return
+
         selectedIndex :+ 1
         If selectedIndex >= menuItems.Count()
             selectedIndex = 0
@@ -85,9 +98,9 @@ Type CTMenu Extends CTControl
     End Method
 
     Method ConfirmSelection()
-        If Self.delegate
-            Self.delegate.menuDidSelectMenuItem(Self, GetSelectedMenuItem())
-        End If
+        If IsEmpty() Then Return
+        If Not Self.delegate Then Return
+        Self.delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
     End Method
     '#End Region
 
@@ -104,6 +117,11 @@ Type CTMenu Extends CTControl
         Local cursorWidth% = Self.GetCursorWidth()
 
         Local x%, y% = 0
+        If IsEmpty()
+            DrawContrastText "(Empty)", x + cursorWidth, y, Self.textColor
+            Return
+        End If
+
         Local i% = 0
         For Local menuItem:CTMenuItem = EachIn menuItems
             ' Draw label text with varying font color depending on selection
@@ -129,7 +147,17 @@ Type CTMenu Extends CTControl
 
     Method DrawCursor(x%, y%)
         If Not CTMenu.cursorImage Then Return
+
+        Local oldAlpha# = GetAlpha()
+        If IsFirstResponder(Self)
+            SetAlpha 1.0
+        Else
+            SetAlpha 0.5
+        End If
+
         DrawImage CTMenu.cursorImage, x, y
+
+        SetAlpha oldAlpha
     End Method
 
     Method GetCursorWidth%()

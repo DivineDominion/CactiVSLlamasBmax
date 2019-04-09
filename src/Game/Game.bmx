@@ -6,4 +6,6 @@ EndRem
 
 Import "CTGame.bmx"
 Import "CTGameScene.bmx"
+
+Import "CTPickPartyGameScene.bmx"
 Import "CTBattleGameScene.bmx"

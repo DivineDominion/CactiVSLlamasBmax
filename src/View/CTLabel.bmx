@@ -21,6 +21,11 @@ Type CTLabel Extends CTView
         Return label
     End Function
 
+    Method GetTextHeight:Int()
+        If Not HasText() Then Return 0
+        Return TextHeight(Self.text)
+    End Method
+
     Method HasText:Int()
         Return Self.text And Self.text.length > 0
     End Method

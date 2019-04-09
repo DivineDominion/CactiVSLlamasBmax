@@ -15,7 +15,7 @@ CTMenu.cursorImage = LoadImage("img/cursor.png")
 Local logWindow:CTWindow = CreateLogWindow(mainLog)
 CTWindowManager.GetInstance().AddWindow(logWindow)
 
-Local battleGameScene:CTBattleGameScene = New CTBattleGameScene
-Global game:CTGame = New CTGame(battleGameScene)
+Local initialScene:CTPickPartyGameScene = New CTPickPartyGameScene
+Global game:CTGame = New CTGame(initialScene)
 
 GameLoop()
