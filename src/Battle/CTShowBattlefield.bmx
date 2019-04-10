@@ -8,6 +8,7 @@ Import "CTBattlefieldView.bmx"
 
 ' Use temporary tokens:
 Import "CTCactusToken.bmx"
+Import "../Army/CTCactus.bmx"
 
 Type CTShowBattlefield
     Private
@@ -17,16 +18,18 @@ Type CTShowBattlefield
     Method New(); End Method
 
     Public
-    Function Create:CTShowBattlefield(frameRect:CTRect)
+    Function Create:CTShowBattlefield(frameRect:CTRect, cacti:CTCactus[])
         Assert frameRect Else "CTShowBattlefield requires frameRect"
 
         Local service:CTShowBattlefield = New CTShowBattlefield
         service.frameRect = frameRect
 
         Local battlefield:CTBattlefield = New CTBattlefield
-        battlefield.PutTokenAtColumnRow(New CTCactusToken, 0, 0)
-        battlefield.PutTokenAtColumnRow(New CTCactusToken, 1, 0)
-        battlefield.PutTokenAtColumnRow(New CTCactusToken, 1, 1)
+        Local cactusTokens:CTCactusToken[] = MapCactusToCactusToken(cacti)
+        Assert cactusTokens.length = 3 Else "Requires 3 cacti during demo"
+        battlefield.PutTokenAtColumnRow(cactusTokens[0], 0, 0)
+        battlefield.PutTokenAtColumnRow(cactusTokens[1], 1, 0)
+        battlefield.PutTokenAtColumnRow(cactusTokens[2], 1, 1)
         service.battlefieldView = New CTBattlefieldView(battlefield)
 
         Return service
@@ -53,3 +56,12 @@ Type CTShowBattlefield
     End Method
     '#End Region
 End Type
+
+Private
+Function MapCactusToCactusToken:CTCactusToken[](cacti:CTCactus[])
+    Local result:CTCactusToken[cacti.length]
+    For Local i:Int = 0 Until cacti.length
+        result[i] = New CTCactusToken(cacti[i])
+    Next
+    Return result
+End Function

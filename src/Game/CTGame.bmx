@@ -22,6 +22,15 @@ Type CTGame Implements CTGameSceneTransitionDelegate
     End Method
 
 
+    '#Region CTGameSceneTransitionDelegate
+    Public
+    Method GameScenePresentsNewGameScene(gameScene:CTGameScene, newGameScene:CTGameScene)
+        DebugLog "Trans"
+        Self.ActivateGameScene(newGameScene)
+    End Method
+    '#End Region
+
+
     '#Region Game State Stack
     Private
     Global gameSceneStack:TList = New TList
@@ -43,6 +52,7 @@ Type CTGame Implements CTGameSceneTransitionDelegate
     End Function
 
     Function PopGameScene:CTGameScene()
+        ' TODO deactivate?
         If gameSceneStack.Last() = Null Then Return Null
         Return CTGameScene(gameSceneStack.RemoveLast())
     End Function

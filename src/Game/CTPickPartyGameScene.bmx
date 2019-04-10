@@ -3,8 +3,8 @@ SuperStrict
 Import "CTGameScene.bmx"
 Import "../Army/CTPickParty.bmx"
 Import "../View/CTScreen.bmx"
+Import "CTBattleGameScene.bmx"
 
-Type CTPickPartyGameScene Implements CTGameScene
 Type CTPickPartyGameScene Implements CTGameScene, CTPickPartyDelegate
     '#Region CTGameScene
     Private
@@ -43,6 +43,10 @@ Type CTPickPartyGameScene Implements CTGameScene, CTPickPartyDelegate
     '#Region CTPickPartyDelegate
     Public
     Method DidPickParty(pickParty:CTPickParty, party:TList)
+        If Not Self.transitionDelegate Then Return
+        Local battleGameScene:CTBattleGameScene = New CTBattleGameScene(party)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+         transitionDelegate.GameScenePresentsNewGameScene(Self, battleGameScene)
     End Method
     '#End Region
 End Type
