@@ -1,7 +1,6 @@
 SuperStrict
 
 Import "CTControl.bmx"
-Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
 Import "DrawContrastText.bmx"
 
@@ -11,8 +10,8 @@ End Interface
 
 Type CTMenu Extends CTControl
     Private
-    Field selectedIndex:Int = 0
-    Field menuItems:CTMutableArray = New CTMutableArray
+    Field selectedLink:TLink = Null
+    Field menuItems:TList = New TList
 
 
     Public
@@ -42,41 +41,57 @@ Type CTMenu Extends CTControl
         Return menu
     End Function
 
-    Method IsEmpty:Int()
-        Return Self.menuItems.IsEmpty()
-    End Method
-
-    Method ResetSelection()
-        Self.selectedIndex = 0
-    End Method
-
     Method RemoveDelegate()
         Self.delegate = Null
     End Method
 
+
+    '#Region Menu Contents
+    Public
     Method AddMenuItemWithLabel:CTMenuItem(label:String)
         Local menuItem:CTMenuItem = CTMenuItem.Create(label)
         AddMenuItem(menuItem)
         Return menuItem
     End Method
 
-    Method AddMenuItem(menuItem:CTMenuITem)
-        menuItems.Append(menuItem)
+    Method AddMenuItem(menuItem:CTMenuItem)
+        ListAddLast(Self.menuItems, menuItem)
+        SetInitialSelectionIfNecessary()
     End Method
 
-    Method GetSelectedMenuItem:CTMenuItem()
-        Assert Not IsEmpty() Else "Cannot GetSelectedMenuItem in empty menu"
-        Return CTMenuItem(menuItems.GetElementAt(selectedIndex))
+    Method IsEmpty:Int()
+        Return Self.menuItems.IsEmpty()
     End Method
+
+
+    Private
+    Method SetInitialSelectionIfNecessary()
+        ' Fixup when adding items to empty lists: select the first item
+        If Not selectedLink Then ResetSelection()
+    End Method
+    '#End Region
+
+
+    '#Region Selection
+    Public
+    Method GetSelectedMenuItem:CTMenuItem()
+        Assert selectedLink Else "Cannot GetSelectedMenuItem without selection"
+        Return CTMenuItem(selectedLink.Value())
+    End Method
+
+    Method ResetSelection()
+        Self.selectedLink = Self.menuItems.FirstLink()
+    End Method
+    '#End Region
 
 
     '#Region CTKeyInterpreter
     Method MoveUp()
         If IsEmpty() Then Return
 
-        selectedIndex :- 1
-        If selectedIndex < 0
-            selectedIndex = max(0, menuItems.Count() - 1)
+        selectedLink = selectedLink.PrevLink()
+        If Not selectedLink
+            selectedLink = menuItems.LastLink()
         End If
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
@@ -87,9 +102,9 @@ Type CTMenu Extends CTControl
     Method MoveDown()
         If IsEmpty() Then Return
 
-        selectedIndex :+ 1
-        If selectedIndex >= menuItems.Count()
-            selectedIndex = 0
+        selectedLink = selectedLink.NextLink()
+        If Not selectedLink
+            selectedLink = menuItems.FirstLink()
         End If
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
@@ -98,52 +113,59 @@ Type CTMenu Extends CTControl
     End Method
 
     Method ConfirmSelection()
-        If IsEmpty() Then Return
+        If Not selectedLink Then Return
         If Not Self.delegate Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
     End Method
     '#End Region
 
+
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
-        DrawLabels(dirtyRect)
+
+        If IsEmpty()
+            DrawEmptinessIndicator(dirtyRect)
+        Else
+            DrawMenuItemLabels(dirtyRect)
+        EndIF
     End Method
 
+
     Private
-    Method DrawLabels(dirtyRect:CTRect)
+    Method DrawEmptinessIndicator(dirtyRect:CTRect)
+        Local textColor:CTColor = Self.textColor
+        If IsFirstResponder(Self) Then textColor = Self.selectedTextColor
+        DrawContrastText "(Empty)", 0, 0, textColor
+    End Method
+
+    Method DrawMenuItemLabels(dirtyRect:CTRect)
         Local lineHeight% = TextHeight("x")
         Local cursorWidth% = Self.GetCursorWidth()
 
         Local x%, y% = 0
-        If IsEmpty()
-            DrawContrastText "(Empty)", x + cursorWidth, y, Self.textColor
-            Return
-        End If
-
         Local i% = 0
-        For Local menuItem:CTMenuItem = EachIn menuItems
+        Local link:TLink = menuItems.FirstLink()
+        While link
+            Local menuItem:CTMenuItem = CTMenuItem(link.Value())
+            Local isSelected:Int = False
+            If Self.selectedLink And Self.selectedLink = link And IsFirstResponder(Self) Then isSelected = True
+
             ' Draw label text with varying font color depending on selection
-            Local textColor:CTColor
-            If Self.selectedIndex = i
-                textColor = Self.selectedTextColor
-            Else
-                textColor = Self.textColor
-            End If
+            Local textColor:CTColor = Self.textColor
+            If isSelected Then textColor = Self.selectedTextColor
 
             DrawContrastText menuItem.label, x + cursorWidth, y, textColor
 
-            ' Draw cursor on top
-            If Self.selectedIndex = i
-                DrawCursor(x, y)
-            End If
-
+            ' Draw cursor on top (doesn't appear if drawn first)
+            If isSelected Then DrawCursor(x, y)
 
             y :+ lineHeight
             i :+ 1
-        Next
+            link = link.NextLink()
+        Wend
     End Method
 
     Method DrawCursor(x%, y%)
@@ -169,3 +191,30 @@ Type CTMenu Extends CTControl
     End Method
     '#End Region
 End Type
+
+Private
+Function ListInsertBeforeIndex(list:TList, item:Object, index:Int)
+    If list.IsEmpty()
+        If index <> 0 Then Throw New TIndexOutOfBoundsException
+        list.AddFirst(item)
+    ElseIf index = 0
+        list.AddFirst(item)
+    ElseIf index = list.Count()
+        list.AddLast(item)
+    Else
+        Local link:TLink = ListLinkAtIndex(list, index)
+        If Not link Then Throw New TNoSuchElementException
+        list.InsertBeforeLink(item, link)
+    EndIf
+End Function
+
+Function ListLinkAtIndex:TLink(list:TList, index:Int)
+    Assert index >= 0 Else "Object index must be positive"
+    Local link:TLink = list.FirstLink()
+    While link
+        If Not index Return link
+        link = link.NextLink()
+        index :- 1
+    Wend
+    RuntimeError "List index out of range"
+End Function
