@@ -8,7 +8,7 @@ Type CTPlayer
     Method New(); End Method
 
     Public
-    Global cactusPlayer:CTPlayer = New CTPlayer("Cactii Power",..
+    Global cactusPlayer:CTPlayer = New CTPlayer("Cacti Power",..
         New CTArmy([..
             New CTCactus("Foo"),..
             New CTCactus("Bar"),..
