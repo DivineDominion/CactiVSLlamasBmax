@@ -100,7 +100,8 @@ Type CTMenu Extends CTControl
     Method ConfirmSelection()
         If IsEmpty() Then Return
         If Not Self.delegate Then Return
-        Self.delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
     End Method
     '#End Region
 
