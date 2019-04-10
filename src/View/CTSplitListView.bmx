@@ -47,10 +47,10 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method OppositeOf:Int(side:Int)
-        If side = CTSplitListView.LEFT_SIDE
-            Return CTSplitListView.RIGHT_SIDE
-        ElseIf side = CTSplitListView.RIGHT_SIDE
-            Return CTSplitListView.LEFT_SIDE
+        If side = LEFT_SIDE
+            Return RIGHT_SIDE
+        ElseIf side = RIGHT_SIDE
+            Return LEFT_SIDE
         End If
         RuntimeError "side " + String(side) + " is not supported"
     End Method
@@ -64,8 +64,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
 
         ' When removing the last item from the current list, switch focus to the opposite side
         If IsFirstResponder(list) And list.IsEmpty()
-            If list = leftListMenu Then ActivateRightList()
-            If list = rightListMenu Then ActivateLeftList()
+            If list = leftListMenu Then ActivateListOnSide(LEFT_SIDE)
+            If list = rightListMenu Then ActivateListOnSide(RIGHT_SIDE)
         End If
     End Method
 
@@ -90,43 +90,33 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     Public
     Method MakeFirstResponder()
         Super.MakeFirstResponder()
-        Self.ActivateLeftList() ' Activate left list initially
+        Self.ActivateListOnSide(LEFT_SIDE)
     End Method
 
     Method MoveLeft()
-        Self.ActivateLeftList()
+        Self.ActivateListOnSide(LEFT_SIDE)
     End Method
 
     Method MoveRight()
-        Self.ActivateRightList()
+        Self.ActivateListOnSide(RIGHT_SIDE)
     End Method
 
-    Method ActivateLeftList()
+    Method ActivateListOnSide(side:Int)
+        Local list:CTMenu = ListForSide(side)
+        Local oppositeSide:Int = OppositeOf(side)
+        Local oppositeList:CTMenu = ListForSide(oppositeSide)
+
         ' Activate opposite list instead if this one is empty
-        If Self.leftListMenu.IsEmpty() And Not Self.rightListMenu.IsEmpty()
-            ActivateRightList()
+        If list.IsEmpty() And Not oppositeList.IsEmpty()
+            ActivateListOnSide(oppositeSide)
             Return
         End If
 
-        Self.rightListMenu.ResignFirstResponder()
-        Self.leftListMenu.MakeFirstResponder()
+        oppositeList.ResignFirstResponder()
+        list.MakeFirstResponder()
 
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, CTSplitListView.LEFT_SIDE)
-    End Method
-
-    Method ActivateRightList()
-        ' Activate opposite list instead if this one is empty
-        If Self.rightListMenu.IsEmpty() And Not Self.leftListMenu.IsEmpty()
-            ActivateLeftList()
-            Return
-        End If
-
-        Self.leftListMenu.ResignFirstResponder()
-        Self.rightListMenu.MakeFirstResponder()
-
-        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, CTSplitListView.RIGHT_SIDE)
+        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, side)
     End Method
     '#End Region
 
