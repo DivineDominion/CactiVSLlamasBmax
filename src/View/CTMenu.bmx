@@ -131,6 +131,14 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Method ResetSelection()
         Self.selectedLink = Self.menuItems.FirstLink()
     End Method
+
+    Method SelectFirst()
+        Self.selectedLink = Self.menuItems.FirstLink()
+    End Method
+
+    Method SelectLast()
+        Self.selectedLink = Self.menuItems.LastLink()
+    End Method
     '#End Region
 
 

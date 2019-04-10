@@ -10,6 +10,8 @@ Interface CTSplitListViewDelegate
     End Rem
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
 
+    Method SplitListViewShouldWrapSide:Int(splitListView:CTSplitListView, side:Int, forwardDirection:Int)
+
     Rem
     See CTSplitListView.LEFT_SIDE and CTSplitListView.RIGHT_SIDE for side values.
     End Rem
@@ -61,6 +63,32 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         RuntimeError "side " + String(side) + " is not supported"
     End Method
 
+    Method SelectFirstOnSide(side:Int)
+        ListForSide(side).SelectFirst()
+    End Method
+
+    Method SelectLastOnSide(side:Int)
+        ListForSide(side).SelectLast()
+    End Method
+
+    Method ActivateListOnSide(side:Int)
+        Local list:CTMenu = ListForSide(side)
+        Local oppositeSide:Int = OppositeOf(side)
+        Local oppositeList:CTMenu = ListForSide(oppositeSide)
+
+        ' Activate opposite list instead if this one is empty
+        If list.IsEmpty() And Not oppositeList.IsEmpty()
+            ActivateListOnSide(oppositeSide)
+            Return
+        End If
+
+        oppositeList.ResignFirstResponder()
+        list.MakeFirstResponder()
+
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, side)
+    End Method
+
 
     '#Region Split View Contents
     Public
@@ -106,24 +134,6 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     Method MoveRight()
         Self.ActivateListOnSide(RIGHT_SIDE)
     End Method
-
-    Method ActivateListOnSide(side:Int)
-        Local list:CTMenu = ListForSide(side)
-        Local oppositeSide:Int = OppositeOf(side)
-        Local oppositeList:CTMenu = ListForSide(oppositeSide)
-
-        ' Activate opposite list instead if this one is empty
-        If list.IsEmpty() And Not oppositeList.IsEmpty()
-            ActivateListOnSide(oppositeSide)
-            Return
-        End If
-
-        oppositeList.ResignFirstResponder()
-        list.MakeFirstResponder()
-
-        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, side)
-    End Method
     '#End Region
 
 
@@ -138,9 +148,22 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
-        Return True
+        If Not Self.delegate Then Return True
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        Return delegate.SplitListViewShouldWrapSide:Int(Self, SideForMenu(menu), forwardDirection)
+    End Method
+
+    Private
+    Method SideForMenu:Int(menu:CTMenu)
+        If menu = leftListMenu
+            Return CTSplitListView.LEFT_SIDE
+        Else If menu = rightListMenu
+            Return CTSplitListView.RIGHT_SIDE
+        End If
+        RuntimeError "Attempting to get side from unknown menu"
     End Method
     '#End Region
+
 
     '#Region CTDrawable
     Public
