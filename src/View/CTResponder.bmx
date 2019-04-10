@@ -13,9 +13,12 @@ AddHook EmitEventHook, HandleKeyboardInput
 Function HandleKeyboardInput:Object(id:Int, data:Object, context:Object)
     Local event:TEvent = TEvent(data)
 
+    DebugLog "Event: " + event.ToString()
+
     For Local responder:CTResponder = EachIn _responderStack
         Select event.ID
             Case EVENT_KEYUP
+                 DebugLog "Responder: " + TTypeId.ForObject(responder).Name()
                  Local consumed:Int = responder.KeyUp(event.Data)
                  If consumed Then Exit
         End Select
