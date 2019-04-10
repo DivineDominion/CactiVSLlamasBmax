@@ -31,13 +31,15 @@ Type CTGame Implements CTGameSceneTransitionDelegate
         Return CTGameScene(gameSceneStack.Last())
     End Function
 
-    Method ActivateGameScene(gameState:CTGameScene)
-        Self.PushGameScene(gameState)
-        gameState.Activate(Self)
+    Method ActivateGameScene(gameScene:CTGameScene)
+        Local previousGameScene:CTGameScene = CurrentGameScene()
+        Self.PushGameScene(gameScene)
+        If previousGameScene then previousGameScene.Deactivate()
+        gameScene.Activate(Self)
     End Method
 
-    Function PushGameScene(gameState:CTGameScene)
-        gameSceneStack.AddLast(gameState)
+    Function PushGameScene(gameScene:CTGameScene)
+        gameSceneStack.AddLast(gameScene)
     End Function
 
     Function PopGameScene:CTGameScene()
