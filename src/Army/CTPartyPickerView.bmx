@@ -45,7 +45,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
         Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
 
         Self.statusLabel = CTPartyStatusLabel.Create()
-        Self.statusLabel.DisplaySelectionCountOfRequired(Self.party.Count(), REQ_PARTY_COUNT)
+        UpdateStatusLabel()
     End Method
 
 
@@ -55,6 +55,10 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
             Local menuItem:CTMenuItem = New CTMenuItem(character.GetName(), character.GetID())
             Self.splitListView.AddMenuItemToSide(menuItem, side)
         Next
+    End Method
+
+    Method UpdateStatusLabel()
+        Self.statusLabel.DisplaySelectionCountOfRequired(Self.party.Count(), REQ_PARTY_COUNT)
     End Method
     '#End Region
 
@@ -87,11 +91,18 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     '#Region CTSplitListViewDelegate
     Public
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
-        splitListView.RemoveMenuItemFromSide(menuItem, side)
-        splitListView.AddMenuItemToSide(menuItem, splitListView.OppositeOf(side))
+        TransferMenuItemInSplitListViewFromSide(menuItem, splitListView, side)
+        UpdateStatusLabel()
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
+
+    Private
+    Method TransferMenuItemInSplitListViewFromSide(menuItem:CTMenuItem, splitListView:CTSplitListView, sourceSide:Int)
+        Local targetSide:Int = splitListView.OppositeOf(sourceSide)
+        splitListView.RemoveMenuItemFromSide(menuItem, sourceSide)
+        splitListView.AddMenuItemToSide(menuItem, targetSide)
+    End Method
     '#End Region
 End Type
 
