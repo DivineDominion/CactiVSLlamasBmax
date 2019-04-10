@@ -136,6 +136,10 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
             delegate.SplitListViewDidSelectMenuItemFromSide(Self, menuItem, side)
         End If
     End Method
+
+    Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
+        Return True
+    End Method
     '#End Region
 
     '#Region CTDrawable

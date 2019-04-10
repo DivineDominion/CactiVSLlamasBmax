@@ -6,6 +6,7 @@ Import "DrawContrastText.bmx"
 
 Interface CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
+    Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
 End Interface
 
 Interface CTMenuDrawingBase
@@ -154,13 +155,20 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         SelectNext()
     End Method
 
+    Method ConfirmSelection()
+        If Not selectedLink Then Return
+        If Not Self.delegate Then Return
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
+    End Method
+
+
+    Private
     Method SelectPrevious()
         If IsEmpty() Then Return
 
-        selectedLink = selectedLink.PrevLink()
-        If Not selectedLink
-            selectedLink = menuItems.LastLink()
-        End If
+        selectedLink = LinkBeforeSelection()
+
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
             SelectPrevious()
@@ -170,21 +178,34 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Method SelectNext()
         If IsEmpty() Then Return
 
-        selectedLink = selectedLink.NextLink()
-        If Not selectedLink
-            selectedLink = menuItems.FirstLink()
-        End If
+        selectedLink = LinkAfterSelection()
+
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
             MoveDown()
         End If
     End Method
 
-    Method ConfirmSelection()
-        If Not selectedLink Then Return
-        If Not Self.delegate Then Return
+    Method LinkAfterSelection:TLink()
+        ' Wrap around or stop at end
+        Local nextLink:TLink = selectedLink.NextLink()
+        If nextLink Then Return nextLink
+        If ShouldWrapAround(True) Then Return menuItems.FirstLink()
+        Return selectedLink
+    End Method
+
+    Method LinkBeforeSelection:TLink()
+        ' Wrap around or stop at start
+        Local prevLink:TLink = selectedLink.PrevLink()
+        If prevLink Then Return prevLink
+        If ShouldWrapAround(False) Then Return menuItems.LastLink()
+        Return selectedLink
+    End Method
+
+    Method ShouldWrapAround:Int(forwardDirection:Int)
+        IF Not Self.delegate Return True
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
+        Return delegate.MenuShouldWrapAround(Self, forwardDirection)
     End Method
     '#End Region
 
@@ -198,7 +219,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
             DrawEmptinessIndicator(dirtyRect)
         Else
             DrawMenuItemLabels(dirtyRect)
-        EndIF
+        EndIf
     End Method
 
 

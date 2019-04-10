@@ -70,5 +70,9 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.DialogDidConfirm(Self, didConfirm)
     End Method
+
+    Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
+        Return True
+    End Method
     '#End Region
 End Type
