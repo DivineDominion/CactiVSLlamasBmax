@@ -36,10 +36,11 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         Self.rightListMenu = New CTMenu()
         rightListMenu.AddMenuItemWithLabel("Right")
         Self.rightListMenu.delegate = Self
-    End Method
 
-    Method AddMenuItemToSide(menuItem:CTMenuItem, side:Int)
-        Self.ListForSide(side).AddMenuItem(menuItem)
+        ' Bubble up key events from menus to this control but no further
+        Self.leftListMenu.consumesKeyEvents = False
+        Self.rightListMenu.consumesKeyEvents = False
+        Self.consumesKeyEvents = True
     End Method
 
     Method TearDown()
@@ -47,14 +48,45 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         Self.rightListMenu.RemoveDelegate()
     End Method
 
+    Method OppositeOf:Int(side:Int)
+        If side = CTSplitListView.LEFT_SIDE
+            Return CTSplitListView.RIGHT_SIDE
+        ElseIf side = CTSplitListView.RIGHT_SIDE
+            Return CTSplitListView.LEFT_SIDE
+        End If
+        RuntimeError "side " + String(side) + " is not supported"
+    End Method
+
+
+    '#Region Split View Contents
+    Public
+    Method RemoveMenuItemFromSide(menuItem:CTMenuItem, side:Int)
+        Local list:CTMenu = ListForSide(side)
+        list.RemoveMenuItem(menuItem)
+
+        ' When removing the last item from the current list, switch focus to the opposite side
+        If IsFirstResponder(list) And list.IsEmpty()
+            If list = leftListMenu Then ActivateRightList()
+            If list = rightListMenu Then ActivateLeftList()
+        End If
+    End Method
+
+    Method AddMenuItemToSide(menuItem:CTMenuItem, side:Int)
+        Self.ListForSide(side).AddMenuItem(menuItem)
+    End Method
+
+
     Private
     Method ListForSide:CTMenu(side:Int)
         If side = CTSplitListView.LEFT_SIDE
             Return Self.leftListMenu
-        Else
+        ElseIf side = CTSplitListView.RIGHT_SIDE
             Return Self.rightListMenu
         End If
+        RuntimeError "side " + String(side) + " is not supported"
     End Method
+    '#End Region
+
 
     '#Region CTKeyInterpreter and CTResponder Forwarding
     Public
@@ -72,6 +104,7 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method ActivateLeftList()
+        ' Activate opposite list instead if this one is empty
         If Self.leftListMenu.IsEmpty() And Not Self.rightListMenu.IsEmpty()
             ActivateRightList()
             Return
@@ -85,6 +118,7 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method ActivateRightList()
+        ' Activate opposite list instead if this one is empty
         If Self.rightListMenu.IsEmpty() And Not Self.leftListMenu.IsEmpty()
             ActivateLeftList()
             Return
@@ -113,7 +147,6 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
-        Print("Draw SplitListView")
         Super.Draw(dirtyRect)
 
         Local columnWidth:Int = dirtyRect.GetWidth() / 2

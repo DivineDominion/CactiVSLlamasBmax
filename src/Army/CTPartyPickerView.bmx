@@ -40,12 +40,14 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
 
         ' Subviews
         Self.splitListView = New CTSplitListView
+        Self.splitListView.delegate = Self
         Self.AddCharactersFromListToSide(Self.reserve, CTSplitListView.LEFT_SIDE)
         Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
 
         Self.statusLabel = CTPartyStatusLabel.Create()
         Self.statusLabel.DisplaySelectionCountOfRequired(Self.party.Count(), REQ_PARTY_COUNT)
     End Method
+
 
     Private
     Method AddCharactersFromListToSide(list:TList, side:Int)
@@ -83,8 +85,10 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
 
 
     '#Region CTSplitListViewDelegate
+    Public
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
-        ' TODO transfer character to other side
+        splitListView.RemoveMenuItemFromSide(menuItem, side)
+        splitListView.AddMenuItemToSide(menuItem, splitListView.OppositeOf(side))
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method

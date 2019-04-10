@@ -59,6 +59,28 @@ Type CTMenu Extends CTControl
         SetInitialSelectionIfNecessary()
     End Method
 
+    Method InsertMenuItemAtIndex(menuItem:CTMenuItem, index:Int)
+        ListInsertBeforeIndex(Self.menuItems, menuItem, index)
+        SetInitialSelectionIfNecessary()
+    End Method
+
+    Method RemoveMenuItem(menuItem:CTMenuItem)
+        Local link:TLink = ListFindLink(Self.menuItems, menuItem)
+
+        If Not link Throw New TNoSuchElementException
+
+        ' Move selection down (or up if at end of list) when selection is removed
+        If link = selectedLink
+            If link.NextLink()
+                selectedLink = link.NextLink()
+            Else
+                selectedLink = link.PrevLink()
+            End If
+        End If
+
+        link.Remove()
+    End Method
+
     Method IsEmpty:Int()
         Return Self.menuItems.IsEmpty()
     End Method
