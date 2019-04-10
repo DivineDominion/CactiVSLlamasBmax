@@ -8,6 +8,10 @@ Import "../View/CTLabel.bmx"
 Import "../View/CTViewport.bmx"
 Import "../View/CTDialog.bmx"
 
+Interface CTPartyPickerViewDelegate
+    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:TList)
+End Interface
+
 Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTDialogDelegate
     Private
     Field army:CTArmy
@@ -28,6 +32,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
     Public
     Const REQ_PARTY_COUNT:Int = 3
+    Field delegate:CTPartyPickerViewDelegate = Null
 
     Method New(player:CTPlayer)
         New()
@@ -53,9 +58,14 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     End Method
 
     Method TearDown()
+        ResetDelegate()
         Self.splitListView.TearDown()
         Self.confirmationOptions.TearDown()
         Super.TearDown()
+    End Method
+
+    Method ResetDelegate()
+        Self.delegate = Null
     End Method
 
     Private
@@ -178,7 +188,8 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     '#Region CTDialogDelegate
     Public
     Method DialogDidConfirm(dialog:CTDialog, didConfirm:Int)
-        ' TODO: proceed or cancel
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.PartyPickerViewDidSelectParty(Self, party)
     End Method
 
     Method DialogShouldMoveVertically:Int(dialog:CTDialog)

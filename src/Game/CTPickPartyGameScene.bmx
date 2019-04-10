@@ -5,6 +5,7 @@ Import "../Army/CTPickParty.bmx"
 Import "../View/CTScreen.bmx"
 
 Type CTPickPartyGameScene Implements CTGameScene
+Type CTPickPartyGameScene Implements CTGameScene, CTPickPartyDelegate
     '#Region CTGameScene
     Private
     Field transitionDelegate:CTGameSceneTransitionDelegate = Null
@@ -16,6 +17,7 @@ Type CTPickPartyGameScene Implements CTGameScene
     End Method
 
     Method Deactivate()
+        ClosePartyPicker()
         Self.transitionDelegate = Null
     End Method
 
@@ -28,12 +30,19 @@ Type CTPickPartyGameScene Implements CTGameScene
         Local windowHeight:Int = CTScreen.main.GetHeight() - (2 * windowOffset)
         Local frameRect:CTRect = CTRect.Create(windowOffset, windowOffset, windowWidth, windowHeight)
         _pickParty = CTPickParty.Create(frameRect, CTPlayer.cactusPlayer)
-        _pickParty.ShowPartyPicker()
+        _pickParty.ShowPartyPicker(Self)
     End Method
 
     Method ClosePartyPicker()
         If _pickParty = Null Then Return
         _pickParty.CloseWindow()
+    End Method
+    '#End Region
+
+
+    '#Region CTPickPartyDelegate
+    Public
+    Method DidPickParty(pickParty:CTPickParty, party:TList)
     End Method
     '#End Region
 End Type

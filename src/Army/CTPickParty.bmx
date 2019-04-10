@@ -4,11 +4,14 @@ Import "../Game/CTPlayer.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "CTPartyPickerView.bmx"
 
-Type CTPickParty
+Interface CTPickPartyDelegate
+    Method DidPickParty(pickParty:CTPickParty, party:TList)
+End Interface
+
+Type CTPickParty Implements CTPartyPickerViewDelegate
     Private
     Field player:CTPlayer
     Field frameRect:CTRect
-    Field partyPickerView:CTPartyPickerView
 
     Method New(); End Method
 
@@ -19,18 +22,23 @@ Type CTPickParty
         Local service:CTPickParty = New CTPickParty
         service.frameRect = frameRect
         service.player = player
-        service.partyPickerView = New CTPartyPickerView(player)
         Return service
     End Function
 
     '#Region Window lifecycle management
     Private
     Field currentWindow:CTWindow = Null
+    Field partyPickerView:CTPartyPickerView = Null
+    Field delegate:CTPickPartyDelegate = Null
 
     Public
-    Method ShowPartyPicker()
+    Method ShowPartyPicker(delegate:CTPickPartyDelegate)
+        Assert delegate Else "ShowPartyPicker requires delegate"
         Assert Not Self.currentWindow Else "#ShowPartyPicker called before closing the window"
 
+        Self.delegate = delegate
+        Self.partyPickerView = New CTPartyPickerView(Self.player)
+        Self.partyPickerView.delegate = Self
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.partyPickerView, "Pick Party")
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
     End Method
@@ -39,8 +47,21 @@ Type CTPickParty
         Assert Self.currentWindow Else "#CloseWindow called without active window"
         If Self.currentWindow = Null Then Return
 
-        Self.currentWindow.Close()
+        Self.partyPickerView.TearDown()
+        Self.partyPickerView = Null
+
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
+        Self.currentWindow.Close()
+        Self.currentWindow = Null
+        Self.delegate = Null
+    End Method
+    '#End Region
+
+
+    '#Region CTPartyPickerViewDelegate
+    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:TList)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.DidPickParty(Self, selectedParty)
     End Method
     '#End Region
 End Type
