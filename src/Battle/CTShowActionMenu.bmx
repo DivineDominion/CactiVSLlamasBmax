@@ -24,7 +24,7 @@ Type CTShowActionMenu Implements CTMenuDelegate
     Function Create:CTShowActionMenu(frameRect:CTRect, lines:String[])
         Local service:CTShowActionMenu = New CTShowActionMenu
         service.frameRect = frameRect
-        service.menu = CTMenu.Create(lines)
+        service.menu = New CTMenu(lines)
         Return service
     End Function
 

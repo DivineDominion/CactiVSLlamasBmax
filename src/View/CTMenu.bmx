@@ -8,15 +8,27 @@ Interface CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
 End Interface
 
-Type CTMenu Extends CTControl
+Interface CTMenuDrawingBase
+    Method DrawCursor(x%, y%)
+    Method GetCursorWidth%()
+    Method IsActive%()
+    Method TextColor:CTColor(isHighlighted:Int)
+End Interface
+
+Interface CTMenuItemDrawingStrategy
+    Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, drawingBase:CTMenuDrawingBase)
+End Interface
+
+Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Private
     Field selectedLink:TLink = Null
     Field menuItems:TList = New TList
-
+    Field drawingStrategy:CTMenuItemDrawingStrategy
+    Field isHorizontal:Int = False
 
     Public
     Global cursorImage:TImage = Null
-    Field textColor:CTColor = CTColor.LightGray()
+    Field defaultTextColor:CTColor = CTColor.LightGray()
     Field selectedTextColor:CTColor = CTColor.White()
 
     Rem
@@ -31,16 +43,20 @@ Type CTMenu Extends CTControl
         Self.isOpaque = True
     End Method
 
-    Method New(labels:String[])
+    Method New(labels:String[] = [], isHorizontal:Int = False)
         New()
+
+        Self.isHorizontal = isHorizontal
+        If isHorizontal
+            Self.drawingStrategy = New CTMenuHorizontalDrawingStrategy()
+        Else
+            Self.drawingStrategy = New CTMenuVerticalDrawingStrategy()
+        End If
+
         For Local label:String = EachIn labels
             Self.AddMenuItemWithLabel(label)
         Next
     End Method
-
-    Function Create:CTMenu(labels:String[])
-        Return New CTMenu(labels)
-    End Function
 
     Method RemoveDelegate()
         Self.delegate = Null
@@ -114,6 +130,26 @@ Type CTMenu Extends CTControl
 
     '#Region CTKeyInterpreter
     Method MoveUp()
+        If isHorizontal Then Return
+        SelectPrevious()
+    End Method
+
+    Method MoveLeft()
+        If Not isHorizontal Then Return
+        SelectPrevious()
+    End Method
+
+    Method MoveDown()
+        If isHorizontal Then Return
+        SelectNext()
+    End Method
+
+    Method MoveRight()
+        If Not isHorizontal Then Return
+        SelectNext()
+    End Method
+
+    Method SelectPrevious()
         If IsEmpty() Then Return
 
         selectedLink = selectedLink.PrevLink()
@@ -122,11 +158,11 @@ Type CTMenu Extends CTControl
         End If
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
-            MoveUp()
+            SelectPrevious()
         End If
     End Method
 
-    Method MoveDown()
+    Method SelectNext()
         If IsEmpty() Then Return
 
         selectedLink = selectedLink.NextLink()
@@ -163,43 +199,21 @@ Type CTMenu Extends CTControl
 
     Private
     Method DrawEmptinessIndicator(dirtyRect:CTRect)
-        Local textColor:CTColor = Self.textColor
-        If IsFirstResponder(Self) Then textColor = Self.selectedTextColor
-        DrawContrastText "(Empty)", 0, 0, textColor
+        DrawContrastText "(Empty)", 0, 0, TextColor(IsFirstResponder(Self))
     End Method
 
     Method DrawMenuItemLabels(dirtyRect:CTRect)
-        Local lineHeight% = TextHeight("x")
-        Local cursorWidth% = Self.GetCursorWidth()
-
-        Local x%, y% = 0
-        Local i% = 0
-        Local link:TLink = menuItems.FirstLink()
-        While link
-            Local menuItem:CTMenuItem = CTMenuItem(link.Value())
-            Local isSelected:Int = False
-            If Self.selectedLink And Self.selectedLink = link And IsFirstResponder(Self) Then isSelected = True
-
-            ' Draw label text with varying font color depending on selection
-            Local textColor:CTColor = Self.textColor
-            If isSelected Then textColor = Self.selectedTextColor
-
-            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
-
-            ' Draw cursor on top (doesn't appear if drawn first)
-            If isSelected Then DrawCursor(x, y)
-
-            y :+ lineHeight
-            i :+ 1
-            link = link.NextLink()
-        Wend
+        Self.drawingStrategy.DrawMenuItemLabels(Self.menuItems, selectedLink, dirtyRect, Self)
     End Method
+    '#End Region
 
+    '#Region CTMenuDrawingBase
+    Public
     Method DrawCursor(x%, y%)
         If Not CTMenu.cursorImage Then Return
 
         Local oldAlpha# = GetAlpha()
-        If IsFirstResponder(Self)
+        If IsActive()
             SetAlpha 1.0
         Else
             SetAlpha 0.5
@@ -215,6 +229,18 @@ Type CTMenu Extends CTControl
             Return ImageWidth(CTMenu.cursorImage)
         End If
         Return 0
+    End Method
+
+    Method IsActive%()
+        Return IsFirstResponder(Self)
+    End Method
+
+    Method TextColor:CTColor(isHighlighted:Int)
+        If isHighlighted
+            Return Self.selectedTextColor
+        Else
+            Return Self.defaultTextColor
+        End If
     End Method
     '#End Region
 End Type
@@ -245,3 +271,56 @@ Function ListLinkAtIndex:TLink(list:TList, index:Int)
     Wend
     RuntimeError "List index out of range"
 End Function
+
+Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
+    Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
+        Local lineHeight% = TextHeight("x")
+        Local cursorWidth% = base.GetCursorWidth()
+
+        Local x%, y% = 0
+        Local i% = 0
+        Local link:TLink = menuItems.FirstLink()
+        While link
+            Local menuItem:CTMenuItem = CTMenuItem(link.Value())
+            Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
+            Local textColor:CTColor = base.TextColor(isSelected)
+
+            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+
+            ' Draw cursor on top (doesn't appear if drawn first)
+            If isSelected Then base.DrawCursor(x, y)
+
+            y :+ lineHeight
+            i :+ 1
+            link = link.NextLink()
+        Wend
+    End Method
+End Type
+
+Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
+    Const COLUMNS:Int = 2 ' Small screen, support 2 columns for now
+
+    Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
+        Local lineHeight% = TextHeight("x")
+        Local cursorWidth% = base.GetCursorWidth()
+
+        Local columnWidth% = rect.GetWidth() / COLUMNS
+        Local i% = 0
+        Local link:TLink = menuItems.FirstLink()
+        While link
+            Local menuItem:CTMenuItem = CTMenuItem(link.Value())
+            Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
+            Local textColor:CTColor = base.TextColor(isSelected)
+
+            Local x% = (i Mod COLUMNS) * columnWidth
+            Local y% = (i / COLUMNS) * lineHeight
+            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+
+            ' Draw cursor on top (doesn't appear if drawn first)
+            If isSelected Then base.DrawCursor(x, y)
+
+            i :+ 1
+            link = link.NextLink()
+        Wend
+    End Method
+End Type
