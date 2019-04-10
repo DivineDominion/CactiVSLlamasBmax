@@ -5,6 +5,8 @@ Import "CTResponder.bmx"
 Import "CTKeyInterpreter.bmx"
 
 Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
+    Field consumesKeyEvents:Int = True
+
     Method Use(); End Method
 
     '#Region CTResponder
@@ -19,8 +21,9 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     Rem
     bbdoc: Default implementation calls #InterpretKey.
     EndRem
-    Method KeyUp(key:Int)
+    Method KeyUp:Int(key:Int)
         Self.InterpretKey(key)
+        Return Self.consumesKeyEvents
     End Method
     '#End Region
 

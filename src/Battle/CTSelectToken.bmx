@@ -42,7 +42,8 @@ Type CTSelectToken Implements CTShowActionMenuDelegate
 
         Local action:String = menuItem.label
         mainLog.Append("ACTION: " + action)
-        If Self.delegate Then Self.delegate.SelectTokenDidSelectAction(Self, action)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.SelectTokenDidSelectAction(Self, action)
     End Method
     '#End Region
 End Type

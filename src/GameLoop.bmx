@@ -23,4 +23,3 @@ Function GameLoop()
         lastTime = MilliSecs()
     Until KeyDown(Key_Escape) Or AppTerminate()
 End Function
-
