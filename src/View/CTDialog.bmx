@@ -49,8 +49,12 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Self.delegate = Null
     End Method
 
-    Method ResetSelection()
-        Self.menu.ResetSelection()
+    Method SelectFirst()
+        Self.menu.SelectFirst()
+    End Method
+
+    Method SelectLast()
+        Self.menu.SelectLast()
     End Method
 
     Method Draw(dirtyRect:CTRect)

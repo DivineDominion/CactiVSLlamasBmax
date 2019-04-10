@@ -130,7 +130,13 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     Method SplitListViewShouldWrapSide:Int(splitListView:CTSplitListView, side:Int, forwardDirection:Int)
         ' Instead of wrapping around in the list, jump to the options menu
         Self.confirmationOptions.MakeFirstResponder()
-        Self.confirmationOptions.ResetSelection()
+
+        If side = CTSplitListView.LEFT_SIDE
+            Self.confirmationOptions.SelectFirst()
+        ElseIf side = CTSplitListView.RIGHT_SIDE
+            Self.confirmationOptions.SelectLast()
+        End If
+
         Return False
     End Method
 
