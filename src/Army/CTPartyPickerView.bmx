@@ -3,27 +3,27 @@ SuperStrict
 Import "../Game/CTPlayer.bmx"
 Import "CTArmy.bmx"
 Import "../View/CTControl.bmx"
-Import "../View/CTMenu.bmx"
+Import "../View/CTSplitListView.bmx"
 Import "../View/CTLabel.bmx"
 Import "../View/CTViewport.bmx"
 
-Type CTPartyPickerView Extends CTControl
+Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     Private
     Field army:CTArmy
 
     Field reserve:TList
-    Field reserveMenu:CTMenu
-
     Field party:TList
-    Field partyMenu:CTMenu
+    Field splitListView:CTSplitListView
 
     Field statusLabel:CTPartyStatusLabel
 
+
+    '#REGION Creation
+    Private
     Method New()
         Self.backgroundColor = CTColor.Black()
         Self.isOpaque = True
     End Method
-
 
     Public
     Const REQ_PARTY_COUNT:Int = 3
@@ -39,99 +39,55 @@ Type CTPartyPickerView Extends CTControl
         Self.party = New TList()
 
         ' Subviews
-        Self.reserveMenu = Self.MenuForCharacterList(Self.reserve)
-        Self.partyMenu = Self.MenuForCharacterList(Self.party)
+        Self.splitListView = New CTSplitListView
+        Self.AddCharactersFromListToSide(Self.reserve, CTSplitListView.LEFT_SIDE)
+        Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
 
         Self.statusLabel = CTPartyStatusLabel.Create()
         Self.statusLabel.DisplaySelectionCountOfRequired(Self.party.Count(), REQ_PARTY_COUNT)
     End Method
 
     Private
-    Method MenuForCharacterList:CTMenu(list:TList)
-        Local menu:CTMenu = New CTMenu
+    Method AddCharactersFromListToSide(list:TList, side:Int)
         For Local character:CTCharacter = EachIn list
-            menu.AddMenuItemWithLabel(character.GetName())
+            Local menuItem:CTMenuItem = CTMenuItem.create(character.GetName())
+            Self.splitListView.AddMenuItemToSide(menuItem, side)
         Next
-        return menu
-    End Method
-
-
-    '#Region CTKeyInterpreter
-    Public
-    Method ConfirmSelection()
-        Self.CurrentMenu().ConfirmSelection()
-    End Method
-
-    Method MoveUp()
-        Self.CurrentMenu().MoveUp()
-    End Method
-
-    Method MoveDown()
-        Self.CurrentMenu().MoveDown()
-    End Method
-
-    Method MoveLeft()
-        Self.ActivateReserveMenu()
-    End Method
-
-    Method MoveRight()
-        Self.ActivatePartyMenu()
-    End Method
-
-    Private
-    Method CurrentMenu:CTMenu()
-        If selectedColumn = 0 Then Return reserveMenu
-        Return partyMenu
     End Method
     '#End Region
 
-    Private
-    Field selectedColumn:Int
-    Field selectedRow:Int
 
-    Method ActivateReserveMenu()
-        If Self.reserveMenu.IsEmpty()
-            ActivatePartyMenu()
-            Return
-        End If
-
-        Self.selectedColumn = 0
+    Public
+    Method MakeFirstResponder()
+        Super.MakeFirstResponder()
+        Self.splitListView.MakeFirstResponder()
     End Method
 
-    Method ActivatePartyMenu()
-        If Self.partyMenu.IsEmpty()
-            ActivateReserveMenu()
-            Return
-        End If
-
-        Self.selectedColumn = 1
-    End Method
 
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
 
-        Local columnWidth:Int = dirtyRect.GetWidth() / 2
-        ' Left column
-        Local leftColumnRect:CTRect = dirtyRect..
-            .SettingWidth(columnWidth)..
-            .Resizing(0, -statusLabel.GetTextHeight())
-        CTViewport.Create(leftColumnRect).Draw(reserveMenu)
-
-        ' Right column
-        Local rightColumnRect:CTRect = dirtyRect..
-            .SettingWidth(columnWidth)..
-            .Translating(columnWidth, 0)..
-            .Resizing(0, -statusLabel.GetTextHeight())
-        CTViewport.Create(rightColumnRect).Draw(partyMenu)
-
         ' Draw status at the bottom
         Local labelRect:CTRect = dirtyRect..
             .SettingHeight(statusLabel.GetTextHeight())..
             .Translating(0, dirtyRect.GetHeight() - statusLabel.GetTextHeight())
         CTViewport.Create(labelRect).Draw(statusLabel)
+
+        ' Draw list above status label
+        Local listRect:CTRect = dirtyRect.Resizing(0, -statusLabel.GetTextHeight())
+        CTViewport.Create(listRect).Draw(splitListView)
     End Method
+    '#End Region
+
+
+    '#Region CTSplitListViewDelegate
+    Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
+        ' TODO transfer character to other side
+    End Method
+
+    Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
     '#End Region
 End Type
 
