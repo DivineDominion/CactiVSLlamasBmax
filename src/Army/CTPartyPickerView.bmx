@@ -48,6 +48,11 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
         UpdateStatusLabel()
     End Method
 
+    Method TearDown()
+        Self.splitListView.TearDown()
+        Self.confirmationOptions.TearDown()
+        Super.TearDown()
+    End Method
 
     Private
     Method AddCharactersFromListToSide(list:TList, side:Int)
@@ -62,11 +67,26 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     '#End Region
 
 
+    '#Region CTResponder
+    ' Decorate responder stack access to the underlying controls
     Public
     Method MakeFirstResponder()
         Super.MakeFirstResponder()
         Self.splitListView.MakeFirstResponder()
     End Method
+
+    Method ResignFirstResponder()
+        Self.splitListView.ResignFirstResponder()
+        Self.confirmationOptions.ResignFirstResponder()
+        Super.ResignFirstResponder()
+    End Method
+
+    Method RemoveFromResponderStack()
+        Self.splitListView.RemoveFromResponderStack()
+        Self.confirmationOptions.RemoveFromResponderStack()
+        Super.RemoveFromResponderStack()
+    End Method
+    '#End Region
 
 
     '#Region CTDrawable

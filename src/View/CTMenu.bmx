@@ -57,6 +57,11 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
             Self.AddMenuItemWithLabel(label)
         Next
     End Method
+    
+    Method TearDown()
+        RemoveDelegate()
+        Super.TearDown()
+    End Method
 
     Method RemoveDelegate()
         Self.delegate = Null

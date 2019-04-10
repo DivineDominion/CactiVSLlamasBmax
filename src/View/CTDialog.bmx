@@ -28,9 +28,23 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method TearDown()
-        Self.menu.delegate = Null
+        RemoveDelegate()
+        Self.menu.TearDown()
+        Super.TearDown()
     End Method
 
+    Method RemoveDelegate()
+        Self.delegate = Null
+    End Method
+
+    Method Draw(dirtyRect:CTRect)
+        Super.Draw(dirtyRect)
+        Self.menu.Draw(dirtyRect)
+    End Method
+
+
+    '#Region CTResponder
+    ' Decorate responder stack access to the underlying menu
     Method MakeFirstResponder()
         Super.MakeFirstResponder()
         Self.menu.MakeFirstResponder()
@@ -41,13 +55,15 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Super.ResignFirstResponder()
     End Method
 
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
-        Self.menu.Draw(dirtyRect)
+    Method RemoveFromResponderStack()
+        Self.menu.RemoveFromResponderStack()
+        Super.RemoveFromResponderStack
     End Method
+    '#End Region
 
 
     '#Region CTMenuDelegate
+    Public
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
         Assert menu = Self.menu Else "CTDialog callback called with wrong menu"
         Local didConfirm:Int = (menuItem <> Self.cancelMenuItem)

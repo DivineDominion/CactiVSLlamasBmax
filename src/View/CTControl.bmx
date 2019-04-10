@@ -9,6 +9,10 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
 
     Method Use(); End Method
 
+    Method TearDown()
+        RemoveFromResponderStack()
+    End Method
+
     '#Region CTResponder
     Method MakeFirstResponder()
         PushResponder(Self)
@@ -16,6 +20,10 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
 
     Method ResignFirstResponder()
         If IsFirstResponder(Self) Then PopFirstResponder()
+    End Method
+    
+    Method RemoveFromResponderStack()
+        RemoveResponder(Self)
     End Method
 
     Rem

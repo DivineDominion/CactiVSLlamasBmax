@@ -42,8 +42,14 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     End Method
 
     Method TearDown()
-        Self.leftListMenu.RemoveDelegate()
-        Self.rightListMenu.RemoveDelegate()
+        RemoveDelegate()
+        Self.leftListMenu.TearDown()
+        Self.rightListMenu.TearDown()
+        Super.TearDown()
+    End Method
+
+    Method RemoveDelegate()
+        Self.delegate = Null
     End Method
 
     Method OppositeOf:Int(side:Int)
