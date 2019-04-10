@@ -6,16 +6,17 @@ Import "../View/CTControl.bmx"
 Import "../View/CTSplitListView.bmx"
 Import "../View/CTLabel.bmx"
 Import "../View/CTViewport.bmx"
+Import "../View/CTDialog.bmx"
 
-Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
+Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTDialogDelegate
     Private
     Field army:CTArmy
 
     Field reserve:TList
     Field party:TList
     Field splitListView:CTSplitListView
-
     Field statusLabel:CTPartyStatusLabel
+    Field confirmationOptions:CTDialog
 
 
     '#REGION Creation
@@ -46,6 +47,9 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
 
         Self.statusLabel = CTPartyStatusLabel.Create()
         UpdateStatusLabel()
+
+        Self.confirmationOptions = New CTDialog("Proceed", "Cancel")
+        Self.confirmationOptions.delegate = Self
     End Method
 
     Method TearDown()
@@ -94,14 +98,21 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
 
-        ' Draw status at the bottom
+        ' Draw options at the bottom
+        Local lineHeight% = TextHeight("x")
+        Local optionsRect:CTRect = dirtyRect..
+            .SettingHeight(lineHeight)..
+            .Translating(0, dirtyRect.GetHeight() - lineHeight)
+        CTViewport.Create(optionsRect).Draw(confirmationOptions)
+
+        ' Draw status above options the bottom
         Local labelRect:CTRect = dirtyRect..
             .SettingHeight(statusLabel.GetTextHeight())..
-            .Translating(0, dirtyRect.GetHeight() - statusLabel.GetTextHeight())
+            .Translating(0, optionsRect.GetY() - statusLabel.GetTextHeight())
         CTViewport.Create(labelRect).Draw(statusLabel)
 
         ' Draw list above status label
-        Local listRect:CTRect = dirtyRect.Resizing(0, -statusLabel.GetTextHeight())
+        Local listRect:CTRect = dirtyRect.Resizing(0, -labelRect.GetHeight()-optionsRect.GetHeight())
         CTViewport.Create(listRect).Draw(splitListView)
     End Method
     '#End Region
@@ -115,6 +126,19 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
+
+    Method SplitListViewShouldWrapSide:Int(splitListView:CTSplitListView, side:Int, forwardDirection:Int)
+        ' Instead of wrapping around in the list, jump to the options menu
+        Self.confirmationOptions.MakeFirstResponder()
+
+        If side = CTSplitListView.LEFT_SIDE
+            Self.confirmationOptions.SelectFirst()
+        ElseIf side = CTSplitListView.RIGHT_SIDE
+            Self.confirmationOptions.SelectLast()
+        End If
+
+        Return False
+    End Method
 
     Private
     Method SwitchCharacterFromMenuItemInSplitViewFromSide(menuItem:CTMenuItem, splitListView:CTSplitListView, sourceSide:Int)
@@ -147,6 +171,37 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
 
     Method PartyIsFull:Int()
         Return Self.party.Count >= REQ_PARTY_COUNT
+    End Method
+    '#End Region
+
+
+    '#Region CTDialogDelegate
+    Public
+    Method DialogDidConfirm(dialog:CTDialog, didConfirm:Int)
+        ' TODO: proceed or cancel
+    End Method
+
+    Method DialogShouldMoveVertically:Int(dialog:CTDialog)
+        ' Move back to split view on vertical arrow keys
+        Return True
+    End Method
+
+    Method DialogDidMoveVerticallyDownAtIndex(dialog:CTDialog, downwardDirection:Int, optionIndex:Int)
+        Local side:Int = SplitViewSideForOptionIndex(optionIndex)
+        If downwardDirection
+            Self.splitListView.SelectFirstOnSide(side)
+        Else
+            Self.splitListView.SelectLastOnSide(side)
+        End If
+        Self.confirmationOptions.ResignFirstResponder()
+        Self.splitListView.ActivateListOnSide(side)
+    End Method
+
+    Private
+    Method SplitViewSideForOptionIndex:Int(optionIndex:Int)
+        If optionIndex = 0 Then Return CTSplitListView.LEFT_SIDE
+        If optionIndex = 1 Then Return CTSplitListView.RIGHT_SIDE
+        RuntimeError "Unexpected option index " + String(optionIndex)
     End Method
     '#End Region
 End Type

@@ -5,6 +5,17 @@ Import "CTMenu.bmx"
 
 Interface CTDialogDelegate
     Method DialogDidConfirm(dialog:CTDialog, didConfirm:Int)
+
+    Rem
+    returns: True if vertical movement should be handled, False otherwise.
+    End Rem
+    Method DialogShouldMoveVertically:Int(dialog:CTDialog)
+
+    Rem
+    Called when the user pressed up/down arrow keys while the dialog is active.
+    Dialogs are presented horizontally, so use this to switch to detail elements.
+    EndRem
+    Method DialogDidMoveVerticallyDownAtIndex(dialog:CTDialog, downwardDirection:Int, optionIndex:Int)
 End Interface
 
 Type CTDialog Extends CTControl Implements CTMenuDelegate
@@ -24,6 +35,7 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Self.menu = New CTMenu([], True)
         Self.menu.AddMenuItem(confirmMenuItem)
         Self.menu.AddMenuItem(cancelMenuItem)
+        Self.menu.consumesKeyEvents = False
         Self.menu.delegate = Self
     End Method
 
@@ -35,6 +47,14 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
 
     Method RemoveDelegate()
         Self.delegate = Null
+    End Method
+
+    Method SelectFirst()
+        Self.menu.SelectFirst()
+    End Method
+
+    Method SelectLast()
+        Self.menu.SelectLast()
     End Method
 
     Method Draw(dirtyRect:CTRect)
@@ -62,6 +82,35 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
     '#End Region
 
 
+    '#Region CTKeyInterpreter
+    Public
+    Method MoveUp()
+        If ShouldMoveVertically() Then NotifyMoveDown(False)
+    End Method
+
+    Method MoveDown()
+        If ShouldMoveVertically() Then NotifyMoveDown(True)
+    End Method
+
+    Private
+    Method ShouldMoveVertically:Int()
+        If Not Self.delegate Then Return False
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        Return delegate.DialogShouldMoveVertically(Self)
+    End Method
+
+    Method NotifyMoveDown(downwardDirection:Int)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        delegate.DialogDidMoveVerticallyDownAtIndex(Self, downwardDirection, SelectionIndex())
+    End Method
+
+    Method SelectionIndex:Int()
+        If menu.GetSelectedMenuItem() = confirmMenuItem Then Return 0
+        Return 1
+    End Method
+    '#End Region
+
+
     '#Region CTMenuDelegate
     Public
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
@@ -69,6 +118,10 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Local didConfirm:Int = (menuItem <> Self.cancelMenuItem)
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.DialogDidConfirm(Self, didConfirm)
+    End Method
+
+    Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
+        Return True
     End Method
     '#End Region
 End Type

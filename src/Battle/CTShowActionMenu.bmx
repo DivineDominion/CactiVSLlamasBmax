@@ -50,5 +50,9 @@ Type CTShowActionMenu Implements CTMenuDelegate
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.showActionMenuDidSelectMenuItem(Self, menuItem)
     End Method
+
+    Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
+        Return True
+    End Method
     '#End Redion
 End Type
