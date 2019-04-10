@@ -23,7 +23,8 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Private
     Field selectedLink:TLink = Null
     Field menuItems:TList = New TList
-    Field drawingStrategy:CTMenuItemDrawingStrategy = New CTMenuVerticalDrawingStrategy()
+    Field drawingStrategy:CTMenuItemDrawingStrategy
+    Field isHorizontal:Int = False
 
     Public
     Global cursorImage:TImage = Null
@@ -42,8 +43,16 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         Self.isOpaque = True
     End Method
 
-    Method New(labels:String[])
+    Method New(labels:String[] = [], isHorizontal:Int = False)
         New()
+
+        Self.isHorizontal = isHorizontal
+        If isHorizontal
+            Self.drawingStrategy = New CTMenuHorizontalDrawingStrategy()
+        Else
+            Self.drawingStrategy = New CTMenuVerticalDrawingStrategy()
+        End If
+
         For Local label:String = EachIn labels
             Self.AddMenuItemWithLabel(label)
         Next
@@ -121,6 +130,26 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     '#Region CTKeyInterpreter
     Method MoveUp()
+        If isHorizontal Then Return
+        SelectPrevious()
+    End Method
+
+    Method MoveLeft()
+        If Not isHorizontal Then Return
+        SelectPrevious()
+    End Method
+
+    Method MoveDown()
+        If isHorizontal Then Return
+        SelectNext()
+    End Method
+
+    Method MoveRight()
+        If Not isHorizontal Then Return
+        SelectNext()
+    End Method
+
+    Method SelectPrevious()
         If IsEmpty() Then Return
 
         selectedLink = selectedLink.PrevLink()
@@ -129,11 +158,11 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         End If
         ' Skip Separators
         If GetSelectedMenuItem().IsSkippable()
-            MoveUp()
+            SelectPrevious()
         End If
     End Method
 
-    Method MoveDown()
+    Method SelectNext()
         If IsEmpty() Then Return
 
         selectedLink = selectedLink.NextLink()
@@ -262,6 +291,34 @@ Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
             If isSelected Then base.DrawCursor(x, y)
 
             y :+ lineHeight
+            i :+ 1
+            link = link.NextLink()
+        Wend
+    End Method
+End Type
+
+Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
+    Const COLUMNS:Int = 2 ' Small screen, support 2 columns for now
+
+    Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
+        Local lineHeight% = TextHeight("x")
+        Local cursorWidth% = base.GetCursorWidth()
+
+        Local columnWidth% = rect.GetWidth() / COLUMNS
+        Local i% = 0
+        Local link:TLink = menuItems.FirstLink()
+        While link
+            Local menuItem:CTMenuItem = CTMenuItem(link.Value())
+            Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
+            Local textColor:CTColor = base.TextColor(isSelected)
+
+            Local x% = (i Mod COLUMNS) * columnWidth
+            Local y% = (i / COLUMNS) * lineHeight
+            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+
+            ' Draw cursor on top (doesn't appear if drawn first)
+            If isSelected Then base.DrawCursor(x, y)
+
             i :+ 1
             link = link.NextLink()
         Wend
