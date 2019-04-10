@@ -3,16 +3,16 @@ SuperStrict
 Type CTMenuItem
     Public
     Field label:String
-    Field isPlaceholder:Int = False
+    Field isDivider:Int = False
 
     Function Create:CTMenuItem(label:String)
         Local item:CTMenuItem = New CTMenuItem
         item.label = label
-        If label.length = 0 Then item.isPlaceholder = True
+        If label.length = 0 Then item.isDivider = True
         Return item
     End Function
 
     Method IsSkippable:Int()
-        Return Self.isPlaceholder
+        Return Self.isDivider
     End Method
 End Type

@@ -35,6 +35,11 @@ Type CTWindowManager
         Self.windows.Append(win)
     End Method
 
+    Method AddWindowAndMakeKey(win:CTWindow)
+        Self.AddWindow(win)
+        win.MakeKey()
+    End Method
+
     Method RemoveWindow(win:CTWindow)
         Self.windows.RemoveFirst(win)
     End Method

@@ -5,8 +5,6 @@ Import "../Util/CTMutableArray.bmx"
 Import "CTMenuItem.bmx"
 Import "DrawContrastText.bmx"
 
-Global cursorImage:TImage = Null
-
 Interface CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
 End Interface
@@ -18,6 +16,7 @@ Type CTMenu Extends CTControl
 
 
     Public
+    Global cursorImage:TImage = Null
     Field textColor:CTColor = CTColor.LightGray()
     Field selectedTextColor:CTColor = CTColor.White()
 
@@ -129,13 +128,13 @@ Type CTMenu Extends CTControl
     End Method
 
     Method DrawCursor(x%, y%)
-        If Not cursorImage Then Return
-        DrawImage cursorImage, x, y
+        If Not CTMenu.cursorImage Then Return
+        DrawImage CTMenu.cursorImage, x, y
     End Method
 
     Method GetCursorWidth%()
-        If cursorImage
-            Return ImageWidth(cursorImage)
+        If CTMenu.cursorImage
+            Return ImageWidth(CTMenu.cursorImage)
         End If
         Return 0
     End Method
