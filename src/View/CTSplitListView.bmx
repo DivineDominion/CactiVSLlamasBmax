@@ -80,9 +80,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         Self.rightListMenu.ResignFirstResponder()
         Self.leftListMenu.MakeFirstResponder()
 
-        If Self.delegate
-            Self.delegate.SplitListViewDidActivateSide(Self, CTSplitListView.LEFT_SIDE)
-        End If
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, CTSplitListView.LEFT_SIDE)
     End Method
 
     Method ActivateRightList()
@@ -94,9 +93,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         Self.leftListMenu.ResignFirstResponder()
         Self.rightListMenu.MakeFirstResponder()
 
-        If Self.delegate
-            Self.delegate.SplitListViewDidActivateSide(Self, CTSplitListView.RIGHT_SIDE)
-        End If
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.SplitListViewDidActivateSide(Self, CTSplitListView.RIGHT_SIDE)
     End Method
     '#End Region
 
@@ -106,7 +104,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
         If Self.delegate
             Local side:Int = CTSplitListView.LEFT_SIDE
             If menu = rightListMenu Then side = CTSplitListView.RIGHT_SIDE
-            Self.delegate.SplitListViewDidSelectMenuItemFromSide(Self, menuItem, side)
+            ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+            delegate.SplitListViewDidSelectMenuItemFromSide(Self, menuItem, side)
         End If
     End Method
     '#End Region

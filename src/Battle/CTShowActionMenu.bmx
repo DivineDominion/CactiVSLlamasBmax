@@ -47,9 +47,8 @@ Type CTShowActionMenu Implements CTMenuDelegate
         CTWindowManager.GetInstance().RemoveWindow(currentWindow)
         Self.currentWindow = Null
 
-        If Self.delegate
-            Self.delegate.showActionMenuDidSelectMenuItem(Self, menuItem)
-        End If
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.showActionMenuDidSelectMenuItem(Self, menuItem)
     End Method
     '#End Redion
 End Type
