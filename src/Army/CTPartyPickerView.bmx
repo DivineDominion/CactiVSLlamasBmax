@@ -52,8 +52,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     Private
     Method AddCharactersFromListToSide(list:TList, side:Int)
         For Local character:CTCharacter = EachIn list
-            Local menuItem:CTMenuItem = New CTMenuItem(character.GetName(), character.GetID())
-            Self.splitListView.AddMenuItemToSide(menuItem, side)
+            Self.splitListView.AddMenuItemToSide(CTMenuItemFromCharacter(character), side)
         Next
     End Method
 
@@ -91,20 +90,47 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     '#Region CTSplitListViewDelegate
     Public
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
-        TransferMenuItemInSplitListViewFromSide(menuItem, splitListView, side)
+        SwitchCharacterFromMenuItemInSplitViewFromSide(menuItem, splitListView, side)
         UpdateStatusLabel()
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
 
     Private
-    Method TransferMenuItemInSplitListViewFromSide(menuItem:CTMenuItem, splitListView:CTSplitListView, sourceSide:Int)
+    Method SwitchCharacterFromMenuItemInSplitViewFromSide(menuItem:CTMenuItem, splitListView:CTSplitListView, sourceSide:Int)
+        Local sourceList:TList = CharacterListForSide(sourceSide)
         Local targetSide:Int = splitListView.OppositeOf(sourceSide)
+        Local targetList:TList = CharacterListForSide(targetSide)
+
+        If targetList = party And PartyIsFull() Then Return
+
+        ' Update model
+        Local transferredCharacterID:Int = menuItem.objectID
+        Local character:CTCharacter = CharacterInListWithID(sourceList, transferredCharacterID)
+        If Not character Then RuntimeError "No character found with ID " + String(transferredCharacterID)
+        sourceList.Remove(character)
+        targetList.AddLast(character)
+
+        ' Update view
         splitListView.RemoveMenuItemFromSide(menuItem, sourceSide)
-        splitListView.AddMenuItemToSide(menuItem, targetSide)
+        splitListView.AddMenuItemToSide(CTMenuItemFromCharacter(character), targetSide)
+    End Method
+
+    Method CharacterListForSide:TList(side:Int)
+        If side = CTSplitListView.LEFT_SIDE
+            Return reserve
+        ElseIf side = CTSplitListView.RIGHT_SIDE
+            Return party
+        EndIf
+        RuntimeError "side " + String(side) + " is not supported"
+    End Method
+
+    Method PartyIsFull:Int()
+        Return Self.party.Count >= REQ_PARTY_COUNT
     End Method
     '#End Region
 End Type
+
 
 Type CTPartyStatusLabel Extends CTLabel
     Function Create:CTPartyStatusLabel()
@@ -118,3 +144,15 @@ Type CTPartyStatusLabel Extends CTLabel
         Self.isCentered = True
     End Method
 End Type
+
+Private
+Function CharacterInListWithID:CTCharacter(characterList:TList, characterID:Int)
+    For Local character:CTCharacter = EachIn characterList
+        If character.GetID() = characterID Then Return character
+    Next
+    RuntimeError "No character found in TList with ID=" + String(characterID)
+End Function
+
+Function CTMenuItemFromCharacter:CTMenuItem(character:CTCharacter)
+    Return New CTMenuItem(character.GetName(), character.GetID())
+End Function

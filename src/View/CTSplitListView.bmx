@@ -31,10 +31,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     Method New()
         Self.leftListMenu = New CTMenu()
         Self.leftListMenu.delegate = Self
-        leftListMenu.AddMenuItemWithLabel("left")
 
         Self.rightListMenu = New CTMenu()
-        rightListMenu.AddMenuItemWithLabel("Right")
         Self.rightListMenu.delegate = Self
 
         ' Bubble up key events from menus to this control but no further
