@@ -38,10 +38,6 @@ Type CTMenu Extends CTControl
         Next
     End Method
 
-    Function Create:CTMenu(labels:String[])
-        Return New CTMenu(labels)
-    End Function
-
     Method RemoveDelegate()
         Self.delegate = Null
     End Method
