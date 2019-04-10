@@ -50,7 +50,7 @@ Type CTMenu Extends CTControl
     '#Region Menu Contents
     Public
     Method AddMenuItemWithLabel:CTMenuItem(label:String)
-        Local menuItem:CTMenuItem = CTMenuItem.Create(label)
+        Local menuItem:CTMenuItem = New CTMenuItem(label)
         AddMenuItem(menuItem)
         Return menuItem
     End Method

@@ -2,14 +2,25 @@ SuperStrict
 
 Type CTMenuItem
     Public
-    Field label:String
+    Rem
+    bbdoc: ID of a represented object. May be -1 for no representation.
+    End Rem
+    Field objectID:Int = -1
+
+    Rem
+    bbdoc: Text representation in the menu.
+    End Rem
+    Field label:String = ""
     Field isDivider:Int = False
 
-    Function Create:CTMenuItem(label:String)
-        Local item:CTMenuItem = New CTMenuItem
-        item.label = label
-        If label.length = 0 Then item.isDivider = True
-        Return item
+    Method New(label:String, objectID:Int = -1)
+        Self.label = label
+        Self.objectID = objectID
+        If Not label Or label.length = 0 Then Self.isDivider = True
+    End Method
+
+    Function CreateDivider:CTMenuItem()
+        Return New CTMenuItem(Null, -1)
     End Function
 
     Method IsSkippable:Int()

@@ -2,7 +2,7 @@ SuperStrict
 
 Import "CTCharacter.bmx"
 
-Type CTCactus Implements CTCharacter
+Type CTCactus Extends CTCharacter
     Private
     Field name:String
     Field hp%

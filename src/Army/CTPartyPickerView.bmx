@@ -52,7 +52,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate
     Private
     Method AddCharactersFromListToSide(list:TList, side:Int)
         For Local character:CTCharacter = EachIn list
-            Local menuItem:CTMenuItem = CTMenuItem.create(character.GetName())
+            Local menuItem:CTMenuItem = New CTMenuItem(character.GetName(), character.GetID())
             Self.splitListView.AddMenuItemToSide(menuItem, side)
         Next
     End Method
