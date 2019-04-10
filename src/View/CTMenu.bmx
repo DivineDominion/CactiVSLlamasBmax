@@ -31,14 +31,15 @@ Type CTMenu Extends CTControl
         Self.isOpaque = True
     End Method
 
-    Function Create:CTMenu(labels:String[])
-        Local menu:CTMenu = New CTMenu()
-
+    Method New(labels:String[])
+        New()
         For Local label:String = EachIn labels
-            menu.AddMenuItemWithLabel(label)
+            Self.AddMenuItemWithLabel(label)
         Next
+    End Method
 
-        Return menu
+    Function Create:CTMenu(labels:String[])
+        Return New CTMenu(labels)
     End Function
 
     Method RemoveDelegate()
@@ -83,6 +84,10 @@ Type CTMenu Extends CTControl
 
     Method IsEmpty:Int()
         Return Self.menuItems.IsEmpty()
+    End Method
+
+    Method Count:Int()
+        Return Self.menuItems.Count()
     End Method
 
 
