@@ -13,7 +13,7 @@ Interface CTMenuDrawingBase
     Method DrawCursor(x%, y%)
     Method GetCursorWidth%()
     Method IsActive%()
-    Method TextColor:CTColor(isHighlighted:Int)
+    Method TextColor:CTColor(isHighlighted:Int, isEnabled:Int)
 End Interface
 
 Interface CTMenuItemDrawingStrategy
@@ -31,6 +31,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Global cursorImage:TImage = Null
     Field defaultTextColor:CTColor = CTColor.LightGray()
     Field selectedTextColor:CTColor = CTColor.White()
+    Field disabledTextColor:CTColor = CTColor.DarkGray()
 
     Rem
     Warning: setting this to the owner of the menu creates a retain cycle.
@@ -58,7 +59,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
             Self.AddMenuItemWithLabel(label)
         Next
     End Method
-    
+
     Method TearDown()
         RemoveDelegate()
         Super.TearDown()
@@ -112,6 +113,15 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         Return Self.menuItems.Count()
     End Method
 
+    Method SetIsEnabledForIndex(isEnabled:Int, index:Int)
+        Local link:TLink = ListLinkAtIndex(Self.menuItems, index)
+
+        If Not link Throw New TNoSuchElementException
+
+        Local menuItem:CTMenuItem = CTMenuItem(link.Value())
+        menuItem.isEnabled = isEnabled
+    End Method
+
 
     Private
     Method SetInitialSelectionIfNecessary()
@@ -129,15 +139,23 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     End Method
 
     Method ResetSelection()
-        Self.selectedLink = Self.menuItems.FirstLink()
+        SelectFirst()
     End Method
 
     Method SelectFirst()
-        Self.selectedLink = Self.menuItems.FirstLink()
+        Local link:TLink = Self.menuItems.FirstLink()
+        While link And CTMenuItem(link.Value()).IsSkippable()
+            link = link.NextLink()
+        Wend
+        Self.selectedLink = link
     End Method
 
     Method SelectLast()
-        Self.selectedLink = Self.menuItems.LastLink()
+        Local link:TLink = Self.menuItems.LastLink()
+        While link And CTMenuItem(link.Value()).IsSkippable()
+            link = link.PrevLink()
+        Wend
+        Self.selectedLink = link
     End Method
     '#End Region
 
@@ -177,7 +195,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
         selectedLink = LinkBeforeSelection()
 
-        ' Skip Separators
+        ' Skip Separators and disabled items
         If GetSelectedMenuItem().IsSkippable()
             SelectPrevious()
         End If
@@ -188,9 +206,9 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
         selectedLink = LinkAfterSelection()
 
-        ' Skip Separators
+        ' Skip Separators and disabled items
         If GetSelectedMenuItem().IsSkippable()
-            MoveDown()
+            SelectNext()
         End If
     End Method
 
@@ -233,7 +251,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     Private
     Method DrawEmptinessIndicator(dirtyRect:CTRect)
-        DrawContrastText "(Empty)", 0, 0, TextColor(IsFirstResponder(Self))
+        DrawContrastText "(Empty)", 0, 0, TextColor(IsFirstResponder(Self), True)
     End Method
 
     Method DrawMenuItemLabels(dirtyRect:CTRect)
@@ -269,12 +287,10 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         Return IsFirstResponder(Self)
     End Method
 
-    Method TextColor:CTColor(isHighlighted:Int)
-        If isHighlighted
-            Return Self.selectedTextColor
-        Else
-            Return Self.defaultTextColor
-        End If
+    Method TextColor:CTColor(isHighlighted:Int, isEnabled:Int)
+        If Not isEnabled Then Return Self.disabledTextColor
+        If isHighlighted Then Return Self.selectedTextColor
+        Return Self.defaultTextColor
     End Method
     '#End Region
 End Type
@@ -317,7 +333,7 @@ Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
             Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
-            Local textColor:CTColor = base.TextColor(isSelected)
+            Local textColor:CTColor = base.TextColor(isSelected, menuItem.isEnabled)
 
             DrawContrastText menuItem.label, x + cursorWidth, y, textColor
 
@@ -344,7 +360,7 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
             Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
-            Local textColor:CTColor = base.TextColor(isSelected)
+            Local textColor:CTColor = base.TextColor(isSelected, menuItem.isEnabled)
 
             Local x% = (i Mod COLUMNS) * columnWidth
             Local y% = (i / COLUMNS) * lineHeight

@@ -20,7 +20,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     Field party:TList
     Field splitListView:CTSplitListView
     Field statusLabel:CTPartyStatusLabel
-    Field confirmationOptions:CTDialog
+    Field confirmationActions:CTDialog
 
 
     '#REGION Creation
@@ -51,16 +51,17 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
 
         Self.statusLabel = CTPartyStatusLabel.Create()
-        UpdateStatusLabel()
+        Self.UpdateStatusLabel()
 
-        Self.confirmationOptions = New CTDialog("Proceed", "Cancel")
-        Self.confirmationOptions.delegate = Self
+        Self.confirmationActions = New CTDialog("Proceed", "Cancel")
+        Self.confirmationActions.delegate = Self
+        Self.UpdateConfirmationActions()
     End Method
 
     Method TearDown()
         ResetDelegate()
         Self.splitListView.TearDown()
-        Self.confirmationOptions.TearDown()
+        Self.confirmationActions.TearDown()
         Super.TearDown()
     End Method
 
@@ -78,6 +79,11 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     Method UpdateStatusLabel()
         Self.statusLabel.DisplaySelectionCountOfRequired(Self.party.Count(), REQ_PARTY_COUNT)
     End Method
+
+    Method UpdateConfirmationActions()
+        Local isEnabled:Int = PartyIsFull()
+        Self.confirmationActions.SetIsEnabledForIndex(isEnabled, 0)
+    End Method
     '#End Region
 
 
@@ -91,13 +97,13 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
     Method ResignFirstResponder()
         Self.splitListView.ResignFirstResponder()
-        Self.confirmationOptions.ResignFirstResponder()
+        Self.confirmationActions.ResignFirstResponder()
         Super.ResignFirstResponder()
     End Method
 
     Method RemoveFromResponderStack()
         Self.splitListView.RemoveFromResponderStack()
-        Self.confirmationOptions.RemoveFromResponderStack()
+        Self.confirmationActions.RemoveFromResponderStack()
         Super.RemoveFromResponderStack()
     End Method
     '#End Region
@@ -117,7 +123,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Local optionsRect:CTRect = dirtyRect..
             .SettingHeight(lineHeight)..
             .Translating(0, dirtyRect.GetHeight() - lineHeight)
-        CTViewport.Create(optionsRect).Draw(confirmationOptions)
+        CTViewport.Create(optionsRect).Draw(confirmationActions)
 
         ' Draw list between status label and actions
         Local listRect:CTRect = dirtyRect..
@@ -133,18 +139,19 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
         SwitchCharacterFromMenuItemInSplitViewFromSide(menuItem, splitListView, side)
         UpdateStatusLabel()
+        UpdateConfirmationActions()
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
 
     Method SplitListViewShouldWrapSide:Int(splitListView:CTSplitListView, side:Int, forwardDirection:Int)
         ' Instead of wrapping around in the list, jump to the options menu
-        Self.confirmationOptions.MakeFirstResponder()
+        Self.confirmationActions.MakeFirstResponder()
 
         If side = CTSplitListView.LEFT_SIDE
-            Self.confirmationOptions.SelectFirst()
+            Self.confirmationActions.SelectFirst()
         ElseIf side = CTSplitListView.RIGHT_SIDE
-            Self.confirmationOptions.SelectLast()
+            Self.confirmationActions.SelectLast()
         End If
 
         Return False
@@ -204,7 +211,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Else
             Self.splitListView.SelectLastOnSide(side)
         End If
-        Self.confirmationOptions.ResignFirstResponder()
+        Self.confirmationActions.ResignFirstResponder()
         Self.splitListView.ActivateListOnSide(side)
     End Method
 

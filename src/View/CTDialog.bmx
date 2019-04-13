@@ -49,6 +49,9 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Self.delegate = Null
     End Method
 
+
+    '#Region CTMenu Decorator
+    Public
     Method SelectFirst()
         Self.menu.SelectFirst()
     End Method
@@ -57,10 +60,19 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         Self.menu.SelectLast()
     End Method
 
+    Method SetIsEnabledForIndex(isEnabled:Int, index:Int)
+        Self.menu.SetIsEnabledForIndex(isEnabled, index)
+    End Method
+    '#End Region
+
+
+    '#Region CTDrawable
+    Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
         Self.menu.Draw(dirtyRect)
     End Method
+    '#End Region
 
 
     '#Region CTResponder

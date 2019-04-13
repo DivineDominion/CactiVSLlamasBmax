@@ -12,6 +12,7 @@ Type CTMenuItem
     End Rem
     Field label:String = ""
     Field isDivider:Int = False
+    Field isEnabled:Int = True
 
     Method New(label:String, objectID:Int = -1)
         Self.label = label
@@ -24,6 +25,6 @@ Type CTMenuItem
     End Function
 
     Method IsSkippable:Int()
-        Return Self.isDivider
+        Return Self.isDivider Or Not Self.isEnabled
     End Method
 End Type
