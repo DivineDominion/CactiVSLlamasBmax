@@ -10,7 +10,7 @@ CONST BATTLEFIELD_COLUMNS% = 3
 CONST BATTLEFIELD_ROWS% = 3
 
 Interface CTBattlefieldViewDelegate
-    Method BattleFieldViewDidSelectToken(battlefieldView:CTBattlefieldView, token:CTToken)
+    Method BattlefieldViewDidSelectToken(battlefieldView:CTBattlefieldView, token:CTToken)
 End Interface
 
 Type CTBattlefieldView Extends CTControl

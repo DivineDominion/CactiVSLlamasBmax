@@ -25,20 +25,20 @@ Type CTBattleGameScene Implements CTGameScene
     End Method
 
     Private
-    Field _showBattlefield:CTBattle = Null
+    Field _battle:CTBattle = Null
 
     Method ShowBattlefield()
         Local windowOffset:Int = 10
         Local windowWidth:Int = CTScreen.main.GetWidth() - (2 * windowOffset)
         Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, 50, windowWidth, 200)
-        _showBattlefield:CTBattle = New CTBattle(battlefieldWindowFrameRect, CTCactus[](cactusParty.ToArray()))
-        _showBattlefield.ShowBattlefield()
+        Local cacti:CTCactus[] = CTCactus[](cactusParty.ToArray())
+        _battle:CTBattle = New CTBattle(battlefieldWindowFrameRect, cacti)
+        _battle.ShowBattlefield()
     End Method
 
     Method CloseBattlefield()
-        If _showBattlefield = Null Then Return
-        _showBattlefield.CloseWindow()
+        If _battle = Null Then Return
+        _battle.CloseBattlefield()
     End Method
     '#End Region
-
 End Type
