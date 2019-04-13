@@ -4,7 +4,7 @@ Interface CTResponder
     Rem
     returns: True if event should be consumed, false if passed on.
     EndRem
-    Method KeyUp:Int(key:Int)
+    Method KeyDown:Int(key:Int)
     Method MakeFirstResponder()
 End Interface
 
@@ -16,10 +16,10 @@ Function HandleKeyboardInput:Object(id:Int, data:Object, context:Object)
     DebugLog "Event: " + event.ToString()
 
     For Local responder:CTResponder = EachIn _responderStack
+        DebugLog "Responder: " + TTypeId.ForObject(responder).Name()
         Select event.ID
-            Case EVENT_KEYUP
-                 DebugLog "Responder: " + TTypeId.ForObject(responder).Name()
-                 Local consumed:Int = responder.KeyUp(event.Data)
+            Case EVENT_KEYDOWN
+                 Local consumed:Int = responder.KeyDown(event.Data)
                  If consumed Then Exit
         End Select
     Next

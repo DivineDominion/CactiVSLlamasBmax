@@ -29,7 +29,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     Rem
     bbdoc: Default implementation calls #InterpretKey.
     EndRem
-    Method KeyUp:Int(key:Int)
+    Method KeyDown:Int(key:Int)
         Self.InterpretKey(key)
         Return Self.consumesKeyEvents
     End Method
