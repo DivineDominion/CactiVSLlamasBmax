@@ -31,7 +31,7 @@ Type CTBattleGameScene Implements CTGameScene
         Local windowOffset:Int = 10
         Local windowWidth:Int = CTScreen.main.GetWidth() - (2 * windowOffset)
         Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, 50, windowWidth, 200)
-        _showBattlefield:CTShowBattlefield = CTShowBattlefield.Create(battlefieldWindowFrameRect, CTCactus[](cactusParty.ToArray()))
+        _showBattlefield:CTShowBattlefield = New CTShowBattlefield(battlefieldWindowFrameRect, CTCactus[](cactusParty.ToArray()))
         _showBattlefield.ShowBattlefield()
     End Method
 

@@ -3,33 +3,52 @@ SuperStrict
 Import "../View/CTControl.bmx"
 Import "../View/CTRect.bmx"
 Import "CTBattlefield.bmx"
+Import "CTToken.bmx"
 Import "CTTokenHighlighter.bmx"
-Import "CTSelectToken.bmx"
 
 CONST BATTLEFIELD_COLUMNS% = 3
 CONST BATTLEFIELD_ROWS% = 3
 
-Type CTBattlefieldView Extends CTControl Implements CTSelectTokenDelegate
+Interface CTBattlefieldViewDelegate
+    Method BattleFieldViewDidSelectToken(battlefieldView:CTBattlefieldView, token:CTToken)
+End Interface
+
+Type CTBattlefieldView Extends CTControl
     Private
     Field battlefield:CTBattlefield
     Field tokenHighlighter:CTTokenHighlighter = New CTTokenHighlighter
-    Field currentTokenSelector:CTSelectToken = Null
+
+    Method New(); End Method
 
     Public
-    Method New()
-        Self.backgroundColor = CTColor.Black()
-        Self.isOpaque = True
-    End Method
+    Field delegate:CTBattlefieldViewDelegate = Null
 
     Method New(battlefield:CTBattlefield)
-        New()
+        Self.backgroundColor = CTColor.Black()
+        Self.isOpaque = True
         Self.battlefield = battlefield
     End Method
 
+    Method TearDown()
+        ResetDelegate()
+        Super.TearDown()
+    End Method
+
+    Method ResetDelegate()
+        Self.delegate = Null
+    End Method
+
+
     '#Region CTKeyInterpreter
+    Private
+    Field selectedTokenPosition:CTTokenPosition = New CTTokenPosition(0, 0)
+
     Public
     Method ConfirmSelection()
-        Self.ShowTokenSelection()
+        If Not Self.delegate Then Return
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        Local selectedToken:CTToken = battlefield.TokenAtPosition(selectedTokenPosition)
+        If selectedToken Then delegate.BattleFieldViewDidSelectToken(Self, selectedToken)
     End Method
 
     Method MoveUp()
@@ -53,12 +72,11 @@ Type CTBattlefieldView Extends CTControl Implements CTSelectTokenDelegate
     End Method
 
     Private
-    Field selectedTokenPosition:CTTokenPosition = New CTTokenPosition(0, 0)
-
     Method ResetTokenHighlighterAnimation()
         Self.tokenHighlighter.ResetAnimation()
     End Method
     '#End Region
+
 
     '#Region CTDrawable
     Public
@@ -79,25 +97,11 @@ Type CTBattlefieldView Extends CTControl Implements CTSelectTokenDelegate
     End Method
     '#End Region
 
+
     '#Region CTAnimatable
     Public
     Method UpdateAnimation(delta:Float)
         Self.tokenHighlighter.UpdateAnimation(delta)
-    End Method
-    '#End Region
-
-    '#Region CTSelectTokenDelegate
-    Method ShowTokenSelection()
-        Local window:CTWindow = CTWindowManager.GetInstance().WindowWithContentView(Self)
-        Self.currentTokenSelector = CTSelectToken.CreateWithActionMenuRelativeToRect(window.FrameRect())
-        Self.currentTokenSelector.ShowMenu()
-    End Method
-
-    Method SelectTokenDidSelectAction(selectToken:CTSelectToken, action:String)
-        If Self.currentTokenSelector <> selectToken Then Return
-        ' Free up connection to subcomponent to break reference cycle
-        Self.currentTokenSelector.delegate = Null
-        Self.currentTokenSelector = Null
     End Method
     '#End Region
 End Type

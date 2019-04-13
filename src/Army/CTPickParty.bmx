@@ -25,6 +25,7 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
         Return service
     End Function
 
+
     '#Region Window lifecycle management
     Private
     Field currentWindow:CTWindow = Null

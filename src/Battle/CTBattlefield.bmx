@@ -19,6 +19,14 @@ Type CTBattlefield
         tokenPositionsTokens.Insert(tokenPosition, token)
     End Method
 
+    Method TokenAtPosition:CTToken(tokenPosition:CTTokenPosition)
+        For Local node:TKeyValue = EachIn Self.tokenPositionsTokens
+            Local currentPosition:CTTokenPosition = CTTokenPosition(node.Key())
+            If currentPosition.IsEqual(tokenPosition) Then Return CTToken(node.Value())
+        Next
+        Return Null
+    End Method
+
     Method RectForPosition:CTRect(position:CTTokenPosition)
         Return RectForColumnRow(position.column, position.row)
     End Method

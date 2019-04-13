@@ -9,6 +9,10 @@ Type CTTokenPosition
         Self.column = column
         Self.row = row
     End Method
+    
+    Method IsEqual:Int(other:CTTokenPosition)
+        Return Self.column = other.column And Self.row = other.row
+    End Method
 
     Method MovedRight:CTTokenPosition(limit%)
         Local newColumn% = column + 1
