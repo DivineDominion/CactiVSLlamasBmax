@@ -26,6 +26,22 @@ Type CTColor
         SetClsColor r, g, b
     End Method
 
+
+    '#Region Semantic Colors
+    Function DefaultMenuItemColor:CTColor()
+        Return LightGray()
+    End Function
+
+    Function SelectedMenuItemColor:CTColor()
+        Return White()
+    End Function
+
+    Function DisabledMenuItemColor:CTColor()
+        Return DarkGray()
+    End Function
+    '#End Region
+
+
     '#Region Names Colors
     Function White:CTColor()
         Return CTColor.Create(255, 255, 255)

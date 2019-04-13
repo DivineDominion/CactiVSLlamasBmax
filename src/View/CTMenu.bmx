@@ -13,7 +13,6 @@ Interface CTMenuDrawingBase
     Method DrawCursor(x%, y%)
     Method GetCursorWidth%()
     Method IsActive%()
-    Method TextColor:CTColor(isHighlighted:Int, isEnabled:Int)
 End Interface
 
 Interface CTMenuItemDrawingStrategy
@@ -29,9 +28,6 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     Public
     Global cursorImage:TImage = Null
-    Field defaultTextColor:CTColor = CTColor.LightGray()
-    Field selectedTextColor:CTColor = CTColor.White()
-    Field disabledTextColor:CTColor = CTColor.DarkGray()
 
     Rem
     Warning: setting this to the owner of the menu creates a retain cycle.
@@ -251,7 +247,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     Private
     Method DrawEmptinessIndicator(dirtyRect:CTRect)
-        DrawContrastText "(Empty)", 0, 0, TextColor(IsFirstResponder(Self), True)
+        DrawContrastText "(Empty)", 0, 0, CTColor.DefaultMenuItemColor()
     End Method
 
     Method DrawMenuItemLabels(dirtyRect:CTRect)
@@ -285,12 +281,6 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     Method IsActive%()
         Return IsFirstResponder(Self)
-    End Method
-
-    Method TextColor:CTColor(isHighlighted:Int, isEnabled:Int)
-        If Not isEnabled Then Return Self.disabledTextColor
-        If isHighlighted Then Return Self.selectedTextColor
-        Return Self.defaultTextColor
     End Method
     '#End Region
 End Type
@@ -333,7 +323,7 @@ Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
             Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
-            Local textColor:CTColor = base.TextColor(isSelected, menuItem.isEnabled)
+            Local textColor:CTColor = TextColor(menuItem.isEnabled, isSelected)
 
             DrawContrastText menuItem.label, x + cursorWidth, y, textColor
 
@@ -360,7 +350,7 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
             Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
-            Local textColor:CTColor = base.TextColor(isSelected, menuItem.isEnabled)
+            Local textColor:CTColor = TextColor(menuItem.isEnabled, isSelected)
 
             Local x% = (i Mod COLUMNS) * columnWidth
             Local y% = (i / COLUMNS) * lineHeight
@@ -374,3 +364,9 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
         Wend
     End Method
 End Type
+
+Function TextColor:CTColor(isEnabled:Int, isHighlighted:Int)
+    If Not isEnabled Then Return CTColor.DisabledMenuItemColor()
+    If isHighlighted Then Return CTColor.SelectedMenuItemColor()
+    Return CTColor.DefaultMenuItemColor()
+End Function
