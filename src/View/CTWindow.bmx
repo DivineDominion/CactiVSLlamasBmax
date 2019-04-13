@@ -19,9 +19,13 @@ Type CTWindow Implements CTAnimatable
     Field titleLabel:CTLabel
 
     Public
+    Function FrameRectFittingLinesAndTitle:CTRect(x%, y%, w%, textLines%)
+        Return FrameRectFittingLines(x, y, w, textLines + 1)
+    End Function
+
     Function FrameRectFittingLines:CTRect(x%, y%, w%, textLines%)
         Local contentHeight% = textLines * TextHeight("x")
-        Return New CTRect(x, y, w, contentHeight + BORDER_WIDTH)
+        Return New CTRect(x, y, w, contentHeight + (BORDER_WIDTH * 2))
     End Function
 
     Rem

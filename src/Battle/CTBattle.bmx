@@ -39,14 +39,13 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate
     Public
     Method BattlefieldWindowControllerDidSelectToken(windowController:CTBattlefieldWindowController, token:CTToken)
         If Self.battlefieldWindowController <> windowController Then Return
-        ' TODO: change action per character
-        ShowTokenSelection()
+        ShowTokenSelection(token)
     End Method
 
     Private
-    Method ShowTokenSelection()
+    Method ShowTokenSelection(token:CTToken)
         Local window:CTWindow = battlefieldWindowController.Window()
-        Self.currentTokenSelector = CTSelectToken.CreateWithActionMenuRelativeToRect(window.FrameRect())
+        Self.currentTokenSelector = New CTSelectToken(token, window.FrameRect())
         Self.currentTokenSelector.ShowMenu()
     End Method
     '#End Region

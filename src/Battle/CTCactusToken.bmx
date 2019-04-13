@@ -20,4 +20,8 @@ Type CTCactusToken Extends CTToken
         nameColor.Set()
         DrawText cactus.GetName(), rect.GetX() + 6, rect.GetMaxY() - 6 - TextHeight("x")
     End Method
+
+    Method GetCharacter:CTCharacter()
+        Return cactus
+    End Method
 End Type
