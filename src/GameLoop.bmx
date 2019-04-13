@@ -21,5 +21,5 @@ Function GameLoop()
 
         delta = MilliSecs() - lastTime
         lastTime = MilliSecs()
-    Until KeyDown(Key_Escape) Or AppTerminate()
+    Until AppTerminate()
 End Function

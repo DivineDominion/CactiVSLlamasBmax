@@ -21,7 +21,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     Method ResignFirstResponder()
         If IsFirstResponder(Self) Then PopFirstResponder()
     End Method
-    
+
     Method RemoveFromResponderStack()
         RemoveResponder(Self)
     End Method
@@ -46,6 +46,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
         Case KEY_LEFT MoveLeft()
         Case KEY_RIGHT MoveRight()
         Case KEY_SPACE, KEY_ENTER ConfirmSelection()
+        Case KEY_ESCAPE Cancel()
         End Select
     End Method
 
@@ -54,5 +55,6 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     Method MoveLeft(); End Method
     Method MoveRight(); End Method
     Method ConfirmSelection(); End Method
+    Method Cancel(); End Method
     '#End Region
 End Type
