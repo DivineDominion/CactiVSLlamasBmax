@@ -25,7 +25,6 @@ Type CTGame Implements CTGameSceneTransitionDelegate
     '#Region CTGameSceneTransitionDelegate
     Public
     Method GameScenePresentsNewGameScene(gameScene:CTGameScene, newGameScene:CTGameScene)
-        DebugLog "Trans"
         Self.ActivateGameScene(newGameScene)
     End Method
     '#End Region
