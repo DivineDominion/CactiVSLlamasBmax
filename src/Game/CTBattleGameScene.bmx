@@ -2,7 +2,7 @@ SuperStrict
 
 Import "CTGameScene.bmx"
 Import "../View/View.bmx"
-Import "../Battle/CTShowBattlefield.bmx"
+Import "../Battle/CTBattle.bmx"
 
 Type CTBattleGameScene Implements CTGameScene
     '#Region CTGameScene
@@ -25,13 +25,13 @@ Type CTBattleGameScene Implements CTGameScene
     End Method
 
     Private
-    Field _showBattlefield:CTShowBattlefield = Null
+    Field _showBattlefield:CTBattle = Null
 
     Method ShowBattlefield()
         Local windowOffset:Int = 10
         Local windowWidth:Int = CTScreen.main.GetWidth() - (2 * windowOffset)
         Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, 50, windowWidth, 200)
-        _showBattlefield:CTShowBattlefield = New CTShowBattlefield(battlefieldWindowFrameRect, CTCactus[](cactusParty.ToArray()))
+        _showBattlefield:CTBattle = New CTBattle(battlefieldWindowFrameRect, CTCactus[](cactusParty.ToArray()))
         _showBattlefield.ShowBattlefield()
     End Method
 

@@ -11,7 +11,7 @@ Import "CTSelectToken.bmx"
 Import "CTCactusToken.bmx"
 Import "../Army/CTCactus.bmx"
 
-Type CTShowBattlefield Implements CTBattlefieldViewDelegate, CTSelectTokenDelegate
+Type CTBattle Implements CTBattlefieldViewDelegate, CTSelectTokenDelegate
     Private
     Field frameRect:CTRect
 
@@ -24,7 +24,7 @@ Type CTShowBattlefield Implements CTBattlefieldViewDelegate, CTSelectTokenDelega
 
     Public
     Method New(frameRect:CTRect, cacti:CTCactus[])
-        Assert frameRect Else "CTShowBattlefield requires frameRect"
+        Assert frameRect Else "CTBattle requires frameRect"
         Self.frameRect = frameRect
 
         Local cactusTokens:CTCactusToken[] = MapCactusToCactusToken(cacti)
