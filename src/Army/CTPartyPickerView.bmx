@@ -130,6 +130,10 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
             .Translating(0, labelRect.GetHeight())..
             .Resizing(0, -labelRect.GetHeight()-optionsRect.GetHeight())
         CTViewport.Create(listRect).Draw(splitListView)
+
+        ' Draw separator
+        CTColor.WindowFrameColor().Set()
+        DrawRect 0, listRect.GetMaxY() - 4, listRect.GetMaxX(), 2
     End Method
     '#End Region
 
