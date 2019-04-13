@@ -28,6 +28,10 @@ Type CTColor
 
 
     '#Region Semantic Colors
+    Function WindowFrameColor:CTColor()
+        Return White()
+    End Function
+
     Function DefaultMenuItemColor:CTColor()
         Return LightGray()
     End Function

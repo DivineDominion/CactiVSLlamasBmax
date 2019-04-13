@@ -94,7 +94,7 @@ Type CTWindow Implements CTAnimatable
         rect.Translating(1, 1).Fill()
 
         ' Frame
-        SetColor 255, 255, 255
+        CTColor.WindowFrameColor().Set()
         rect.Fill()
 
         ' Title
