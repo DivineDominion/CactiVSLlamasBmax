@@ -46,6 +46,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
         ' Subviews
         Self.splitListView = New CTSplitListView
+        Self.splitListView.consumesKeyEvents = False
         Self.splitListView.delegate = Self
         Self.AddCharactersFromListToSide(Self.reserve, CTSplitListView.LEFT_SIDE)
         Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
@@ -54,6 +55,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.UpdateStatusLabel()
 
         Self.confirmationActions = New CTDialog("Proceed", "Cancel")
+        Self.confirmationActions.consumesKeyEvents = False
         Self.confirmationActions.delegate = Self
         Self.UpdateConfirmationActions()
     End Method
@@ -86,7 +88,6 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     End Method
     '#End Region
 
-
     '#Region CTResponder
     ' Decorate responder stack access to the underlying controls
     Public
@@ -105,6 +106,15 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.splitListView.RemoveFromResponderStack()
         Self.confirmationActions.RemoveFromResponderStack()
         Super.RemoveFromResponderStack()
+    End Method
+    '#End Region
+
+
+    '#Region CTControl
+    Public
+    Method Cancel()
+        Self.confirmationActions.SelectLast()
+        Self.confirmationActions.MakeFirstResponder()
     End Method
     '#End Region
 
