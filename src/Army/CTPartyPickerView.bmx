@@ -108,21 +108,21 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
 
-        ' Draw options at the bottom
+        ' Draw status at the top below window title
+        Local labelRect:CTRect = dirtyRect.SettingHeight(statusLabel.GetTextHeight())
+        CTViewport.Create(labelRect).Draw(statusLabel)
+
+        ' Draw actions at the bottom
         Local lineHeight% = TextHeight("x")
         Local optionsRect:CTRect = dirtyRect..
             .SettingHeight(lineHeight)..
             .Translating(0, dirtyRect.GetHeight() - lineHeight)
         CTViewport.Create(optionsRect).Draw(confirmationOptions)
 
-        ' Draw status above options the bottom
-        Local labelRect:CTRect = dirtyRect..
-            .SettingHeight(statusLabel.GetTextHeight())..
-            .Translating(0, optionsRect.GetY() - statusLabel.GetTextHeight())
-        CTViewport.Create(labelRect).Draw(statusLabel)
-
-        ' Draw list above status label
-        Local listRect:CTRect = dirtyRect.Resizing(0, -labelRect.GetHeight()-optionsRect.GetHeight())
+        ' Draw list between status label and actions
+        Local listRect:CTRect = dirtyRect..
+            .Translating(0, labelRect.GetHeight())..
+            .Resizing(0, -labelRect.GetHeight()-optionsRect.GetHeight())
         CTViewport.Create(listRect).Draw(splitListView)
     End Method
     '#End Region
