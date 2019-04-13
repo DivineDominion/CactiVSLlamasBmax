@@ -209,8 +209,11 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     '#Region CTDialogDelegate
     Public
     Method DialogDidConfirm(dialog:CTDialog, didConfirm:Int)
+        Local selectedParty:TList = Self.party
+        If Not didConfirm Then selectedParty = Null
+
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.PartyPickerViewDidSelectParty(Self, party)
+        If Self.delegate Then delegate.PartyPickerViewDidSelectParty(Self, selectedParty)
     End Method
 
     Method DialogShouldMoveVertically:Int(dialog:CTDialog)

@@ -44,6 +44,7 @@ Type CTPickPartyGameScene Implements CTGameScene, CTPickPartyDelegate
     Public
     Method DidPickParty(pickParty:CTPickParty, party:TList)
         If Not Self.transitionDelegate Then Return
+        If Not party Then transitionDelegate.QuitGame()
         Local battleGameScene:CTBattleGameScene = New CTBattleGameScene(party)
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
          transitionDelegate.GameScenePresentsNewGameScene(Self, battleGameScene)

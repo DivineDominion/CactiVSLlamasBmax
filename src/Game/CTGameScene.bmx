@@ -2,6 +2,7 @@ SuperStrict
 
 Interface CTGameSceneTransitionDelegate
     Method GameScenePresentsNewGameScene(gameScene:CTGameScene, newGameScene:CTGameScene)
+    Method QuitGame()
 End Interface
 
 Rem

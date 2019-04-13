@@ -27,6 +27,10 @@ Type CTGame Implements CTGameSceneTransitionDelegate
     Method GameScenePresentsNewGameScene(gameScene:CTGameScene, newGameScene:CTGameScene)
         Self.ActivateGameScene(newGameScene)
     End Method
+
+    Method QuitGame()
+        End
+    End Method
     '#End Region
 
 
