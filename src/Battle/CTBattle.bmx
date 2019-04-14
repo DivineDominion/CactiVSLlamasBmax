@@ -1,17 +1,16 @@
 SuperStrict
 
 Import "CTBattlefieldWindowController.bmx"
-Import "CTSelectToken.bmx"
+Import "CTShowActionMenu.bmx"
 Import "CTToken.bmx"
 
 ' Use temporary tokens:
 Import "CTCactusToken.bmx"
 Import "../Army/CTCactus.bmx"
 
-Type CTBattle Implements CTBattlefieldWindowControllerDelegate
+Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenuDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
-    Field currentTokenSelector:CTSelectToken = Null
 
     Public
     Method New(frameRect:CTRect, cacti:CTCactus[])
@@ -30,7 +29,7 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate
     End Method
 
     Method CloseBattlefield()
-        If Self.currentTokenSelector Then Self.currentTokenSelector.delegate = Null
+        CloseActionsMenu()
         Self.battlefieldWindowController.Close()
     End Method
 
@@ -39,25 +38,51 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate
     Public
     Method BattlefieldWindowControllerDidSelectToken(windowController:CTBattlefieldWindowController, token:CTToken)
         If Self.battlefieldWindowController <> windowController Then Return
-        ShowTokenSelection(token)
-    End Method
-
-    Private
-    Method ShowTokenSelection(token:CTToken)
-        Local window:CTWindow = battlefieldWindowController.Window()
-        Self.currentTokenSelector = New CTSelectToken(token, window.FrameRect())
-        Self.currentTokenSelector.ShowMenu()
+        ShowActionsForToken(token)
     End Method
     '#End Region
 
+    '#Region Selecting Tokens
+    Private
+    Field currentMenuHandler:CTShowActionMenu = Null
 
-    '#Region CTSelectTokenDelegate
     Public
-    Method SelectTokenDidSelectAction(selectToken:CTSelectToken, action:String)
-        If Self.currentTokenSelector <> selectToken Then Return
-        ' Free up connection to subcomponent to break reference cycle
-        Self.currentTokenSelector.delegate = Null
-        Self.currentTokenSelector = Null
+    Method ShowActionsForToken(token:CTToken)
+        Assert Not Self.currentMenuHandler Else "Expected currentMenuHandler to be Null"
+
+        Local character:CTCharacter = token.GetCharacter()
+        Local lines:String[] = ["Fight", "Move", "", "Run"]
+
+        Local window:CTWindow = battlefieldWindowController.Window()
+        Local rect:CTRect = window.FrameRect()
+        Local menuFrameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(..
+            rect.GetX(), rect.GetMaxY() + 2, ..
+            rect.GetWidth(), lines.length)
+
+        Self.currentMenuHandler = New CTShowActionMenu(menuFrameRect, lines, character.GetName())
+        Self.currentMenuHandler.delegate = Self
+        Self.currentMenuHandler.ShowMenu()
+    End Method
+
+    Method CloseActionsMenu()
+        If Not Self.currentMenuHandler Then Return
+        Self.currentMenuHandler.CloseMenu()
+        Self.currentMenuHandler.delegate = Null
+        Self.currentMenuHandler = Null
+    End Method
+    '#End Region
+
+    '#Region CTShowActionMenuDelegate
+    Public
+    Method ShowActionMenuDidSelectAction(showActionMenu:CTShowActionMenu, action:String)
+        If Self.currentMenuHandler <> showActionMenu Then Return
+        DebugLog("ACTION: " + action)
+        CloseActionsMenu()
+    End Method
+
+    Method ShowActionMenuDidCancel(showActionMenu:CTShowActionMenu)
+        If Self.currentMenuHandler <> showActionMenu Then Return
+        CloseActionsMenu()
     End Method
     '#End Region
 End Type

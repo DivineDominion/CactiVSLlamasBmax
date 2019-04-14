@@ -7,6 +7,7 @@ Import "../View/CTWindowManager.bmx"
 
 Interface CTShowActionMenuDelegate
     Method ShowActionMenuDidSelectAction(showActionMenu:CTShowActionMenu, action:String)
+    Method ShowActionMenuDidCancel(showActionMenu:CTShowActionMenu)
 End Interface
 
 Type CTShowActionMenu Implements CTMenuDelegate
@@ -37,21 +38,28 @@ Type CTShowActionMenu Implements CTMenuDelegate
         menu.MakeFirstResponder()
     End Method
 
-    '#Region CTMenuDelegate
-    Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
-        If Self.menu <> menu Then Return
+    Method CloseMenu()
+        Assert Self.currentWindow Else "#CloseMenu called before showing the window"
 
         menu.RemoveDelegate() ' Breaks the retain cycle
         menu.ResignFirstResponder()
         menu.ResetSelection()
+
         CTWindowManager.GetInstance().RemoveWindow(currentWindow)
         Self.currentWindow = Null
+    End Method
 
+    '#Region CTMenuDelegate
+    Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
+        If Self.menu <> menu Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.ShowActionMenuDidSelectAction(Self, menuItem.label)
     End Method
 
     Method MenuDidCancel(menu:CTMenu)
+        If Self.menu <> menu Then Return
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.ShowActionMenuDidCancel(Self)
     End Method
 
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
