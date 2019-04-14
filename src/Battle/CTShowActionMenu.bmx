@@ -51,6 +51,9 @@ Type CTShowActionMenu Implements CTMenuDelegate
         If Self.delegate Then delegate.ShowActionMenuDidSelectAction(Self, menuItem.label)
     End Method
 
+    Method MenuDidCancel(menu:CTMenu)
+    End Method
+
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
         Return True
     End Method

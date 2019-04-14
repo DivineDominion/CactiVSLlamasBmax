@@ -6,6 +6,7 @@ Import "DrawContrastText.bmx"
 
 Interface CTMenuDelegate
     Method MenuDidSelectMenuItem(menu:CTMenu, menuItem:CTMenuItem)
+    Method MenuDidCancel(menu:CTMenu)
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
 End Interface
 
@@ -182,6 +183,11 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         If Not Self.delegate Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         delegate.MenuDidSelectMenuItem(Self, GetSelectedMenuItem())
+    End Method
+
+    Method Cancel()
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.MenuDidCancel(Self)
     End Method
 
 

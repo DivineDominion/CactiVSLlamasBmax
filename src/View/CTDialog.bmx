@@ -132,6 +132,10 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
         If Self.delegate Then delegate.DialogDidConfirm(Self, didConfirm)
     End Method
 
+    Method MenuDidCancel(menu:CTMenu)
+        Self.SelectLast()
+    End Method
+
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
         Return True
     End Method

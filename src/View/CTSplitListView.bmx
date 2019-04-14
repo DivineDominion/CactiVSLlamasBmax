@@ -9,6 +9,7 @@ Interface CTSplitListViewDelegate
     See CTSplitListView.LEFT_SIDE and CTSplitListView.RIGHT_SIDE for side values.
     End Rem
     Method SplitListViewDidSelectMenuItemFromSide(splitListView:CTSplitListView, menuItem:CTMenuItem, side:Int)
+    Method SplitListViewDidCancel(splitListView:CTSplitListView)
 
     Method SplitListViewShouldWrapSide:Int(splitListView:CTSplitListView, side:Int, forwardDirection:Int)
 
@@ -150,7 +151,12 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
         If Not Self.delegate Then Return True
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        Return delegate.SplitListViewShouldWrapSide:Int(Self, SideForMenu(menu), forwardDirection)
+        Return delegate.SplitListViewShouldWrapSide(Self, SideForMenu(menu), forwardDirection)
+    End Method
+
+    Method MenuDidCancel(menu:CTMenu)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.SplitListViewDidCancel(Self)
     End Method
 
     Private

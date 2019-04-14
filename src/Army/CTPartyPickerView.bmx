@@ -46,7 +46,6 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
         ' Subviews
         Self.splitListView = New CTSplitListView
-        Self.splitListView.consumesKeyEvents = False
         Self.splitListView.delegate = Self
         Self.AddCharactersFromListToSide(Self.reserve, CTSplitListView.LEFT_SIDE)
         Self.AddCharactersFromListToSide(Self.party, CTSplitListView.RIGHT_SIDE)
@@ -55,7 +54,6 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.UpdateStatusLabel()
 
         Self.confirmationActions = New CTDialog("Proceed", "Cancel")
-        Self.confirmationActions.consumesKeyEvents = False
         Self.confirmationActions.delegate = Self
         Self.UpdateConfirmationActions()
     End Method
@@ -110,15 +108,6 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     '#End Region
 
 
-    '#Region CTControl
-    Public
-    Method Cancel()
-        Self.confirmationActions.SelectLast()
-        Self.confirmationActions.MakeFirstResponder()
-    End Method
-    '#End Region
-
-
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
@@ -154,6 +143,10 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         SwitchCharacterFromMenuItemInSplitViewFromSide(menuItem, splitListView, side)
         UpdateStatusLabel()
         UpdateConfirmationActions()
+    End Method
+
+    Method SplitListViewDidCancel(splitListView:CTSplitListView)
+        SelectCancelAction()
     End Method
 
     Method SplitListViewDidActivateSide(splitListView:CTSplitListView, side:Int); End Method
@@ -202,6 +195,11 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
     Method PartyIsFull:Int()
         Return Self.party.Count >= REQ_PARTY_COUNT
+    End Method
+
+    Method SelectCancelAction()
+        Self.confirmationActions.SelectLast()
+        Self.confirmationActions.MakeFirstResponder()
     End Method
     '#End Region
 
