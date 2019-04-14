@@ -9,9 +9,24 @@ Type CTTokenPosition
         Self.column = column
         Self.row = row
     End Method
-    
+
+    Method Compare:Int(other:Object)
+        Local otherPosition:CTTokenPosition = CTTokenPosition(other)
+        If Not otherPosition Then Return Super.Compare(other)
+
+        If Self.column < otherPosition.column
+            Return -1
+        Else If Self.column > otherPosition.column
+            Return 1
+        Else ' ==
+            If Self.row = otherPosition.row Then Return 0
+            If Self.row < otherPosition.row Then Return -1
+            If Self.row > otherPosition.row Then Return 1
+        End If
+    End Method
+
     Method IsEqual:Int(other:CTTokenPosition)
-        Return Self.column = other.column And Self.row = other.row
+        Return (Compare(other) = 0)
     End Method
 
     Method MovedRight:CTTokenPosition(limit%)
