@@ -16,6 +16,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
     Method TearDown()
         RemoveFromResponderStack()
         RemoveKeyInterpreterDelegate() ' Break eventual retain cycles
+        Super.TearDown()
     End Method
 
 
