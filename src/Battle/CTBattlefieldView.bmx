@@ -1,34 +1,26 @@
 SuperStrict
 
 Import "../View/CTView.bmx"
-Import "CTBattlefield.bmx"
-Import "CTToken.bmx"
+Import "CTTokenPosition.bmx"
 
 Type CTBattlefieldView Extends CTView
-    Private
-    Field battlefield:CTBattlefield
-
-    Method New(); End Method
-
     Public
-    Method New(battlefield:CTBattlefield)
-        Assert battlefield Else "CTBattlefieldView requires battlefield"
+    Method New()
         Self.backgroundColor = CTColor.Black()
         Self.isOpaque = True
-        Self.battlefield = battlefield
     End Method
+
+    Function RectForTokenPosition:CTRect(position:CTTokenPosition)
+        Local x:Int = position.column * 50
+        Local y:Int = position.row * 50
+        Return CTRect.Create(x, y, 50, 50)
+    End Function
 
 
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
-        DrawTokens()
-    End Method
-
-    Private
-    Method DrawTokens()
-        Self.battlefield.DrawTokens()
     End Method
     '#End Region
 End Type

@@ -4,6 +4,7 @@ Import "../View/CTController.bmx"
 Import "CTTokenSelectionView.bmx"
 Import "CTBattlefield.bmx"
 Import "CTTokenPosition.bmx"
+Import "CTBattlefieldView.bmx"
 
 Interface CTTokenSelectionControllerDelegate
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
@@ -91,7 +92,7 @@ Type CTTokenSelectionController Extends CTController
     End Method
 
     Method ChangeHighlighterPosition()
-        Local newRect:CTRect = Self.battlefield.RectForPosition(Self.selectedTokenPosition)
+        Local newRect:CTRect = CTBattlefieldView.RectForTokenPosition(Self.selectedTokenPosition)
         Self.selectionView.bounds = newRect
     End Method
 

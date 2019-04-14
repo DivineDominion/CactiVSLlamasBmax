@@ -3,6 +3,7 @@ SuperStrict
 Import "../View/CTController.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldView.bmx"
+Import "CTTokenView.bmx"
 Import "CTTokenSelectionController.bmx"
 
 Interface CTBattlefieldViewControllerDelegate
@@ -21,7 +22,16 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
 
     Method New(battlefield:CTBattlefield)
         Self.battlefield = battlefield
-        Self.battlefieldView = New CTBattlefieldView(battlefield)
+        Self.battlefieldView = New CTBattlefieldView()
+
+        ' Add all token subviews
+        For Local node:TKeyValue = EachIn Self.battlefield.TokenPositionsTokens()
+            Local token:CTToken = CTToken(node.Value())
+            Local position:CTTokenPosition = CTTokenPosition(node.Key())
+            Local tokenView:CTTokenView = CTTokenView.CreateTokenView(token)
+            tokenView.PlaceAtPosition(position)
+            Self.battlefieldView.AddSubview(tokenView)
+        Next
     End Method
 
     Method TearDown()

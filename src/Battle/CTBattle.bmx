@@ -2,7 +2,6 @@ SuperStrict
 
 Import "CTBattlefieldWindowController.bmx"
 Import "CTShowActionMenu.bmx"
-Import "CTToken.bmx"
 
 ' Use temporary tokens:
 Import "CTCactusToken.bmx"
