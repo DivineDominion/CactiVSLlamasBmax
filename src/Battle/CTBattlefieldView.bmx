@@ -3,7 +3,6 @@ SuperStrict
 Import "../View/CTView.bmx"
 Import "CTBattlefield.bmx"
 Import "CTToken.bmx"
-Import "CTTokenHighlighter.bmx"
 
 Type CTBattlefieldView Extends CTView
     Private

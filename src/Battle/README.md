@@ -9,11 +9,11 @@
 ## View
 
 - `CTBattlefieldView` is the view that draws `CTToken`s of the `CTBattlefield`
-- `CTTokenHighlighter` is an animatable and drawable selection around tokens
+- `CTTokenSelectionView` is an animatable and drawable selection around tokens
 
 ## Controller
 
-- `CTTokenSelectionController` moves a `CTTokenHighlighter`
+- `CTTokenSelectionController` moves a `CTTokenSelectionView`
 - `CTBattlefieldViewController` groups interaction with the battlefield components
 - `CTBattlefieldWindowController` displays the actual battlefield in a frame and tears down sub-components when the window is closed
 - `CTBattle` is the highest-level service object that 

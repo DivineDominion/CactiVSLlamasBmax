@@ -3,7 +3,6 @@ SuperStrict
 Import "../View/CTController.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldView.bmx"
-Import "CTTokenHighlighter.bmx"
 Import "CTTokenSelectionController.bmx"
 
 Interface CTBattlefieldViewControllerDelegate

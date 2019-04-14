@@ -1,7 +1,7 @@
 SuperStrict
 
 Import "../View/CTController.bmx"
-Import "CTTokenHighlighter.bmx"
+Import "CTTokenSelectionView.bmx"
 Import "CTBattlefield.bmx"
 Import "CTTokenPosition.bmx"
 
@@ -11,7 +11,7 @@ End Interface
 
 Type CTTokenSelectionController Extends CTController
     Private
-    Field selectionHighlighter:CTTokenHighlighter
+    Field selectionView:CTTokenSelectionView
     Field battlefield:CTBattlefield
     Field selectedTokenPosition:CTTokenPosition
 
@@ -26,14 +26,14 @@ Type CTTokenSelectionController Extends CTController
         Self.selectedTokenPosition = initialTokenPosition
         If Not selectedTokenPosition Then Self.selectedTokenPosition = CTTokenPosition.Origin()
 
-        Self.selectionHighlighter = New CTTokenHighlighter()
-        Self.selectionHighlighter.keyInterpreterDelegate = Self
+        Self.selectionView = New CTTokenSelectionView()
+        Self.selectionView.keyInterpreterDelegate = Self
 
         UpdateTokenHighlighter()
     End Method
 
     Method TearDown()
-        Self.selectionHighlighter.TearDown()
+        Self.selectionView.TearDown()
         Self.RemoveDelegate()
         Super.TearDown()
     End Method
@@ -43,11 +43,11 @@ Type CTTokenSelectionController Extends CTController
     End Method
 
     Method MakeHighlighterFirstResponder()
-        Self.selectionHighlighter.MakeFirstResponder()
+        Self.selectionView.MakeFirstResponder()
     End Method
 
     Method View:CTView()
-        Return Self.selectionHighlighter
+        Return Self.selectionView
     End Method
 
     Method SelectedTokenInBattlefield:CTToken()
@@ -92,11 +92,11 @@ Type CTTokenSelectionController Extends CTController
 
     Method ChangeHighlighterPosition()
         Local newRect:CTRect = Self.battlefield.RectForPosition(Self.selectedTokenPosition)
-        Self.selectionHighlighter.bounds = newRect
+        Self.selectionView.bounds = newRect
     End Method
 
     Method ResetHighlighterAnimation()
-        Self.selectionHighlighter.ResetAnimation()
+        Self.selectionView.ResetAnimation()
     End Method
     '#End Region
 End Type
