@@ -11,7 +11,7 @@ Type CTTokenHighlighter Implements CTAnimatable
     Public
     Method DrawOnBattlefield(tokenRect:CTRect)
         Local x%, y%, w%, h%
-        tokenRect.GetViewport(x, y, w, h)
+        tokenRect.GetComponents(x, y, w, h)
         Local cornerWidth% = tokenRect.GetWidth() / 4
         Local cornerHeight% = tokenRect.GetHeight() / 4
 

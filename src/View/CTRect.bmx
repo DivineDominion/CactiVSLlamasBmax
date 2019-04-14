@@ -57,11 +57,15 @@ Type CTRect
         DrawRect x, y+h-strokeWidth, w, strokeWidth
     End Method
 
-    Method GetViewport(x:Int Var, y:Int Var, w:Int Var, h:Int Var)
+    Method GetComponents(x:Int Var, y:Int Var, w:Int Var, h:Int Var)
         x = Self.x
         y = Self.y
         w = Self.w
         h = Self.h
+    End Method
+
+    Method GetViewport(x:Int Var, y:Int Var, w:Int Var, h:Int Var)
+        GetComponents(x, y, w, h)
     End Method
 
     Method GetX:Int()
