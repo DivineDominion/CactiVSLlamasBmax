@@ -6,4 +6,5 @@ Interface CTKeyInterpreter
     Method MoveLeft()
     Method MoveRight()
     Method ConfirmSelection()
+    Method Cancel()
 End Interface

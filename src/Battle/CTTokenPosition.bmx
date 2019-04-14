@@ -1,6 +1,10 @@
 SuperStrict
 
 Type CTTokenPosition
+    Function Origin:CTTokenPosition()
+        Return New CTTokenPosition(0, 0)
+    End Function
+
     Field column%, row%
 
     Method New(column%, row%)
