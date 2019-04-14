@@ -7,9 +7,16 @@ Import "../View/CTRect.bmx"
 Type CTTokenHighlighter Implements CTAnimatable
     Private
     Field strokeWidth:Int = 2
+    Field tokenRect:CTRect = Null
 
     Public
-    Method DrawOnBattlefield(tokenRect:CTRect)
+    Method ChangeTokenRect(newRect:CTRect)
+        Self.tokenRect = newRect
+    End Method
+
+    Method DrawOnBattlefield()
+        If Not tokenRect Then Return
+
         Local x%, y%, w%, h%
         tokenRect.GetComponents(x, y, w, h)
         Local cornerWidth% = tokenRect.GetWidth() / 4

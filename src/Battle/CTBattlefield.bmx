@@ -4,6 +4,9 @@ Import "../View/CTRect.bmx"
 Import "CTToken.bmx"
 Import "CTTokenPosition.bmx"
 
+CONST BATTLEFIELD_COLUMNS% = 3
+CONST BATTLEFIELD_ROWS% = 3
+
 Type CTBattlefield
     Private
     Field tokenPositionsTokens:TMap = New TMap
