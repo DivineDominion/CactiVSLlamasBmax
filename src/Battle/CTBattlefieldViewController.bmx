@@ -10,7 +10,7 @@ Interface CTBattlefieldViewControllerDelegate
     Method BattlefieldViewControllerDidSelectToken(battlefieldViewController:CTBattlefieldViewController, token:CTToken)
 End Interface
 
-Type CTBattlefieldViewController Extends CTController
+Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectionControllerDelegate
     Private
     Field battlefield:CTBattlefield
     Field battlefieldView:CTBattlefieldView
@@ -24,16 +24,19 @@ Type CTBattlefieldViewController Extends CTController
     Method New(battlefield:CTBattlefield)
         Self.battlefield = battlefield
 
-        Local selectionHighlighter:CTTokenHighlighter = New CTTokenHighlighter()
-        Self.selectionController = New CTTokenSelectionController(selectionHighlighter, battlefield)
+        Self.selectionController = New CTTokenSelectionController(battlefield)
+        Self.selectionController.delegate = Self
 
-        Self.battlefieldView = New CTBattlefieldView(battlefield, selectionHighlighter)
-        Self.battlefieldView.keyInterpreterDelegate = Self
+        Self.battlefieldView = New CTBattlefieldView(battlefield)
+        Self.battlefieldView.AddSubview(Self.selectionController.View())
+
+        Self.selectionController.MakeHighlighterFirstResponder()
     End Method
 
     Method TearDown()
         Self.battlefieldView.TearDown()
-        RemoveDelegate()
+        Self.selectionController.TearDown()
+        Self.RemoveDelegate()
         Super.TearDown()
     End Method
 
@@ -50,29 +53,12 @@ Type CTBattlefieldViewController Extends CTController
     '#End Region
 
 
-    '#Region CTKeyInterpreter
+    '#Region CTTokenSelectionControllerDelegate
     Public
-    Method ConfirmSelection()
-        If Not Self.delegate Then Return
+    Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
+        IF controller <> Self.selectionController Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        Local selectedToken:CTToken = selectionController.SelectedTokenInBattlefield()
-        If selectedToken Then delegate.BattlefieldViewControllerDidSelectToken(Self, selectedToken)
-    End Method
-
-    Method MoveUp()
-        Self.selectionController.MoveUp()
-    End Method
-
-    Method MoveDown()
-        Self.selectionController.MoveDown()
-    End Method
-
-    Method MoveLeft()
-        Self.selectionController.MoveLeft()
-    End Method
-
-    Method MoveRight()
-        Self.selectionController.MoveRight()
+        If Self.delegate Then delegate.BattlefieldViewControllerDidSelectToken(Self, token)
     End Method
     '#End Region
 End Type

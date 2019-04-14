@@ -1,46 +1,9 @@
 SuperStrict
 
-Import "../View/CTAnimatable.bmx"
+Import "../View/CTControl.bmx"
 Import "../View/CTColor.bmx"
-Import "../View/CTRect.bmx"
 
-Type CTTokenHighlighter Implements CTAnimatable
-    Private
-    Field strokeWidth:Int = 2
-    Field tokenRect:CTRect = Null
-
-    Public
-    Method ChangeTokenRect(newRect:CTRect)
-        Self.tokenRect = newRect
-    End Method
-
-    Method DrawOnBattlefield()
-        If Not tokenRect Then Return
-
-        Local x%, y%, w%, h%
-        tokenRect.GetComponents(x, y, w, h)
-        Local cornerWidth% = tokenRect.GetWidth() / 4
-        Local cornerHeight% = tokenRect.GetHeight() / 4
-
-        Self.GetCurrentStrokeColor.Set()
-
-        ' Top left
-        DrawRect x, y, cornerWidth, strokeWidth
-        DrawRect x, y, strokeWidth, cornerHeight
-
-        ' Top right
-        DrawRect x+w, y, -cornerWidth, strokeWidth
-        DrawRect x+w, y, -strokeWidth, cornerHeight
-
-        ' Bottom left
-        DrawRect x, y+h, cornerWidth, -strokeWidth
-        DrawRect x, y+h, strokeWidth, -cornerHeight
-
-        ' Bottom right
-        DrawRect x+w, y+h, -cornerWidth, -strokeWidth
-        DrawRect x+w, y+h, -strokeWidth, -cornerHeight
-    End Method
-
+Type CTTokenHighlighter Extends CTControl
     '#Region CTAnimatable
     Public
     Method ResetAnimation()
@@ -75,6 +38,38 @@ Type CTTokenHighlighter Implements CTAnimatable
 
     Method GetCurrentStrokeColor:CTColor()
         Return Self.colors[Self.currentFrame]
+    End Method
+    '#End Region
+
+
+    '#Region CTDrawable
+    Private
+    Field strokeWidth:Int = 2
+
+    Public
+    Method Draw(dirtyRect:CTRect)
+        Local x%, y%, w%, h%
+        dirtyRect.GetSize(w, h)
+        Local cornerWidth% = dirtyRect.GetWidth() / 4
+        Local cornerHeight% = dirtyRect.GetHeight() / 4
+
+        Self.GetCurrentStrokeColor.Set()
+
+        ' Top left
+        DrawRect x, y, cornerWidth, strokeWidth
+        DrawRect x, y, strokeWidth, cornerHeight
+
+        ' Top right
+        DrawRect x+w, y, -cornerWidth, strokeWidth
+        DrawRect x+w, y, -strokeWidth, cornerHeight
+
+        ' Bottom left
+        DrawRect x, y+h, cornerWidth, -strokeWidth
+        DrawRect x, y+h, strokeWidth, -cornerHeight
+
+        ' Bottom right
+        DrawRect x+w, y+h, -cornerWidth, -strokeWidth
+        DrawRect x+w, y+h, -strokeWidth, -cornerHeight
     End Method
     '#End Region
 End Type
