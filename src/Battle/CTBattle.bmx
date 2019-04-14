@@ -26,6 +26,8 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenu
 
     Method ShowBattlefield()
         Self.battlefieldWindowController.Show(Self)
+        ' TODO: cache selection session
+        Local session:Object = Self.battlefieldWindowController.StartSelectingToken()
     End Method
 
     Method CloseBattlefield()

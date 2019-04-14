@@ -14,7 +14,6 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
     Private
     Field battlefield:CTBattlefield
     Field battlefieldView:CTBattlefieldView
-    Field selectionController:CTTokenSelectionController
 
     Method New(); End Method
 
@@ -23,19 +22,12 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
 
     Method New(battlefield:CTBattlefield)
         Self.battlefield = battlefield
-
-        Self.selectionController = New CTTokenSelectionController(battlefield)
-        Self.selectionController.delegate = Self
-
         Self.battlefieldView = New CTBattlefieldView(battlefield)
-        Self.battlefieldView.AddSubview(Self.selectionController.View())
-
-        Self.selectionController.MakeHighlighterFirstResponder()
     End Method
 
     Method TearDown()
         Self.battlefieldView.TearDown()
-        Self.selectionController.TearDown()
+        Self.TearDownSelectionControllers()
         Self.RemoveDelegate()
         Super.TearDown()
     End Method
@@ -53,10 +45,51 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
     '#End Region
 
 
+    '#Region Token Selection
+    Private
+    Field selectionControllers:TList = New TList
+
+    Public
+    Method StartSelectingToken:Object()
+        Return Self.AddSelectionController()
+    End Method
+
+    Method StopSelectingToken(selection:Object)
+        Local selectionController:CTTokenSelectionController = CTTokenSelectionController(selection)
+        If Not selectionController Then Return
+        Self.RemoveSelectionController(selectionController)
+    End Method
+
+    Private
+    Method AddSelectionController:Object()
+        Local selectionController:CTTokenSelectionController = New CTTokenSelectionController(battlefield)
+        selectionController.delegate = Self
+
+        Self.View().AddSubview(selectionController.View())
+        selectionController.MakeHighlighterFirstResponder()
+
+        Self.selectionControllers.AddLast(selectionController)
+
+        Return selectionController
+    End Method
+
+    Method RemoveSelectionController(selectionController:CTTokenSelectionController)
+        Self.View.RemoveSubview(selectionController.View())
+        selectionController.TearDown()
+        Self.selectionControllers.Remove(selectionController)
+    End Method
+
+    Method TearDownSelectionControllers()
+        For Local selectionController:CTTokenSelectionController = EachIn selectionControllers
+            Self.RemoveSelectionController(selectionController)
+        Next
+    End Method
+    '#End Region
+
     '#Region CTTokenSelectionControllerDelegate
     Public
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
-        IF controller <> Self.selectionController Then Return
+        If Not Self.selectionControllers.Contains(controller) Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.BattlefieldViewControllerDidSelectToken(Self, token)
     End Method

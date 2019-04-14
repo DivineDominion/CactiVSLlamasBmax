@@ -14,7 +14,6 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
     Private
     Field frameRect:CTRect
     Field battlefield:CTBattlefield
-    Field battlefieldViewController:CTBattlefieldViewController
 
     Method New(); End Method
 
@@ -30,6 +29,7 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
     '#Region Window lifecycle management
     Private
     Field currentWindow:CTWindow = Null
+    Field battlefieldViewController:CTBattlefieldViewController
     Field delegate:CTBattlefieldWindowControllerDelegate = Null
 
     Public
@@ -58,6 +58,22 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
         Self.currentWindow.Close()
         Self.currentWindow = Null
         Self.delegate = Null
+    End Method
+    '#End Region
+
+
+    '#Region Selection Management
+    Rem
+    returns: Selection session.
+    End Rem
+    Method StartSelectingToken:Object()
+        Assert Self.battlefieldViewController Else "#Show CTBattlefieldWindowController before selecting"
+        Return Self.battlefieldViewController.StartSelectingToken()
+    End Method
+
+    Method StopSelectingToken(session:Object)
+        Assert Self.battlefieldViewController Else "#Show CTBattlefieldWindowController before selecting"
+        Self.battlefieldViewController.StopSelectingToken(session)
     End Method
     '#End Region
 
