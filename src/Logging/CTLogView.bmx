@@ -4,6 +4,8 @@ Import "CTDisplayLog.bmx"
 Import "../View/CTView.bmx"
 
 Type CTLogView Extends CTView
+    Const LINES:Int = 6
+
     Private
     Field displayLog:CTDisplayLog
 
@@ -22,6 +24,10 @@ Type CTLogView Extends CTView
 
     Method Draw(dirtyRect:CTRect)
         Super.Draw(dirtyRect)
-        displayLog.Draw(1, 0, 3)
+        displayLog.Draw(1, 0, LINES)
+    End Method
+
+    Method InstrinsicHeight:Int()
+        Return TextHeight("x") * LINES
     End Method
 End Type

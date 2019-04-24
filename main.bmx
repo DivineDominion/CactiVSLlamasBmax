@@ -12,9 +12,6 @@ screenColor.SetBackground()
 CTView.defaultBgColor = CTColor.Black()
 CTMenu.cursorImage = LoadImage("img/cursor.png")
 
-Local logWindow:CTWindow = CreateLogWindow(mainLog)
-CTWindowManager.GetInstance().AddWindow(logWindow)
-
 Local initialScene:CTPickPartyGameScene = New CTPickPartyGameScene
 Global game:CTGame = New CTGame(initialScene)
 
