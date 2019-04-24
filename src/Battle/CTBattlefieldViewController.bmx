@@ -35,7 +35,6 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
     End Method
 
     Method TearDown()
-        Self.battlefieldView.TearDown()
         Self.TearDownSelectionControllers()
         Self.RemoveDelegate()
         Super.TearDown()

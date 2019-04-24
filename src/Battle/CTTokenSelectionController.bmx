@@ -34,7 +34,6 @@ Type CTTokenSelectionController Extends CTController
     End Method
 
     Method TearDown()
-        Self.selectionView.TearDown()
         Self.RemoveDelegate()
         Super.TearDown()
     End Method

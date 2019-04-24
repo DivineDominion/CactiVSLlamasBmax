@@ -6,8 +6,9 @@ Import "CTKeyInterpreter.bmx"
 Type CTController Implements CTKeyInterpreter Abstract
     Method View:CTView() Abstract
 
-    ' Only defined for symmetry with CTControl
-    Method TearDown(); End Method
+    Method TearDown()
+        Self.View().TearDown()
+    End Method
 
     '#Region CTKeyInterpreter
     Method MoveUp(); End Method
