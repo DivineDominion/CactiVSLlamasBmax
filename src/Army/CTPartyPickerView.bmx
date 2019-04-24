@@ -59,13 +59,13 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     End Method
 
     Method TearDown()
-        ResetDelegate()
+        RemoveDelegate()
         Self.splitListView.TearDown()
         Self.confirmationActions.TearDown()
         Super.TearDown()
     End Method
 
-    Method ResetDelegate()
+    Method RemoveDelegate()
         Self.delegate = Null
     End Method
 
