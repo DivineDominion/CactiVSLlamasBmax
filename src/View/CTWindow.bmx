@@ -2,6 +2,7 @@ SuperStrict
 
 Import "CTAnimatable.bmx"
 Import "CTView.bmx"
+Import "CTController.bmx"
 Import "CTRect.bmx"
 Import "CTViewport.bmx"
 Import "CTResponder.bmx"
@@ -34,6 +35,10 @@ Type CTWindow Implements CTAnimatable
     EndRem
     Function Create:CTWindow(x%, y%, w%, h%, contentView:CTView = Null, title:String = Null)
         Return Self.Create(New CTRect(x, y, w, h), contentView, title)
+    End Function
+
+    Function Create:CTWindow(frameRect:CTRect, controller:CTController, title:String = Null)
+        Return Self.Create(frameRect, controller.View(), title)
     End Function
 
     Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null, title:String = Null)

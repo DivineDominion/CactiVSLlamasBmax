@@ -38,7 +38,7 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
 
         Self.battlefieldViewController = New CTBattlefieldViewController(battlefield)
         Self.battlefieldViewController.delegate = Self
-        Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldViewController.View())
+        Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldViewController)
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
         Self.delegate = delegate
     End Method
