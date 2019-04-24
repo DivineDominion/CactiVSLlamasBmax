@@ -15,13 +15,15 @@ Function HandleKeyboardInput:Object(id:Int, data:Object, context:Object)
 
     DebugLog "Event: " + event.ToString()
 
+    Local responderNo:Int = 1
     For Local responder:CTResponder = EachIn _responderStack
-        DebugLog "Responder: " + TTypeId.ForObject(responder).Name()
+        DebugLog "Responder #" + String(responderNo) + ": " + TTypeId.ForObject(responder).Name()
         Select event.ID
             Case EVENT_KEYDOWN
                  Local consumed:Int = responder.KeyDown(event.Data)
                  If consumed Then Exit
         End Select
+        responderNo :+ 1
     Next
 
     Return data
