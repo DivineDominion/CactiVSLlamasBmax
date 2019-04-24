@@ -2,10 +2,12 @@ SuperStrict
 
 Type CTMenuItem
     Public
+    Const NO_OBJECT:Int = -1
+
     Rem
     bbdoc: ID of a represented object. May be -1 for no representation.
     End Rem
-    Field objectID:Int = -1
+    Field objectID:Int = NO_OBJECT
 
     Rem
     bbdoc: Text representation in the menu.
