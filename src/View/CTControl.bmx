@@ -5,6 +5,10 @@ Import "CTResponder.bmx"
 Import "CTKeyInterpreter.bmx"
 
 Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
+    Rem
+    Set to False so that other responders in the responder chain are informed as well.
+    Leave set to True to make this control consume events.
+    End Rem
     Field consumesKeyEvents:Int = True
 
     Rem
@@ -35,7 +39,7 @@ Type CTControl Extends CTView Implements CTResponder, CTKeyInterpreter
 
     Rem
     bbdoc: Default implementation calls #InterpretKey.
-    returns: `consumesKeyEvents`, False by default.
+    returns: `consumesKeyEvents`, True by default, meaning the next responder needn't be informed.
     EndRem
     Method KeyDown:Int(key:Int)
         Self.InterpretKey(key)
