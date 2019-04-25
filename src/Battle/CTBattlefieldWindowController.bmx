@@ -36,7 +36,6 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
     Method Show(delegate:CTBattlefieldWindowControllerDelegate)
         Assert Not Self.currentWindow Else "#ShowBattlefield called before closing the window"
 
-        Self.battlefieldViewController = New CTBattlefieldViewController(battlefield)
         Self.battlefieldViewController.delegate = Self
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldViewController)
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
@@ -50,9 +49,6 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
     Method Close()
         Assert Self.currentWindow Else "#CloseWindow called without active window"
         If Self.currentWindow = Null Then Return
-
-        Self.battlefieldViewController.TearDown()
-        Self.battlefieldViewController = Null
 
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
         Self.currentWindow = Null

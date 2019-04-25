@@ -13,6 +13,7 @@ Type CTWindow Implements CTAnimatable
     Const BORDER_WIDTH:Int = 2
     Field rect:CTRect
 
+    Field contentViewController:CTController
     Field contentViewport:CTViewport
     Field contentView:CTView
 
@@ -38,7 +39,9 @@ Type CTWindow Implements CTAnimatable
     End Function
 
     Function Create:CTWindow(frameRect:CTRect, controller:CTController, title:String = Null)
-        Return Self.Create(frameRect, controller.View(), title)
+        Local window:CTWindow = Self.Create(frameRect, controller.View(), title)
+        window.contentViewController = controller
+        Return window
     End Function
 
     Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null, title:String = Null)
@@ -86,6 +89,7 @@ Type CTWindow Implements CTAnimatable
 
     Method TearDown()
         If Self.contentView Then Self.contentView.TearDown()
+        If Self.contentViewController Then Self.contentViewController.TearDown()
     End Method
 
     Method FrameRect:CTRect()
