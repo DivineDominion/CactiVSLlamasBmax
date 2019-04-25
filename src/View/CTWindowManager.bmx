@@ -41,6 +41,7 @@ Type CTWindowManager
     End Method
 
     Method RemoveWindow(win:CTWindow)
+        win.TearDown()
         Self.windows.RemoveFirst(win)
     End Method
 

@@ -55,7 +55,6 @@ Type CTBattlefieldWindowController Implements CTBattlefieldViewControllerDelegat
         Self.battlefieldViewController = Null
 
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
-        Self.currentWindow.Close()
         Self.currentWindow = Null
         Self.delegate = Null
     End Method

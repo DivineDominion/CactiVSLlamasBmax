@@ -84,9 +84,8 @@ Type CTWindow Implements CTAnimatable
         Return IsFirstResponder(responder)
     End Method
 
-    Method Close()
-        Local responder:CTResponder = CTResponder(Self.contentView)
-        If responder Then RemoveResponder(responder)
+    Method TearDown()
+        If Self.contentView Then Self.contentView.TearDown()
     End Method
 
     Method FrameRect:CTRect()

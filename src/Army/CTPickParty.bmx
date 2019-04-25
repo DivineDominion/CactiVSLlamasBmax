@@ -31,7 +31,6 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
     '#Region Window lifecycle management
     Private
     Field currentWindow:CTWindow = Null
-    Field partyPickerView:CTPartyPickerView = Null
     Field delegate:CTPickPartyDelegate = Null
 
     Public
@@ -40,9 +39,9 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
         Assert Not Self.currentWindow Else "#ShowPartyPicker called before closing the window"
 
         Self.delegate = delegate
-        Self.partyPickerView = New CTPartyPickerView(Self.player)
-        Self.partyPickerView.delegate = Self
-        Self.currentWindow = CTWindow.Create(Self.frameRect, Self.partyPickerView, "Pick Party")
+        Local partyPickerView:CTPartyPickerView = New CTPartyPickerView(Self.player)
+        partyPickerView.delegate = Self
+        Self.currentWindow = CTWindow.Create(Self.frameRect, partyPickerView, "Pick Party")
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
     End Method
 
@@ -50,11 +49,7 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
         Assert Self.currentWindow Else "#CloseWindow called without active window"
         If Self.currentWindow = Null Then Return
 
-        Self.partyPickerView.TearDown()
-        Self.partyPickerView = Null
-
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
-        Self.currentWindow.Close()
         Self.currentWindow = Null
         Self.delegate = Null
     End Method
