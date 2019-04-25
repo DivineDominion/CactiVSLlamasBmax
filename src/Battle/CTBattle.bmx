@@ -4,7 +4,7 @@ Import "CTBattlefieldWindowController.bmx"
 Import "CTShowActionMenu.bmx"
 
 ' Use temporary tokens:
-Import "CTCactusToken.bmx"
+Import "../Battlefield/CTCactusToken.bmx"
 Import "../Army/CTCactus.bmx"
 
 Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenuDelegate

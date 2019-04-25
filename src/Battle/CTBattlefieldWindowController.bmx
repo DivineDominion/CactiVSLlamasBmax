@@ -2,9 +2,9 @@ SuperStrict
 
 Import "../View/CTWindow.bmx"
 Import "../View/CTWindowManager.bmx"
-Import "CTBattlefield.bmx"
-Import "CTBattlefieldViewController.bmx"
-Import "CTToken.bmx"
+Import "../Battlefield/CTBattlefield.bmx"
+Import "../Battlefield/CTBattlefieldViewController.bmx"
+Import "../Battlefield/CTToken.bmx"
 
 Interface CTBattlefieldWindowControllerDelegate
     Method BattlefieldWindowControllerDidSelectToken(windowController:CTBattlefieldWindowController, token:CTToken)
