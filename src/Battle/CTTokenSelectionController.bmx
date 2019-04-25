@@ -33,6 +33,13 @@ Type CTTokenSelectionController Extends CTController
         UpdateTokenHighlighter()
     End Method
 
+
+    '#Region CTController
+    Public
+    Method View:CTView()
+        Return Self.selectionView
+    End Method
+    
     Method TearDown()
         Self.RemoveDelegate()
         Super.TearDown()
@@ -41,15 +48,9 @@ Type CTTokenSelectionController Extends CTController
     Method RemoveDelegate()
         Self.delegate = Null
     End Method
-
-    Method MakeHighlighterFirstResponder()
-        Self.selectionView.MakeFirstResponder()
-    End Method
-
-    Method View:CTView()
-        Return Self.selectionView
-    End Method
-
+    '#End Region
+    
+    
     Method SelectedTokenInBattlefield:CTToken()
         Return Self.battlefield.TokenAtPosition(selectedTokenPosition)
     End Method

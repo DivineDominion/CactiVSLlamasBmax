@@ -34,6 +34,13 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
         Next
     End Method
 
+
+    '#Region CTController
+    Public
+    Method View:CTView()
+        Return Self.battlefieldView
+    End Method
+
     Method TearDown()
         Self.TearDownSelectionControllers()
         Self.RemoveDelegate()
@@ -42,13 +49,6 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
 
     Method RemoveDelegate()
         Self.delegate = Null
-    End Method
-
-
-    '#Region CTController
-    Public
-    Method View:CTView()
-        Return Self.battlefieldView
     End Method
     '#End Region
 
@@ -74,7 +74,7 @@ Type CTBattlefieldViewController Extends CTController Implements CTTokenSelectio
         selectionController.delegate = Self
 
         Self.View().AddSubview(selectionController.View())
-        selectionController.MakeHighlighterFirstResponder()
+        selectionController.MakeFirstResponder()
 
         Self.selectionControllers.AddLast(selectionController)
 
