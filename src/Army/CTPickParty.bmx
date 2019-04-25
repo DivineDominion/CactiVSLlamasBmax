@@ -1,11 +1,12 @@
 SuperStrict
 
 Import "../Game/CTPlayer.bmx"
+Import "CTParty.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "CTPartyPickerView.bmx"
 
 Interface CTPickPartyDelegate
-    Method DidPickParty(pickParty:CTPickParty, party:TList)
+    Method PickPartyDidPickParty(pickParty:CTPickParty, party:CTParty)
 End Interface
 
 Type CTPickParty Implements CTPartyPickerViewDelegate
@@ -18,6 +19,7 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
     Public
     Function Create:CTPickParty(frameRect:CTRect, player:CTPlayer)
         Assert frameRect Else "CTPickParty requires frameRect"
+        Assert player Else "CTPickParty requires player"
 
         Local service:CTPickParty = New CTPickParty
         service.frameRect = frameRect
@@ -60,9 +62,9 @@ Type CTPickParty Implements CTPartyPickerViewDelegate
 
 
     '#Region CTPartyPickerViewDelegate
-    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:TList)
+    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:CTParty)
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.DidPickParty(Self, selectedParty)
+        If Self.delegate Then delegate.PickPartyDidPickParty(Self, selectedParty)
     End Method
     '#End Region
 End Type

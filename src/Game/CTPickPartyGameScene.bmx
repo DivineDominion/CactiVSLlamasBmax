@@ -42,7 +42,7 @@ Type CTPickPartyGameScene Implements CTGameScene, CTPickPartyDelegate
 
     '#Region CTPickPartyDelegate
     Public
-    Method DidPickParty(pickParty:CTPickParty, party:TList)
+    Method PickPartyDidPickParty(pickParty:CTPickParty, party:CTParty)
         If Not Self.transitionDelegate Then Return
         If Not party Then transitionDelegate.QuitGame()
         Local battleGameScene:CTBattleGameScene = New CTBattleGameScene(party)
