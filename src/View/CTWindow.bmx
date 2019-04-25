@@ -53,7 +53,7 @@ Type CTWindow Implements CTAnimatable
             Local titleHeight:Int = TextHeight(title)
             Local titleRect:CTRect = contentFrameRect.SettingHeight(titleHeight)
             win.titleViewport = CTViewport.Create(titleRect)
-            win.titleLabel = CTLabel.Create(title, True)
+            win.titleLabel = New CTLabel(title, True)
             contentFrameRect = contentFrameRect.Translating(0, titleHeight).Resizing(0, -titleHeight)
         End If
         win.contentViewport = CTViewport.Create(contentFrameRect)
