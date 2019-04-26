@@ -19,13 +19,28 @@ Type CTBattlefieldViewController Extends CTController
         Self.battlefield = battlefield
         Self.battlefieldView = New CTBattlefieldView()
 
-        ' Add all token subviews
+        AddTokenSubviews()
+    End Method
+
+    Method UpdateBattlefield()
+        RemoveTokenSubviews()
+        AddTokenSubviews()
+    End Method
+
+    Private
+    Method AddTokenSubviews()
         For Local node:TKeyValue = EachIn Self.battlefield.TokenPositionsTokens()
             Local token:CTToken = CTToken(node.Value())
             Local position:CTTokenPosition = CTTokenPosition(node.Key())
             Local tokenView:CTTokenView = CTTokenView.CreateTokenView(token)
             tokenView.PlaceAtPosition(position)
-            Self.battlefieldView.AddSubview(tokenView)
+            Self.View.AddSubview(tokenView)
+        Next
+    End Method
+
+    Method RemoveTokenSubviews()
+        For Local view:CTView = EachIn Self.View.AllSubviews()
+            If CTTokenView(view) <> Null Then Self.View().RemoveSubview(view)
         Next
     End Method
 

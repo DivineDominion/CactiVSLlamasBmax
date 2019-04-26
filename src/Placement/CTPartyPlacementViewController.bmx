@@ -1,10 +1,10 @@
 SuperStrict
 
 Import "../View/CTController.bmx"
-Import "CTBattlefieldViewController.bmx"
-Import "CTBattlefieldView.bmx"
+Import "../Battlefield/CTBattlefieldViewController.bmx"
+Import "../Battlefield/CTBattlefieldView.bmx"
+Import "../Battlefield/CTTokenPositionSelectionController.bmx"
 Import "../Army/CTParty.bmx"
-Import "CTTokenPositionSelectionController.bmx"
 
 Type CTPartyPlacementViewController Extends CTController Implements CTTokenPositionSelectionControllerDelegate
     Private

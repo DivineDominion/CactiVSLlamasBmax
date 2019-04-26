@@ -8,6 +8,7 @@ Import "../View/CTSplitListView.bmx"
 Import "../View/CTLabel.bmx"
 Import "../View/CTViewport.bmx"
 Import "../View/CTDialog.bmx"
+Import "CTMenuItemFromCharacter.bmx"
 
 Interface CTPartyPickerViewDelegate
     Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:CTParty)
@@ -260,8 +261,4 @@ Function CharacterInListWithID:CTCharacter(characterList:TList, characterID:Int)
         If character.GetID() = characterID Then Return character
     Next
     RuntimeError "No character found in TList with ID=" + String(characterID)
-End Function
-
-Function CTMenuItemFromCharacter:CTMenuItem(character:CTCharacter)
-    Return New CTMenuItem(character.GetName(), character.GetID())
 End Function

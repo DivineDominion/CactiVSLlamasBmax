@@ -45,6 +45,11 @@ Type CTBattlefieldWindowController
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
     End Method
 
+    Method UpdateBattlefield()
+        If Not Self.battlefieldViewController Then Return
+        Self.battlefieldViewController.UpdateBattlefield()
+    End Method
+
     Method Window:CTWindow()
         Return currentWindow
     End Method

@@ -13,7 +13,9 @@ Type CTPartyPlacementStatusViewController Extends CTController
 
     Public
     Method New(maxCount:Int)
-        Self.label = New CTLabel(TextSelectedCountOfMaxCount(0, Self.maxCount), True)
+        Self.maxCount = maxCount
+        Self.label = New CTLabel("", True)
+        UpdatePlacementCount(0)
     End Method
 
     Method UpdatePlacementCount(count:Int)

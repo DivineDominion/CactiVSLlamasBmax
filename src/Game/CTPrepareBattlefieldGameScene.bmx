@@ -1,7 +1,7 @@
 SuperStrict
 
 Import "CTGameScene.bmx"
-Import "../Battlefield/CTPlacePartyCoordinator.bmx"
+Import "../Placement/CTPlacePartyCoordinator.bmx"
 Import "../Battlefield/CTBattlefieldView.bmx"
 Import "../View/CTScreen.bmx"
 Import "../Game/CTPlayer.bmx"
