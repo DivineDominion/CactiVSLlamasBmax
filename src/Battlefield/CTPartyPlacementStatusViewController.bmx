@@ -31,5 +31,5 @@ End Type
 
 Private
 Function TextSelectedCountOfMaxCount:String(selected:Int, max:Int)
-    Return "Selected " + String(selected) + "/" + String(max)
+    Return "Placed " + String(selected) + "/" + String(max) + " Party Members"
 End Function
