@@ -11,6 +11,12 @@ Type CTTokenPositionSelectionController Extends CTBattlefieldSelectionController
     Public
     Field delegate:CTTokenPositionSelectionControllerDelegate = Null
 
+    Method New(initialTokenPosition:CTTokenPosition = Null)
+        ' FIXME: use extra init method from constructor because of: https://github.com/bmx-ng/bcc/issues/417
+        ' Rely on base constructor when fixed
+        Initialize(initialTokenPosition)
+    End Method
+
 
     '#Region CTController
     Public
