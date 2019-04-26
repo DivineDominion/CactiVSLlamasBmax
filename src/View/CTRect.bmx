@@ -49,9 +49,12 @@ Type CTRect
         Return CTRect.Create(Self.x, Self.y, newWidth, Self.h)
     End Method
 
-    Method CenteringInContainer:CTRect(container:CTRect)
+    Method CenteringInContainer:CTRect(container:CTRect, arithmeticCenter:Int = False)
         Local x% = (container.GetWidth() - Self.GetWidth()) / 2
-        Local y% = (container.GetHeight() - Self.GetHeight()) / 2
+        ' Place at 2/5 of the height for tasteful centering by default, or at 50% if arithmeticCenter is on:
+        Local verticalFactor# = 2.0 / 5.0
+        If arithmeticCenter Then verticalFactor = 0.5
+        Local y% = (container.GetHeight() - Self.GetHeight()) * verticalFactor
         Return CTRect.Create(x, y, Self.GetWidth(), Self.GetHeight())
     End Method
 
