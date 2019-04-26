@@ -1,7 +1,7 @@
 SuperStrict
 
 Import "CTGameScene.bmx"
-Import "../Battlefield/CTPlacePartyWindowCoordinator.bmx"
+Import "../Battlefield/CTPlacePartyCoordinator.bmx"
 Import "../Battlefield/CTBattlefieldView.bmx"
 Import "../View/CTScreen.bmx"
 Import "../Game/CTPlayer.bmx"
@@ -33,7 +33,7 @@ Type CTPrepareBattlefieldGameScene Implements CTGameScene, CTPlacePartyDelegate
     End Method
 
     Private
-    Field _placePartyWindowCoordinator:CTPlacePartyWindowCoordinator = Null
+    Field _placePartyWindowCoordinator:CTPlacePartyCoordinator = Null
 
     Method PlaceParty()
         Local windowOffset:Int = 10
@@ -41,7 +41,7 @@ Type CTPrepareBattlefieldGameScene Implements CTGameScene, CTPlacePartyDelegate
         Local frameRect:CTRect = CTWindow..
             .FrameRectFittingContentRect(battlefieldBounds)..
             .CenteringInContainer(CTScreen.main.GetBounds())
-        _placePartyWindowCoordinator = New CTPlacePartyWindowCoordinator(frameRect, cactusParty)
+        _placePartyWindowCoordinator = New CTPlacePartyCoordinator(frameRect, cactusParty)
         _placePartyWindowCoordinator.ShowPartyPlacement(Self)
     End Method
 
@@ -54,7 +54,7 @@ Type CTPrepareBattlefieldGameScene Implements CTGameScene, CTPlacePartyDelegate
 
     '#Region CTPlacePartyDelegate
     Public
-    Method PlacePartyDidPrepareBattlefield(controller:CTPlacePartyWindowCoordinator, battlefield:CTBattlefield)
+    Method PlacePartyDidPrepareBattlefield(controller:CTPlacePartyCoordinator, battlefield:CTBattlefield)
         If Not Self.transitionDelegate Then Return
         If Not battlefield Then transitionDelegate.QuitGame()
         Local battleGameScene:CTBattleGameScene = New CTBattleGameScene(battlefield)

@@ -7,14 +7,14 @@ Import "CTPartyPlacementStatusWindowController.bmx"
 Import "CTBattlefieldWindowController.bmx"
 
 Interface CTPlacePartyDelegate
-    Method PlacePartyDidPrepareBattlefield(controller:CTPlacePartyWindowCoordinator, battlefield:CTBattlefield)
+    Method PlacePartyDidPrepareBattlefield(controller:CTPlacePartyCoordinator, battlefield:CTBattlefield)
 End Interface
 
 Rem
 Puts multiple windows on the screen and manages the selection and placement of
 tokens on the battlefield.
 End Rem
-Type CTPlacePartyWindowCoordinator Implements CTTokenPositionSelectionControllerDelegate
+Type CTPlacePartyCoordinator Implements CTTokenPositionSelectionControllerDelegate
     Private
     Field frameRect:CTRect
     Field party:CTParty
@@ -24,8 +24,8 @@ Type CTPlacePartyWindowCoordinator Implements CTTokenPositionSelectionController
 
     Public
     Method New(frameRect:CTRect, party:CTParty)
-        Assert frameRect Else "CTPlacePartyWindowCoordinator requires frameRect"
-        Assert party Else "CTPlacePartyWindowCoordinator requires party"
+        Assert frameRect Else "CTPlacePartyCoordinator requires frameRect"
+        Assert party Else "CTPlacePartyCoordinator requires party"
 
         Self.frameRect = frameRect
         Self.party = party
