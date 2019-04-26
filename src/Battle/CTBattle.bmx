@@ -1,13 +1,13 @@
 SuperStrict
 
-Import "CTBattlefieldWindowController.bmx"
+Import "../Battlefield/CTBattlefieldWindowController.bmx"
 Import "CTShowActionMenu.bmx"
 
 ' Use temporary tokens:
 Import "../Battlefield/CTCactusToken.bmx"
 Import "../Army/CTCactus.bmx"
 
-Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenuDelegate
+Type CTBattle Implements CTShowActionMenuDelegate, CTTokenSelectionControllerDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
@@ -24,9 +24,9 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenu
     End Method
 
     Method ShowBattlefield()
-        Self.battlefieldWindowController.Show(Self)
+        Self.battlefieldWindowController.Show()
         ' TODO: cache selection session
-        Local session:Object = Self.battlefieldWindowController.StartSelectingToken()
+        Local session:Object = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
     End Method
 
     Method CloseBattlefield()
@@ -35,10 +35,9 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenu
     End Method
 
 
-    '#Region CTBattlefieldWindowControllerDelegate
+    '#Region CTTokenSelectionControllerDelegate
     Public
-    Method BattlefieldWindowControllerDidSelectToken(windowController:CTBattlefieldWindowController, token:CTToken)
-        If Self.battlefieldWindowController <> windowController Then Return
+    Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
         ShowActionsForToken(token)
     End Method
     '#End Region

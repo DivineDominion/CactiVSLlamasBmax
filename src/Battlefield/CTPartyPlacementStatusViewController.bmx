@@ -10,8 +10,7 @@ Type CTPartyPlacementStatusViewController Extends CTController
     Field label:CTLabel
 
     Public
-    Method New(party:CTParty)
-        Self.maxCount = party.Count()
+    Method New(maxCount:Int)
         Self.label = New CTLabel(TextSelectedCountOfMaxCount(0, Self.maxCount), True)
     End Method
 
