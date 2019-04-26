@@ -16,7 +16,7 @@ Type CTLabel Extends CTView
         Self.text = text
         Self.isOpaque = True
         Self.backgroundColor = CTColor.Black()
-        Self.isCentered = False
+        Self.isCentered = isCentered
     End Method
 
     Method GetTextHeight:Int()

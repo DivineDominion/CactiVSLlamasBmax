@@ -1,6 +1,5 @@
 SuperStrict
 
-Import "../Army/CTParty.bmx"
 Import "../View/CTLabel.bmx"
 Import "../View/CTController.bmx"
 
@@ -9,22 +8,25 @@ Type CTPartyPlacementStatusViewController Extends CTController
     Field maxCount:Int
     Field label:CTLabel
 
+    Method New(); End Method
+
+
     Public
     Method New(maxCount:Int)
         Self.label = New CTLabel(TextSelectedCountOfMaxCount(0, Self.maxCount), True)
+    End Method
+
+    Method UpdatePlacementCount(count:Int)
+        Self.label.text = TextSelectedCountOfMaxCount(count, Self.maxCount)
     End Method
 
 
     '#Region CTController
     Public
     Method View:CTView()
-        Return label
+        Return Self.label
     End Method
     '#End Region
-
-    Method UpdatePlacementCount(count:Int)
-        Self.label.text = TextSelectedCountOfMaxCount(count, Self.maxCount)
-    End Method
 End Type
 
 Private
