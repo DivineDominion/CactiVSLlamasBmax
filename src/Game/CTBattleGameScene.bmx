@@ -9,11 +9,11 @@ Type CTBattleGameScene Implements CTGameScene
     '#Region CTGameScene
     Private
     Field transitionDelegate:CTGameSceneTransitionDelegate = Null
-    Field cactusParty:CTParty
+    Field battlefield:CTBattlefield
 
     Public
-    Method New(cactusParty:CTParty)
-        Self.cactusParty = cactusParty
+    Method New(battlefield:CTBattlefield)
+        Self.battlefield = battlefield
     End Method
 
     Method Activate(transitionDelegate:CTGameSceneTransitionDelegate)
@@ -32,8 +32,7 @@ Type CTBattleGameScene Implements CTGameScene
         Local windowOffset:Int = 10
         Local windowWidth:Int = CTScreen.main.GetWidth() - (2 * windowOffset)
         Local battlefieldWindowFrameRect:CTRect = CTRect.Create(windowOffset, 50, windowWidth, 200)
-        Local cacti:CTCactus[] = CTCactus[](cactusParty.Characters())
-        _battle:CTBattle = New CTBattle(battlefieldWindowFrameRect, cacti)
+        _battle = New CTBattle(battlefieldWindowFrameRect, Self.battlefield)
         _battle.ShowBattlefield()
     End Method
 

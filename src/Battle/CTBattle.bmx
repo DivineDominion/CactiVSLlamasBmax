@@ -12,13 +12,13 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenu
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
     Public
-    Method New(frameRect:CTRect, cacti:CTCactus[])
-        Local cactusTokens:CTCactusToken[] = MapCactusToCactusToken(cacti)
-        Assert cactusTokens.length = 3 Else "Requires 3 cacti during demo"
-        Local battlefield:CTBattlefield = New CTBattlefield
-        battlefield.PutTokenAtColumnRow(cactusTokens[0], 0, 0)
-        battlefield.PutTokenAtColumnRow(cactusTokens[1], 1, 0)
-        battlefield.PutTokenAtColumnRow(cactusTokens[2], 1, 1)
+    Method New(frameRect:CTRect, battlefield:CTBattlefield)
+        ' Local cactusTokens:CTCactusToken[] = MapCactusToCactusToken(cacti)
+        ' Assert cactusTokens.length = 3 Else "Requires 3 cacti during demo"
+        ' Local battlefield:CTBattlefield = New CTBattlefield
+        ' battlefield.PutTokenAtColumnRow(cactusTokens[0], 0, 0)
+        ' battlefield.PutTokenAtColumnRow(cactusTokens[1], 1, 0)
+        ' battlefield.PutTokenAtColumnRow(cactusTokens[2], 1, 1)
 
         Self.battlefieldWindowController = New CTBattlefieldWindowController(frameRect, battlefield)
     End Method
@@ -88,11 +88,11 @@ Type CTBattle Implements CTBattlefieldWindowControllerDelegate, CTShowActionMenu
     '#End Region
 End Type
 
-Private
-Function MapCactusToCactusToken:CTCactusToken[](cacti:CTCactus[])
-    Local result:CTCactusToken[cacti.length]
-    For Local i:Int = 0 Until cacti.length
-        result[i] = New CTCactusToken(cacti[i])
-    Next
-    Return result
-End Function
+' Private
+' Function MapCactusToCactusToken:CTCactusToken[](cacti:CTCactus[])
+'     Local result:CTCactusToken[cacti.length]
+'     For Local i:Int = 0 Until cacti.length
+'         result[i] = New CTCactusToken(cacti[i])
+'     Next
+'     Return result
+' End Function

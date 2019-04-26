@@ -29,6 +29,11 @@ Type CTWindow Implements CTAnimatable
         Local contentHeight% = textLines * TextHeight("x")
         Return New CTRect(x, y, w, contentHeight + (BORDER_WIDTH * 2))
     End Function
+    
+    Function FrameRectFittingContentRect:CTRect(contentRect:CTRect)
+        Return contentRect.Outset(BORDER_WIDTH, BORDER_WIDTH)
+    End Function
+    
 
     Rem
     bbdoc: Width and height (`w`, `h`) include the borders, so the content rect
@@ -48,7 +53,7 @@ Type CTWindow Implements CTAnimatable
         Local win:CTWindow = New CTWindow
         win.rect = frameRect
 
-        Local contentFrameRect:CTRect = frameRect.inset(BORDER_WIDTH, BORDER_WIDTH)
+        Local contentFrameRect:CTRect = frameRect.Inset(BORDER_WIDTH, BORDER_WIDTH)
         If title
             Local titleHeight:Int = TextHeight(title)
             Local titleRect:CTRect = contentFrameRect.SettingHeight(titleHeight)

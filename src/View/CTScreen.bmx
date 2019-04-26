@@ -1,5 +1,7 @@
 SuperStrict
 
+Import "CTRect.bmx"
+
 Type CTScreen
     Private
     Field width:Int
@@ -30,6 +32,10 @@ Type CTScreen
 
     Method GetHeight:Int()
         Return height
+    End Method
+
+    Method GetBounds:CTRect()
+        Return CTRect.Create(0, 0, width, height)
     End Method
 End Type
 
