@@ -13,6 +13,7 @@ Type CTLabel Extends CTView
     Field isCentered:Int
 
     Method New(text:String, isCentered:Int = False)
+        Self.text = text
         Self.isOpaque = True
         Self.backgroundColor = CTColor.Black()
         Self.isCentered = False
