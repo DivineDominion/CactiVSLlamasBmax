@@ -21,7 +21,7 @@ Type CTPartyPlacementStatusWindowController
             .FrameRectFittingLinesAndTitle(..
                 referenceFrameRect.GetX(), referenceFrameRect.GetMaxY(), ..
                 referenceFrameRect.GetWidth(), 1, Null)..
-            .Translating(0, 1)
+            .Translating(0, 2)
         Self.maxCount = maxCount
     End Method
 
