@@ -87,6 +87,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.confirmationActions.SetIsEnabledForIndex(isEnabled, 0)
     End Method
     '#End Region
+    
 
     '#Region CTResponder
     ' Decorate responder stack access to the underlying controls
