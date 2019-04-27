@@ -25,5 +25,6 @@ Import "CTMenu.bmx"
 Import "CTSplitListView.bmx"
 Import "CTLabel.bmx"
 
-' View controllers
+' (View) Controllers
 Import "CTController.bmx"
+Import "CTDialogWindowController.bmx"
