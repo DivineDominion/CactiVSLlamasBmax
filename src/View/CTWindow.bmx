@@ -7,12 +7,14 @@ Import "CTRect.bmx"
 Import "CTViewport.bmx"
 Import "CTResponder.bmx"
 Import "CTLabel.bmx"
+Import "CTScreen.bmx"
 
 Type CTWindow Implements CTAnimatable
     Private
     Const BORDER_WIDTH:Int = 2
     Field rect:CTRect
 
+    Field contentViewController:CTController
     Field contentViewport:CTViewport
     Field contentView:CTView
 
@@ -20,14 +22,21 @@ Type CTWindow Implements CTAnimatable
     Field titleLabel:CTLabel
 
     Public
-    Function FrameRectFittingLinesAndTitle:CTRect(x%, y%, w%, textLines%)
-        Return FrameRectFittingLines(x, y, w, textLines + 1)
+    Function FrameRectFittingLinesAndTitle:CTRect(x%, y%, w%, textLines%, title$ = Null)
+        Local titleCount:Int = 0
+        If title Then titleCount = 1
+        Return FrameRectFittingLines(x, y, w, textLines + titleCount)
     End Function
 
     Function FrameRectFittingLines:CTRect(x%, y%, w%, textLines%)
         Local contentHeight% = textLines * TextHeight("x")
         Return New CTRect(x, y, w, contentHeight + (BORDER_WIDTH * 2))
     End Function
+
+    Function FrameRectFittingContentRect:CTRect(contentRect:CTRect)
+        Return contentRect.Outset(BORDER_WIDTH, BORDER_WIDTH)
+    End Function
+
 
     Rem
     bbdoc: Width and height (`w`, `h`) include the borders, so the content rect
@@ -38,27 +47,21 @@ Type CTWindow Implements CTAnimatable
     End Function
 
     Function Create:CTWindow(frameRect:CTRect, controller:CTController, title:String = Null)
-        Return Self.Create(frameRect, controller.View(), title)
+        Local window:CTWindow = Self.Create(frameRect, controller.View(), title)
+        window.contentViewController = controller
+        Return window
     End Function
 
     Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null, title:String = Null)
         Local win:CTWindow = New CTWindow
-        win.rect = frameRect
 
-        Local contentFrameRect:CTRect = frameRect.inset(BORDER_WIDTH, BORDER_WIDTH)
-        If title
-            Local titleHeight:Int = TextHeight(title)
-            Local titleRect:CTRect = contentFrameRect.SettingHeight(titleHeight)
-            win.titleViewport = CTViewport.Create(titleRect)
-            win.titleLabel = CTLabel.Create(title, True)
-            contentFrameRect = contentFrameRect.Translating(0, titleHeight).Resizing(0, -titleHeight)
-        End If
-        win.contentViewport = CTViewport.Create(contentFrameRect)
+        If title Then win.titleLabel = New CTLabel(title, True)
 
         win.contentView = contentView
-        If contentView = Null Then
-            win.contentView = New CTView()
-        EndIf
+        If contentView = Null Then win.contentView = New CTView()
+
+        win.rect = frameRect
+        win.UpdateContentViewports()
 
         Return win
     End Function
@@ -84,13 +87,18 @@ Type CTWindow Implements CTAnimatable
         Return IsFirstResponder(responder)
     End Method
 
-    Method Close()
-        Local responder:CTResponder = CTResponder(Self.contentView)
-        If responder Then RemoveResponder(responder)
+    Method TearDown()
+        If Self.contentView Then Self.contentView.TearDown()
+        If Self.contentViewController Then Self.contentViewController.TearDown()
     End Method
 
     Method FrameRect:CTRect()
         Return Self.rect.Copy()
+    End Method
+
+    Method Center(arithmeticCenter:Int = False)
+        Self.rect = Self.rect.CenteringInContainer(CTScreen.Main.GetBounds(), arithmeticCenter)
+        UpdateContentViewports()
     End Method
 
     Method GetMaxY:Int()
@@ -115,9 +123,23 @@ Type CTWindow Implements CTAnimatable
         contentViewport.Draw(contentView)
     End Method
 
+
     '#Region CTAnimatable
     Method UpdateAnimation(delta:Float)
         Self.contentView.UpdateAnimation(delta)
     End Method
     '#End Region
+
+
+    Private
+    Method UpdateContentViewports()
+        Local contentFrameRect:CTRect = Self.rect.Inset(BORDER_WIDTH, BORDER_WIDTH)
+        If Self.titleLabel
+            Local titleHeight:Int = TextHeight(Self.titleLabel.GetTextHeight())
+            Local titleRect:CTRect = contentFrameRect.SettingHeight(titleHeight)
+            Self.titleViewport = CTViewport.Create(titleRect)
+            contentFrameRect = contentFrameRect.Translating(0, titleHeight).Resizing(0, -titleHeight)
+        End If
+        Self.contentViewport = CTViewport.Create(contentFrameRect)
+    End Method
 End Type

@@ -4,22 +4,20 @@ Import "CTView.bmx"
 Import "DrawContrastText.bmx"
 
 Type CTLabel Extends CTView
+    Private
+    Method New(); End Method
+
+    Public
     Field text:String = ""
     Field textColor:CTColor = CTColor.Yellow()
     Field isCentered:Int
 
-    Method New()
+    Method New(text:String, isCentered:Int = False)
+        Self.text = text
         Self.isOpaque = True
         Self.backgroundColor = CTColor.Black()
-        Self.isCentered = False
+        Self.isCentered = isCentered
     End Method
-
-    Function Create:CTLabel(text:String, isCentered:Int = False)
-        Local label:CTLabel = New CTLabel
-        label.text = text
-        label.isCentered = isCentered
-        Return label
-    End Function
 
     Method GetTextHeight:Int()
         If Not HasText() Then Return 0

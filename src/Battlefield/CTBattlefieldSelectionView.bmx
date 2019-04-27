@@ -3,7 +3,7 @@ SuperStrict
 Import "../View/CTControl.bmx"
 Import "../View/CTColor.bmx"
 
-Type CTTokenSelectionView Extends CTControl
+Type CTBattlefieldSelectionView Extends CTControl
     '#Region CTAnimatable
     Public
     Method ResetAnimation()

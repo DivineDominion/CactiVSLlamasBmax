@@ -21,9 +21,11 @@ Type CTRect
     End Function
 
     Method Inset:CTRect(dx%, dy%)
-        Local w% = max(Self.w - (2 * dx), 0)
-        Local h% = max(Self.h - (2 * dy), 0)
-        Return CTRect.Create(Self.x + dx, Self.y + dy, w, h)
+        Return Self.Resizing(-2 * dx, -2 * dy).Translating(dx, dy)
+    End Method
+
+    Method Outset:CTRect(dx%, dy%)
+        Return Self.Resizing(2 * dx, 2 * dy).Translating(-dx, -dy)
     End Method
 
     Method Translating:CTRect(dx%, dy%)
@@ -31,7 +33,8 @@ Type CTRect
     End Method
 
     Method Resizing:CTRect(dw%, dh%)
-        Return CTRect.Create(Self.x, Self.y, Self.w + dw, Self.h + dh)
+        Return CTRect.Create(Self.x, Self.y, ..
+            max(Self.w + dw, 0), max(Self.h + dh, 0))
     End Method
 
     Method SettingSize:CTRect(newWidth%, newHeight%)
@@ -44,6 +47,15 @@ Type CTRect
 
     Method SettingWidth:CTRect(newWidth%)
         Return CTRect.Create(Self.x, Self.y, newWidth, Self.h)
+    End Method
+
+    Method CenteringInContainer:CTRect(container:CTRect, arithmeticCenter:Int = False)
+        Local x% = (container.GetWidth() - Self.GetWidth()) / 2
+        ' Place at 2/5 of the height for tasteful centering by default, or at 50% if arithmeticCenter is on:
+        Local verticalFactor# = 2.0 / 5.0
+        If arithmeticCenter Then verticalFactor = 0.5
+        Local y% = (container.GetHeight() - Self.GetHeight()) * verticalFactor
+        Return CTRect.Create(x, y, Self.GetWidth(), Self.GetHeight())
     End Method
 
     Method Fill()

@@ -2,14 +2,16 @@ SuperStrict
 
 Import "../Game/CTPlayer.bmx"
 Import "CTArmy.bmx"
+Import "CTParty.bmx"
 Import "../View/CTControl.bmx"
 Import "../View/CTSplitListView.bmx"
 Import "../View/CTLabel.bmx"
 Import "../View/CTViewport.bmx"
 Import "../View/CTDialog.bmx"
+Import "CTMenuItemFromCharacter.bmx"
 
 Interface CTPartyPickerViewDelegate
-    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:TList)
+    Method PartyPickerViewDidSelectParty(partyPickerView:CTPartyPickerView, selectedParty:CTParty)
 End Interface
 
 Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTDialogDelegate
@@ -85,6 +87,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.confirmationActions.SetIsEnabledForIndex(isEnabled, 0)
     End Method
     '#End Region
+    
 
     '#Region CTResponder
     ' Decorate responder stack access to the underlying controls
@@ -207,7 +210,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
     '#Region CTDialogDelegate
     Public
     Method DialogDidConfirm(dialog:CTDialog, didConfirm:Int)
-        Local selectedParty:TList = Self.party
+        Local selectedParty:CTParty = New CTParty(Self.party)
         If Not didConfirm Then selectedParty = Null
 
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
@@ -259,8 +262,4 @@ Function CharacterInListWithID:CTCharacter(characterList:TList, characterID:Int)
         If character.GetID() = characterID Then Return character
     Next
     RuntimeError "No character found in TList with ID=" + String(characterID)
-End Function
-
-Function CTMenuItemFromCharacter:CTMenuItem(character:CTCharacter)
-    Return New CTMenuItem(character.GetName(), character.GetID())
 End Function

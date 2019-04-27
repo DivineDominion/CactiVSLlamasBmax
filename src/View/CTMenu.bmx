@@ -12,7 +12,10 @@ End Interface
 
 Interface CTMenuDrawingBase
     Method DrawCursor(x%, y%)
+    Method DrawCheckmark(x%, y%)
+    Method GetLineLabelOffset%()
     Method GetCursorWidth%()
+    Method GetCheckmarkWidth%()
     Method IsActive%()
 End Interface
 
@@ -27,8 +30,16 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Field drawingStrategy:CTMenuItemDrawingStrategy
     Field isHorizontal:Int = False
 
+    Method New(); End Method
+
     Public
     Global cursorImage:TImage = Null
+    Global checkmarkImage:TImage = Null
+
+    Rem
+    If menu items should be displayed as selectable with a checkmark.
+    End Rem
+    Field displaysCheckmarks:Int = False
 
     Rem
     Warning: setting this to the owner of the menu creates a retain cycle.
@@ -37,13 +48,9 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     End Rem
     Field delegate:CTMenuDelegate = Null
 
-    Method New()
+    Method New(labels:String[] = [], isHorizontal:Int = False)
         Self.backgroundColor = CTColor.Black()
         Self.isOpaque = True
-    End Method
-
-    Method New(labels:String[] = [], isHorizontal:Int = False)
-        New()
 
         Self.isHorizontal = isHorizontal
         If isHorizontal
@@ -153,6 +160,15 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
             link = link.PrevLink()
         Wend
         Self.selectedLink = link
+    End Method
+
+    Method SelectFirstUncheckedMenuItem()
+        Local link:TLink = Self.menuItems.FirstLink()
+        While link And (CTMenuItem(link.Value()).IsSkippable() Or CTMenuItem(link.Value()).isChecked)
+            link = link.NextLink()
+        Wend
+        Self.selectedLink = link
+        If Self.selectedLink = Null Then Self.selectedLink = Self.menuItems.FirstLink()
     End Method
     '#End Region
 
@@ -278,11 +294,34 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         SetAlpha oldAlpha
     End Method
 
-    Method GetCursorWidth%()
-        If CTMenu.cursorImage
-            Return ImageWidth(CTMenu.cursorImage)
+    Method DrawCheckmark(x%, y%)
+        If Not CTMenu.checkmarkImage Then Return
+
+        Local oldAlpha# = GetAlpha()
+        If IsActive()
+            SetAlpha 1.0
+        Else
+            SetAlpha 0.5
         End If
-        Return 0
+
+        DrawImage CTMenu.checkmarkImage, x, y
+
+        SetAlpha oldAlpha
+    End Method
+
+    Method GetLineLabelOffset%()
+        Return GetCursorWidth() + GetCheckmarkWidth()
+    End Method
+
+    Method GetCursorWidth%()
+        If Not CTMenu.cursorImage Then Return 0
+        Return ImageWidth(CTMenu.cursorImage)
+    End Method
+
+    Method GetCheckmarkWidth%()
+        If Not Self.displaysCheckmarks Then Return 0
+        If Not CTMenu.checkmarkImage Then Return 0
+        Return ImageWidth(CTMenu.checkmarkImage)
     End Method
 
     Method IsActive%()
@@ -321,23 +360,23 @@ End Function
 Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
     Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
         Local lineHeight% = TextHeight("x")
-        Local cursorWidth% = base.GetCursorWidth()
+        Local labelOffset% = base.GetLineLabelOffset()
+        Local checkmarkOffset% = base.GetCursorWidth()
 
         Local x%, y% = 0
-        Local i% = 0
         Local link:TLink = menuItems.FirstLink()
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
             Local isSelected:Int = (selectedItemLink And selectedItemLink = link) And base.IsActive()
             Local textColor:CTColor = TextColor(menuItem.isEnabled, isSelected)
 
-            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+            DrawContrastText menuItem.label, x + labelOffset, y, textColor
 
-            ' Draw cursor on top (doesn't appear if drawn first)
+            ' Draw cursor on top (doesn't appear in first line if drawn first)
             If isSelected Then base.DrawCursor(x, y)
+            If menuItem.isChecked Then base.DrawCheckmark(x + checkmarkOffset, y)
 
             y :+ lineHeight
-            i :+ 1
             link = link.NextLink()
         Wend
     End Method
@@ -348,7 +387,8 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
 
     Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
         Local lineHeight% = TextHeight("x")
-        Local cursorWidth% = base.GetCursorWidth()
+        Local labelOffset% = base.GetLineLabelOffset()
+        Local checkmarkOffset% = base.GetCursorWidth()
 
         Local columnWidth% = rect.GetWidth() / COLUMNS
         Local i% = 0
@@ -360,10 +400,11 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
 
             Local x% = (i Mod COLUMNS) * columnWidth
             Local y% = (i / COLUMNS) * lineHeight
-            DrawContrastText menuItem.label, x + cursorWidth, y, textColor
+            DrawContrastText menuItem.label, x + labelOffset, y, textColor
 
-            ' Draw cursor on top (doesn't appear if drawn first)
+            ' Draw cursor on top (doesn't appear in first line if drawn first)
             If isSelected Then base.DrawCursor(x, y)
+            If menuItem.isChecked Then base.DrawCheckmark(x + checkmarkOffset, y)
 
             i :+ 1
             link = link.NextLink()

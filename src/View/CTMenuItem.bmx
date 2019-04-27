@@ -15,6 +15,7 @@ Type CTMenuItem
     Field label:String = ""
     Field isDivider:Int = False
     Field isEnabled:Int = True
+    Field isChecked:Int = False
 
     Method New(label:String, objectID:Int = -1)
         Self.label = label

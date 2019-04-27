@@ -4,6 +4,8 @@ Import "../View/CTView.bmx"
 Import "CTTokenPosition.bmx"
 
 Type CTBattlefieldView Extends CTView
+    Const TILE_SIZE:Int = 50
+
     Public
     Method New()
         Self.backgroundColor = CTColor.Black()
@@ -13,7 +15,11 @@ Type CTBattlefieldView Extends CTView
     Function RectForTokenPosition:CTRect(position:CTTokenPosition)
         Local x:Int = position.column * 50
         Local y:Int = position.row * 50
-        Return CTRect.Create(x, y, 50, 50)
+        Return CTRect.Create(x, y, TILE_SIZE, TILE_SIZE)
+    End Function
+
+    Function SizeForDimensions:CTRect(columns:Int, rows:Int)
+        Return New CTRect(0, 0, columns * TILE_SIZE, rows * TILE_SIZE)
     End Function
 
 

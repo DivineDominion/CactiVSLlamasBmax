@@ -58,6 +58,10 @@ Type CTView Implements CTDrawable, CTAnimatable
         Return subviews.Remove(subview)
     End Method
 
+    Method AllSubviews:CTView[]()
+        Return CTView[](subviews.ToArray())
+    End Method
+
     Method RemoveAllSubviews()
         Self.subviews.Clear()
     End Method
