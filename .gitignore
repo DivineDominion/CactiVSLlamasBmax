@@ -4,6 +4,7 @@ BlitzMax/
 # Build artefacts
 .bmx/
 */**/.bmx/
+*.bmx.bak
 main.app/
 main.debug.app/
 main
