@@ -57,7 +57,8 @@ Type CTBattle Implements CTShowActionMenuDelegate, CTTokenSelectionControllerDel
         Local rect:CTRect = window.FrameRect()
         Local menuFrameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(..
             rect.GetX(), rect.GetMaxY() + 2, ..
-            rect.GetWidth(), lines.length)
+            rect.GetWidth(), lines.length, ..
+            "(Char Name)")
 
         Self.currentMenuHandler = New CTShowActionMenu(menuFrameRect, lines, character.GetName())
         Self.currentMenuHandler.delegate = Self
