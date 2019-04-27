@@ -1,6 +1,7 @@
 SuperStrict
 
 Import "../View/CTWindowManager.bmx"
+Import "../View/CTDialogWindowController.bmx"
 Import "../Army/CTParty.bmx"
 Import "../Battlefield/CTBattlefield.bmx"
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
@@ -16,7 +17,11 @@ Rem
 Puts multiple windows on the screen and manages the selection and placement of
 tokens on the battlefield.
 End Rem
-Type CTPlacePartyCoordinator Implements CTTokenPositionSelectionControllerDelegate, CTSelectCharacterFromPartyDelegate
+Type CTPlacePartyCoordinator ..
+Implements CTTokenPositionSelectionControllerDelegate, ..
+           CTSelectCharacterFromPartyDelegate, ..
+           CTDialogWindowControllerDelegate
+
     Private
     Field frameRect:CTRect
     Field party:CTParty
@@ -103,6 +108,7 @@ Type CTPlacePartyCoordinator Implements CTTokenPositionSelectionControllerDelega
     End Method
     '#End Region
 
+
     '#Region CTSelectCharacterFromPartyDelegate
     Public
     Method SelectCharacterFromPartyDidSelectCharacter(service:CTSelectCharacterFromParty, character:CTCharacter)
@@ -110,6 +116,7 @@ Type CTPlacePartyCoordinator Implements CTTokenPositionSelectionControllerDelega
         PlaceCharacterAtPosition(character, Self.currentSelectedPositon)
         UpdateWindowControllers()
         CloseCharacterSelection()
+        ShowConfirmationIfPossible()
     End Method
 
     Method SelectCharacterFromPartyDidCancel(service:CTSelectCharacterFromParty)
@@ -140,6 +147,44 @@ Type CTPlacePartyCoordinator Implements CTTokenPositionSelectionControllerDelega
         Self.battlefieldWindowController.UpdateBattlefield()
         Local tokenCount:Int = Self.battlefield.AllTokens.Count()
         Self.statusWindowController.UpdatePlacementCount(tokenCount)
+    End Method
+    '#End Region
+
+
+    '#Region Confirmation
+    Private
+    Field confirmationDialog:CTDialogWindowController = Null
+
+    Public
+    Method ShowConfirmationIfPossible()
+        If Not HasPlacedAllPartyMembers() Then Return
+        ShowConfirmationDialog()
+    End Method
+
+    Private
+    Method HasPlacedAllPartyMembers:Int()
+        Local tokenCount:Int = Self.battlefield.AllTokens.Count()
+        Local partyCount:Int = Self.party.Count()
+        Return tokenCount >= partyCount
+    End Method
+
+    Method ShowConfirmationDialog()
+        Assert Not Self.confirmationDialog Else "Expected #ShowConfirmationDialog to be called without active dialog"
+        Self.confirmationDialog = New CTDialogWindowController("Confirm", "Modify", "Use this party placement?")
+        Self.confirmationDialog.ShowDialogWithDelegate(Self)
+    End Method
+    '#End Region
+
+
+    '#Region CTDialogWindowControllerDelegate to handle placement confirmation
+    Public
+    Method DialogWindowControllerDidConfirm(controller:CTDialogWindowController, didConfirm:Int)
+        If Self.confirmationDialog <> controller Then Return
+        Self.confirmationDialog = Null
+
+        If Not didConfirm Then Return
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.PlacePartyDidPrepareBattlefield(Self, Self.battlefield)
     End Method
     '#End Region
 End Type
