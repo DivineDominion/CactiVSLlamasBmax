@@ -161,6 +161,15 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
         Wend
         Self.selectedLink = link
     End Method
+
+    Method SelectFirstUncheckedMenuItem()
+        Local link:TLink = Self.menuItems.FirstLink()
+        While link And (CTMenuItem(link.Value()).IsSkippable() Or CTMenuItem(link.Value()).isChecked)
+            link = link.NextLink()
+        Wend
+        Self.selectedLink = link
+        If Self.selectedLink = Null Then Self.selectedLink = Self.menuItems.FirstLink()
+    End Method
     '#End Region
 
 

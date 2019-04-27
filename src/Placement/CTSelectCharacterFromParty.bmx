@@ -42,6 +42,7 @@ Type CTSelectCharacterFromParty Implements CTMenuDelegate
         Local characters:CTCharacter[] = Self.party.Characters()
         Self.menu = CTMenuForCharactersWithSelectedCharacters(characters, selectedCharacters)
         Self.menu.delegate = Self
+        Self.menu.SelectFirstUncheckedMenuItem()
 
         Local menuWidth:Int = MaxCharacterNameWidthForCharacters(characters) + Self.menu.GetLineLabelOffset()
         Local menuHeight:Int = characters.length * TextHeight("x")
