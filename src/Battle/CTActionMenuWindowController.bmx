@@ -1,6 +1,6 @@
 SuperStrict
 
-Import "CTActionMenuController.bmx"
+Import "CTActionMenuViewController.bmx"
 Import "../View/CTRect.bmx"
 Import "../View/CTWindow.bmx"
 Import "../View/CTWindowManager.bmx"
@@ -26,13 +26,13 @@ Type CTActionMenuWindowController
     '#Region Menu Window Lifecycle
     Private
     Field currentWindow:CTWindow = Null
-    Field actionMenuController:CTActionMenuController = Null
+    Field actionMenuController:CTActionMenuViewController = Null
 
     Public
-    Method ShowMenu(delegate:CTActionMenuControllerDelegate)
+    Method ShowMenu(delegate:CTActionMenuViewControllerDelegate)
         Assert Not Self.currentWindow Else "#ShowMenu called before closing the window"
 
-        Self.actionMenuController = New CTActionMenuController(actions)
+        Self.actionMenuController = New CTActionMenuViewController(actions)
         Self.actionMenuController.delegate = delegate
 
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.actionMenuController, Self.characterName)

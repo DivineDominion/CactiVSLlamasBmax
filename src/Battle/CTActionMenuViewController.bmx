@@ -4,12 +4,12 @@ Import "../View/CTMenu.bmx"
 Import "../View/CTController.bmx"
 Import "CTActionable.bmx"
 
-Interface CTActionMenuControllerDelegate
-    Method ActionMenuControllerDidSelectAction(controller:CTActionMenuController, action:CTActionable)
-    Method ActionMenuControllerDidCancel(controller:CTActionMenuController)
+Interface CTActionMenuViewControllerDelegate
+    Method ActionMenuViewControllerDidSelectAction(controller:CTActionMenuViewController, action:CTActionable)
+    Method ActionMenuViewControllerDidCancel(controller:CTActionMenuViewController)
 End Interface
 
-Type CTActionMenuController Extends CTController Implements CTMenuDelegate
+Type CTActionMenuViewController Extends CTController Implements CTMenuDelegate
     Private
     Field actionMap:TIntMap
     Field menu:CTMenu
@@ -17,7 +17,7 @@ Type CTActionMenuController Extends CTController Implements CTMenuDelegate
     Method New(); End Method
 
     Public
-    Field delegate:CTActionMenuControllerDelegate = Null
+    Field delegate:CTActionMenuViewControllerDelegate = Null
 
     Method New(actions:CTActionable[])
         Self.menu = New CTMenu()
@@ -65,7 +65,7 @@ Type CTActionMenuController Extends CTController Implements CTMenuDelegate
         Local action:CTActionable = Self.ActionForMenuItem(menuItem)
         If action = Null Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
-        If Self.delegate Then delegate.ActionMenuControllerDidSelectAction(Self, action)
+        If Self.delegate Then delegate.ActionMenuViewControllerDidSelectAction(Self, action)
     End Method
 
     Method MenuShouldWrapAround:Int(menu:CTMenu, forwardDirection:Int)
@@ -73,7 +73,7 @@ Type CTActionMenuController Extends CTController Implements CTMenuDelegate
     End Method
 
     Method MenuDidCancel(menu:CTMenu)
-        If Self.delegate Then delegate.ActionMenuControllerDidCancel(Self)
+        If Self.delegate Then delegate.ActionMenuViewControllerDidCancel(Self)
     End Method
 
     Private

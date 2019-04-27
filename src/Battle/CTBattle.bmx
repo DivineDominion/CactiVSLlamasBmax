@@ -3,7 +3,7 @@ SuperStrict
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
 Import "CTActionMenuWindowController.bmx"
 
-Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuControllerDelegate
+Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuViewControllerDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
@@ -70,13 +70,13 @@ Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuControl
     '#End Region
 
 
-    '#Region CTActionMenuControllerDelegate
-    Method ActionMenuControllerDidSelectAction(controller:CTActionMenuController, action:CTActionable)
+    '#Region CTActionMenuViewControllerDelegate
+    Method ActionMenuViewControllerDidSelectAction(controller:CTActionMenuViewController, action:CTActionable)
         DebugLog("ACTION: " + action.GetLabel())
         CloseActionsMenu()
     End Method
 
-    Method ActionMenuControllerDidCancel(controller:CTActionMenuController)
+    Method ActionMenuViewControllerDidCancel(controller:CTActionMenuViewController)
         CloseActionsMenu()
     End Method
     '#End Redion
