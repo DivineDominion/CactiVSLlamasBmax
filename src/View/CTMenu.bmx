@@ -361,10 +361,9 @@ Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
     Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
         Local lineHeight% = TextHeight("x")
         Local labelOffset% = base.GetLineLabelOffset()
-        Local cursorOffset% = base.GetCheckmarkWidth()
+        Local checkmarkOffset% = base.GetCursorWidth()
 
         Local x%, y% = 0
-        Local i% = 0
         Local link:TLink = menuItems.FirstLink()
         While link
             Local menuItem:CTMenuItem = CTMenuItem(link.Value())
@@ -373,12 +372,11 @@ Type CTMenuVerticalDrawingStrategy Implements CTMenuItemDrawingStrategy
 
             DrawContrastText menuItem.label, x + labelOffset, y, textColor
 
-            ' Draw cursor on top (doesn't appear if drawn first)
-            If menuItem.isChecked Then base.DrawCheckmark(x, y)
-            If isSelected Then base.DrawCursor(x + cursorOffset, y)
+            ' Draw cursor on top (doesn't appear in first line if drawn first)
+            If isSelected Then base.DrawCursor(x, y)
+            If menuItem.isChecked Then base.DrawCheckmark(x + checkmarkOffset, y)
 
             y :+ lineHeight
-            i :+ 1
             link = link.NextLink()
         Wend
     End Method
@@ -390,7 +388,7 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
     Method DrawMenuItemLabels(menuItems:TList, selectedItemLink:TLink, rect:CTRect, base:CTMenuDrawingBase)
         Local lineHeight% = TextHeight("x")
         Local labelOffset% = base.GetLineLabelOffset()
-        Local cursorOffset% = base.GetCheckmarkWidth()
+        Local checkmarkOffset% = base.GetCursorWidth()
 
         Local columnWidth% = rect.GetWidth() / COLUMNS
         Local i% = 0
@@ -404,9 +402,9 @@ Type CTMenuHorizontalDrawingStrategy Implements CTMenuItemDrawingStrategy
             Local y% = (i / COLUMNS) * lineHeight
             DrawContrastText menuItem.label, x + labelOffset, y, textColor
 
-            ' Draw cursor on top (doesn't appear if drawn first)
-            If menuItem.isChecked Then base.DrawCheckmark(x, y)
-            If isSelected Then base.DrawCursor(x + cursorOffset, y)
+            ' Draw cursor on top (doesn't appear in first line if drawn first)
+            If isSelected Then base.DrawCursor(x, y)
+            If menuItem.isChecked Then base.DrawCheckmark(x + checkmarkOffset, y)
 
             i :+ 1
             link = link.NextLink()
