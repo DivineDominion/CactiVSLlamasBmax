@@ -8,4 +8,5 @@ Import "CTGame.bmx"
 Import "CTGameScene.bmx"
 
 Import "CTPickPartyGameScene.bmx"
+Import "CTPrepareBattlefieldGameScene.bmx"
 Import "CTBattleGameScene.bmx"

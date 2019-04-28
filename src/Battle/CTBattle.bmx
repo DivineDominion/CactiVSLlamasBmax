@@ -2,8 +2,10 @@ SuperStrict
 
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
 Import "CTActionMenuWindowController.bmx"
+Import "CTActionable.bmx"
+Import "CTTargetedToken.bmx"
 
-Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuViewControllerDelegate
+Type CTBattle Implements CTDrivesActions, CTTokenSelectionControllerDelegate, CTActionMenuViewControllerDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
@@ -22,20 +24,17 @@ Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuViewCon
         Self.battlefieldWindowController.Close()
     End Method
 
-    Private
-    Field actorSelectionSession:Object = Null
-    Field targetSelectionSession:Object = Null
-
-    Method SelectActor()
-        ' TODO: cache selection session
-        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
-    End Method
-
 
     '#Region CTTokenSelectionControllerDelegate
     Public
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
-        ShowActionsForToken(token)
+        If controller = Self.actorSelectionSession
+            ShowActionsForToken(token)
+        Else If controller = Self.targetSelectionSession
+            Assert targetSelectionAction Else "Expected #targetSelectionAction to exist"
+            Local target:CTTargetedToken = New CTTargetedToken(token)
+            targetSelectionAction.ExecuteInDriverWithTarget(Self, target)
+        End If
     End Method
     '#End Region
 
@@ -72,7 +71,7 @@ Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuViewCon
 
     '#Region CTActionMenuViewControllerDelegate
     Method ActionMenuViewControllerDidSelectAction(controller:CTActionMenuViewController, action:CTActionable)
-        DebugLog("ACTION: " + action.GetLabel())
+        action.ExecuteInDriver(Self)
         CloseActionsMenu()
     End Method
 
@@ -80,4 +79,31 @@ Type CTBattle Implements CTTokenSelectionControllerDelegate, CTActionMenuViewCon
         CloseActionsMenu()
     End Method
     '#End Redion
+
+
+    '#Region CTDrivesActions
+    Private
+    Field actorSelectionSession:Object = Null
+    Field targetSelectionSession:Object = Null
+    Field targetSelectionAction:CTTargetableActionable = Null
+
+    Public
+    Method SelectEffectTargetForAction(action:CTTargetableActionable)
+        Self.targetSelectionAction = action
+        SelectTarget()
+    End MEthod
+
+    Method ApplyEffectToTarget(effect:CTTargetedEffect, target:CTEffectTarget)
+        effect.ApplyToTarget(target)
+    End Method
+
+    Private
+    Method SelectActor()
+        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+    End Method
+
+    Method SelectTarget()
+        Self.targetSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+    End Method
+    '#End Region
 End Type
