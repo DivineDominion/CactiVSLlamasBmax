@@ -15,6 +15,7 @@ Type CTTargetedToken Implements CTEffectTarget
 
     '#Region CTEffectTarget
     Method OnInflictDamage(damage:Int)
-        ' TODO inflict damage
+        Self.token.character.TakeDamage(damage)
     End Method
+    '#End Region
 End Type
