@@ -40,7 +40,7 @@ Type CTCharacter Abstract
     '#Region Stats
     Protected
     Field maxHP%, hp%
-    Field hitChance#, damage#
+    Field hitChance#, damage%
 
     Public
     Method GetHP:Int()
@@ -51,7 +51,7 @@ Type CTCharacter Abstract
         Return Self.maxHP
     End Method
 
-    Method GetDamage:Float()
+    Method GetDamage:Int()
         Return Self.damage
     End Method
     '#End Region
