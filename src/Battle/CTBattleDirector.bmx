@@ -7,7 +7,7 @@ Import "CTTargetedToken.bmx"
 Import "CTActionable.bmx"
 Import "../Game/CTPlayer.bmx"
 
-Type CTBattle Implements CTTurnDelegate
+Type CTBattleDirector Implements CTTurnDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
