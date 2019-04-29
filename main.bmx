@@ -14,6 +14,6 @@ CTMenu.cursorImage = LoadImage("img/cursor.png")
 CTMenu.checkmarkImage = LoadImage("img/checkmark.png")
 
 Local initialScene:CTPickPartyGameScene = New CTPickPartyGameScene
-Global game:CTGame = New CTGame(initialScene)
+InitializeGame(initialScene)
 
 GameLoop()
