@@ -1,21 +1,22 @@
 SuperStrict
 
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
-Import "CTShowActionMenu.bmx"
+Import "CTActionMenuWindowController.bmx"
+Import "CTActionable.bmx"
+Import "CTTargetedToken.bmx"
 
-Type CTBattle Implements CTShowActionMenuDelegate, CTTokenSelectionControllerDelegate
+Type CTBattle Implements CTDrivesActions, CTTokenSelectionControllerDelegate, CTActionMenuViewControllerDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
     Public
-    Method New(frameRect:CTRect, battlefield:CTBattlefield)
-        Self.battlefieldWindowController = New CTBattlefieldWindowController(frameRect, battlefield)
+    Method New(battlefieldWinFrameRect:CTRect, battlefield:CTBattlefield)
+        Self.battlefieldWindowController = New CTBattlefieldWindowController(battlefieldWinFrameRect, battlefield)
     End Method
 
     Method ShowBattlefield()
         Self.battlefieldWindowController.Show()
-        ' TODO: cache selection session
-        Local session:Object = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+        Self.SelectActor()
     End Method
 
     Method CloseBattlefield()
@@ -27,52 +28,82 @@ Type CTBattle Implements CTShowActionMenuDelegate, CTTokenSelectionControllerDel
     '#Region CTTokenSelectionControllerDelegate
     Public
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
-        ShowActionsForToken(token)
+        If controller = Self.actorSelectionSession
+            ShowActionsForToken(token)
+        Else If controller = Self.targetSelectionSession
+            Assert targetSelectionAction Else "Expected #targetSelectionAction to exist"
+            Local target:CTTargetedToken = New CTTargetedToken(token)
+            targetSelectionAction.ExecuteInDriverWithTarget(Self, target)
+        End If
     End Method
     '#End Region
 
+
     '#Region Selecting Tokens
     Private
-    Field currentMenuHandler:CTShowActionMenu = Null
+    Field currentMenuHandler:CTActionMenuWindowController = Null
 
     Public
     Method ShowActionsForToken(token:CTToken)
         Assert Not Self.currentMenuHandler Else "Expected currentMenuHandler to be Null"
 
         Local character:CTCharacter = token.GetCharacter()
-        Local lines:String[] = ["Fight", "Move", "", "Run"]
 
+        Local actions:CTActionable[] = CTActionFactory.FighterActions()
         Local window:CTWindow = battlefieldWindowController.Window()
         Local rect:CTRect = window.FrameRect()
         Local menuFrameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(..
             rect.GetX(), rect.GetMaxY() + 2, ..
-            rect.GetWidth(), lines.length, ..
+            rect.GetWidth(), actions.length, ..
             "(Char Name)")
 
-        Self.currentMenuHandler = New CTShowActionMenu(menuFrameRect, lines, character.GetName())
-        Self.currentMenuHandler.delegate = Self
-        Self.currentMenuHandler.ShowMenu()
+        Self.currentMenuHandler = New CTActionMenuWindowController(menuFrameRect, character.GetName(), actions)
+        Self.currentMenuHandler.ShowMenu(Self)
     End Method
 
     Method CloseActionsMenu()
         If Not Self.currentMenuHandler Then Return
         Self.currentMenuHandler.CloseMenu()
-        Self.currentMenuHandler.delegate = Null
         Self.currentMenuHandler = Null
     End Method
     '#End Region
 
-    '#Region CTShowActionMenuDelegate
-    Public
-    Method ShowActionMenuDidSelectAction(showActionMenu:CTShowActionMenu, action:String)
-        If Self.currentMenuHandler <> showActionMenu Then Return
-        DebugLog("ACTION: " + action)
+
+    '#Region CTActionMenuViewControllerDelegate
+    Method ActionMenuViewControllerDidSelectAction(controller:CTActionMenuViewController, action:CTActionable)
+        action.ExecuteInDriver(Self)
         CloseActionsMenu()
     End Method
 
-    Method ShowActionMenuDidCancel(showActionMenu:CTShowActionMenu)
-        If Self.currentMenuHandler <> showActionMenu Then Return
+    Method ActionMenuViewControllerDidCancel(controller:CTActionMenuViewController)
         CloseActionsMenu()
+    End Method
+    '#End Redion
+
+
+    '#Region CTDrivesActions
+    Private
+    Field actorSelectionSession:Object = Null
+    Field targetSelectionSession:Object = Null
+    Field targetSelectionAction:CTTargetableActionable = Null
+
+    Public
+    Method SelectEffectTargetForAction(action:CTTargetableActionable)
+        Self.targetSelectionAction = action
+        SelectTarget()
+    End MEthod
+
+    Method ApplyEffectToTarget(effect:CTTargetedEffect, target:CTEffectTarget)
+        effect.ApplyToTarget(target)
+    End Method
+
+    Private
+    Method SelectActor()
+        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+    End Method
+
+    Method SelectTarget()
+        Self.targetSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
     End Method
     '#End Region
 End Type
