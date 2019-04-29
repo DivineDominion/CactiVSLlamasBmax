@@ -1,11 +1,13 @@
 SuperStrict
 
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
-Import "CTActionMenuWindowController.bmx"
-Import "CTActionable.bmx"
+Import "CTTurn.bmx"
+Import "CTSelectAction.bmx"
 Import "CTTargetedToken.bmx"
+Import "CTActionable.bmx"
+Import "../Game/CTPlayer.bmx"
 
-Type CTBattle Implements CTDrivesActions, CTTokenSelectionControllerDelegate, CTActionMenuViewControllerDelegate
+Type CTBattle Implements CTTurnDelegate
     Private
     Field battlefieldWindowController:CTBattlefieldWindowController = Null
 
@@ -16,94 +18,46 @@ Type CTBattle Implements CTDrivesActions, CTTokenSelectionControllerDelegate, CT
 
     Method ShowBattlefield()
         Self.battlefieldWindowController.Show()
-        Self.SelectActor()
+        Self.NextTurn()
     End Method
 
     Method CloseBattlefield()
-        CloseActionsMenu()
+        If Self.turn Then turn.EndTurn()
         Self.battlefieldWindowController.Close()
     End Method
 
-
-    '#Region CTTokenSelectionControllerDelegate
-    Public
-    Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
-        If controller = Self.actorSelectionSession
-            ShowActionsForToken(token)
-        Else If controller = Self.targetSelectionSession
-            Assert targetSelectionAction Else "Expected #targetSelectionAction to exist"
-            Local target:CTTargetedToken = New CTTargetedToken(token)
-            targetSelectionAction.ExecuteInDriverWithTarget(Self, target)
-        End If
-    End Method
-    '#End Region
-
-
-    '#Region Selecting Tokens
     Private
-    Field currentMenuHandler:CTActionMenuWindowController = Null
+    Method NextTurn()
+        If Self.turn Then turn.EndTurn()
+
+        Self.turn = New CTTurn(battlefieldWindowController)
+        Self.turn.StartWithDelegate(Self)
+    End Method
+
+
+    '#Region CTTurnDelegate
+    Private
+    Field turn:CTTurn
 
     Public
+    Method TurnDidSelectActor(turn:CTTurn, actorToken:CTToken)
+        ShowActionsForToken(actorToken)
+    End Method
+
+    Method TurnDidSelectTargetForActionOfActor(turn:CTTurn, targetToken:CTToken, action:CTTargetableActionable, actorToken:CTToken)
+        ExercuteActionWithTargetToken(action, targetToken)
+    End Method
+
+    Private
     Method ShowActionsForToken(token:CTToken)
-        Assert Not Self.currentMenuHandler Else "Expected currentMenuHandler to be Null"
-
-        Local character:CTCharacter = token.GetCharacter()
-
-        Local actions:CTActionable[] = CTActionFactory.FighterActions()
-        Local window:CTWindow = battlefieldWindowController.Window()
-        Local rect:CTRect = window.FrameRect()
-        Local menuFrameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(..
-            rect.GetX(), rect.GetMaxY() + 2, ..
-            rect.GetWidth(), actions.length, ..
-            "(Char Name)")
-
-        Self.currentMenuHandler = New CTActionMenuWindowController(menuFrameRect, character.GetName(), actions)
-        Self.currentMenuHandler.ShowMenu(Self)
+        CTSelectAction.ShowActions(battlefieldWindowController, token, Self.turn)
     End Method
 
-    Method CloseActionsMenu()
-        If Not Self.currentMenuHandler Then Return
-        Self.currentMenuHandler.CloseMenu()
-        Self.currentMenuHandler = Null
-    End Method
-    '#End Region
-
-
-    '#Region CTActionMenuViewControllerDelegate
-    Method ActionMenuViewControllerDidSelectAction(controller:CTActionMenuViewController, action:CTActionable)
-        action.ExecuteInDriver(Self)
-        CloseActionsMenu()
-    End Method
-
-    Method ActionMenuViewControllerDidCancel(controller:CTActionMenuViewController)
-        CloseActionsMenu()
-    End Method
-    '#End Redion
-
-
-    '#Region CTDrivesActions
-    Private
-    Field actorSelectionSession:Object = Null
-    Field targetSelectionSession:Object = Null
-    Field targetSelectionAction:CTTargetableActionable = Null
-
-    Public
-    Method SelectEffectTargetForAction(action:CTTargetableActionable)
-        Self.targetSelectionAction = action
-        SelectTarget()
-    End MEthod
-
-    Method ApplyEffectToTarget(effect:CTTargetedEffect, target:CTEffectTarget)
-        effect.ApplyToTarget(target)
-    End Method
-
-    Private
-    Method SelectActor()
-        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
-    End Method
-
-    Method SelectTarget()
-        Self.targetSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+    Method ExercuteActionWithTargetToken(action:CTTargetableActionable, targetToken:CTToken)
+        Local target:CTTargetedToken = New CTTargetedToken(targetToken)
+        action.ExecuteInDriverWithTarget(Self.turn, target)
+        Self.NextTurn()
     End Method
     '#End Region
 End Type
+
