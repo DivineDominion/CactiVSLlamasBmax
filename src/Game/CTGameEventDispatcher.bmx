@@ -12,6 +12,7 @@ Type CTGameEventDispatcher
     End Function
 
     Method AddListener(obj:Object)
+        If Self.listeners.Contains(obj) Then Return
         Self.listeners.AddLast(obj)
     End Method
 

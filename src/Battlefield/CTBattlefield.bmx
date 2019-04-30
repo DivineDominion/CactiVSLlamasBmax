@@ -42,6 +42,14 @@ Type CTBattlefield
         Return Null
     End Method
 
+    Method PositionOfTokenForCharacter:CTTokenPosition(character:CTCharacter)
+        For Local node:TKeyValue = EachIn Self._tokenPositionsTokens
+            Local currentToken:CTToken = CTToken(node.Value())
+            If currentToken.character = character Then Return CTTokenPosition(node.Key())
+        Next
+        Return Null
+    End Method
+
     Method RemoveTokenAtPosition:CTToken(tokenPosition:CTTokenPosition)
         If Not Self._tokenPositionsTokens.Contains(tokenPosition) Then Return Null
         Local token:CTToken = CTToken(Self._tokenPositionsTokens.ValueForKey(tokenPosition))

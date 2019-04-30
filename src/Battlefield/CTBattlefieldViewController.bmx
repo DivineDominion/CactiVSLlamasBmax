@@ -10,11 +10,12 @@ Import "CTTokenPositionSelectionController.bmx"
 Type CTBattlefieldViewController Extends CTController
     Private
     Field battlefield:CTBattlefield
-    Field battlefieldView:CTBattlefieldView
 
     Method New(); End Method
 
     Public
+    Field ReadOnly battlefieldView:CTBattlefieldView
+
     Method New(battlefield:CTBattlefield)
         Self.battlefield = battlefield
         Self.battlefieldView = New CTBattlefieldView()
