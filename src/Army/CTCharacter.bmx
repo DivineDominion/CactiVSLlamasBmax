@@ -1,6 +1,7 @@
 SuperStrict
 
 Import "../Event.bmx"
+Import "../Util/CTInteger.bmx"
 
 Type CTCharacter Abstract
     '#Region Base Character ID
@@ -60,7 +61,7 @@ Type CTCharacter Abstract
         If Self.hp <= 0 Then Return
 
         Self.hp :- damage
-        Fire("CharacterDidTakeDamage", Self, [damage])
+        Fire("CharacterDidTakeDamage", Self, New CTInteger(damage))
         If Self.hp <= 0
             Fire("CharacterDidDie", Self)
             Self.hp = 0
