@@ -10,6 +10,9 @@ Treat `CTView` drawing as if it's the only thing on screen. The `dirtyRect`
 is supposed to start at (0,0) in a viewport, so you don't need to worry about offsets.
 
 Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
+
+Manage view hierarchies by sending `AddSubview` to the container view, and
+`RemoveFromSuperview` to the subview if it should remove itself.
 EndRem
 Type CTView Implements CTDrawable, CTAnimatable
     Public
@@ -46,16 +49,26 @@ Type CTView Implements CTDrawable, CTAnimatable
     '#Region View Hierarchy
     Private
     Field subviews:TList = New TList
+    Field superview:CTView = Null
 
     Public
     Method AddSubview:Int(subview:CTView)
         If subviews.Contains(subview) Then Return False
         subviews.AddLast(subview)
+        subview.superview = Self
         Return True
     End Method
 
     Method RemoveSubview:Int(subview:CTView)
-        Return subviews.Remove(subview)
+        Local found:Int = subviews.Remove(subview)
+        If found
+            subview.superview = Null
+        End If
+    End Method
+
+    Method RemoveFromSuperview:Int()
+        If Self.superview Then Return superview.RemoveSubview(Self)
+        Return False
     End Method
 
     Method AllSubviews:CTView[]()
@@ -63,7 +76,9 @@ Type CTView Implements CTDrawable, CTAnimatable
     End Method
 
     Method RemoveAllSubviews()
-        Self.subviews.Clear()
+        For Local subview:CTView = EachIn Self.subviews
+            Self.RemoveSubview(subview)
+        Next
     End Method
     '#End Region
 
