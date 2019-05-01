@@ -18,18 +18,20 @@ Type CTDamageEffectView Extends CTView
 
     '#Region CTAnimatable
     Private
-    Field isAnimating:Int = True
     Field duration# = 1 * MSEC_PER_SEC
     Field elapsedTime# = 0
 
     Public
     Method UpdateAnimation(delta:Float)
-        If Not Self.isAnimating Then Return
+        Super.UpdateAnimation(delta)
+
+        If Not IsAnimating() Then Return
 
         Self.elapsedTime :+ delta
 
+        ' Auto-stop animation
         If Self.elapsedTime >= Self.duration
-            Self.isAnimating = False
+            Self.StopAnimation()
             Fire("AnimationDidComplete", Self)
         End If
     End Method

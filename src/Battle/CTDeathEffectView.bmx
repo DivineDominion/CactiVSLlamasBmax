@@ -14,8 +14,6 @@ Type CTDeathEffectView Extends CTView
 
     '#Region CTAnimatable
     Private
-    Field isAnimating:Int = True
-
     ' Hard-coded random numbers for coordinate offsets and time deltas.
     ' Keep uneven for less repetition in 2-component offsets
     Field OFFSET_RNG:Int[] = [1,-1,2,1, 0,-1,0,-1, 1,0,1,2, 1,-1,0]
@@ -31,7 +29,9 @@ Type CTDeathEffectView Extends CTView
 
     Public
     Method UpdateAnimation(delta:Float)
-        If Not isAnimating Then Return
+        Super.UpdateAnimation(delta)
+
+        If Not IsAnimating() Then Return
 
         Self.elapsedTime :+ delta
 
@@ -45,8 +45,9 @@ Type CTDeathEffectView Extends CTView
         Local progressPercentage# = Self.elapsedTime / Self.duration
         Self.backgroundAlpha = progressPercentage
 
+        ' Auto-stop animation
         If Self.elapsedTime >= Self.duration
-            Self.isAnimating = False
+            Self.StopAnimation()
             Fire("AnimationDidComplete", Self)
         End If
     End Method

@@ -9,7 +9,7 @@ Import "CTResponder.bmx"
 Import "CTLabel.bmx"
 Import "CTScreen.bmx"
 
-Type CTWindow Implements CTAnimatable
+Type CTWindow
     Private
     Const BORDER_WIDTH:Int = 2
     Field rect:CTRect
@@ -130,7 +130,7 @@ Type CTWindow Implements CTAnimatable
     End Method
 
 
-    '#Region CTAnimatable
+    '#Region Animation
     Method UpdateAnimation(delta:Float)
         Self.contentView.UpdateAnimation(delta)
     End Method
