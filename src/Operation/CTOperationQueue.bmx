@@ -12,6 +12,12 @@ Type CTOperationQueue
         Main().operationQueue.Remove(operation)
     End Function
 
+    Function Enqueue(operations:CTOperation[])
+        For Local operation:CTOperation = EachIn operations
+            Enqueue(operation)
+        Next
+    End Function
+
     Function Enqueue(operation:CTOperation)
         Main().operationQueue.AddLast(operation)
     End Function

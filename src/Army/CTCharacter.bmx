@@ -4,6 +4,14 @@ Import "../Event.bmx"
 Import "../Operation.bmx"
 Import "../Util/CTInteger.bmx"
 
+Rem
+Handles character animations on the battlefield and screen.
+End Rem
+Interface CTCharacterAnimator
+    Method CharacterTakingDamageAnimationOperation:CTOperation(character:CTCharacter, damage:Int)
+    Method CharacterDyingAnimationOperation:CTOperation(character:CTCharacter)
+End Interface
+
 Type CTCharacter Abstract
     '#Region Base Character ID
     Private
@@ -69,20 +77,43 @@ Type CTCharacter Abstract
         If Not Self.IsAlive() Then Return
 
         ' Reduce HP
-        Self.hp :- damage
+        Self.hp = max(0, Self.hp - damage) ' Avoid negative HP
 
+        Local animateDamage:CTOperation = TakingDamageAnimationOperation(damage)
         Local fireDidTakeDamage:CTOperation = New CTFireEventOperation("CharacterDidTakeDamage", Self, New CTInteger(damage))
-        CTOperationQueue.Main().Enqueue(fireDidTakeDamage)
+        fireDidTakeDamage.AddDependency(animateDamage)
+        CTOperationQueue.Main().Enqueue([animateDamage, fireDidTakeDamage])
 
 
         ' Check for death
         If Self.IsAlive() Then Return
 
-        Self.hp = 0 ' Avoid negative HP
-
+        Local dyingAnimation:CTOperation = DyingAnimationOperation()
         Local fireDidDie:CTOperation = New CTFireEventOperation("CharacterDidDie", Self)
-        fireDidDie.AddDependency(fireDidTakeDamage)
-        CTOperationQueue.Main().Enqueue(fireDidDie)
+        dyingAnimation.AddDependency(fireDidTakeDamage)
+        fireDidDie.AddDependency(dyingAnimation)
+        CTOperationQueue.Main().Enqueue([dyingAnimation, fireDidDie])
     End Method
     '#End Region
+
+
+    '#Region Character animations
+    Private
+    Field animator:CTCharacterAnimator = Null
+
+    Public
+    Method SetAnimator(animator:CTCharacterAnimator)
+        Self.animator = animator
+    End Method
+
+    Method TakingDamageAnimationOperation:CTOperation(damage:Int)
+        If Not Self.animator Then Return New CTNullOperation()
+        Return Self.animator.CharacterTakingDamageAnimationOperation(Self, damage)
+    End Method
+
+    Method DyingAnimationOperation:CTOperation()
+        If Not Self.animator Then Return New CTNullOperation()
+        Return Self.animator.CharacterDyingAnimationOperation(Self)
+    End Method
+    '#End Method
 End Type
