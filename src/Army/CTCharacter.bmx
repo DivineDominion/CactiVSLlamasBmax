@@ -1,6 +1,7 @@
 SuperStrict
 
 Import "../Event.bmx"
+Import "../Operation.bmx"
 Import "../Util/CTInteger.bmx"
 
 Type CTCharacter Abstract
@@ -52,19 +53,36 @@ Type CTCharacter Abstract
         Return Self.maxHP
     End Method
 
+    Method IsAlive:Int()
+        Return Self.hp > 0
+    End Method
+
     Method GetDamage:Int()
         Return Self.damage
     End Method
     '#End Region
 
-    Method TakeDamage(damage:Int)
-        If Self.hp <= 0 Then Return
 
+    '#Region Damage
+    Public
+    Method TakeDamage(damage:Int)
+        If Not Self.IsAlive() Then Return
+
+        ' Reduce HP
         Self.hp :- damage
-        Fire("CharacterDidTakeDamage", Self, New CTInteger(damage))
-        If Self.hp <= 0
-            Fire("CharacterDidDie", Self)
-            Self.hp = 0
-        End If
+
+        Local fireDidTakeDamage:CTOperation = New CTFireEventOperation("CharacterDidTakeDamage", Self, New CTInteger(damage))
+        CTOperationQueue.Main().Enqueue(fireDidTakeDamage)
+
+
+        ' Check for death
+        If Self.IsAlive() Then Return
+
+        Self.hp = 0 ' Avoid negative HP
+
+        Local fireDidDie:CTOperation = New CTFireEventOperation("CharacterDidDie", Self)
+        fireDidDie.AddDependency(fireDidTakeDamage)
+        CTOperationQueue.Main().Enqueue(fireDidDie)
     End Method
+    '#End Region
 End Type
