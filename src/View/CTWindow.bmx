@@ -59,6 +59,7 @@ Type CTWindow Implements CTAnimatable
 
         win.contentView = contentView
         If contentView = Null Then win.contentView = New CTView()
+        win.contentView.ViewDidBecomeWindowContentView()
 
         win.rect = frameRect
         win.UpdateContentViewports()
@@ -73,7 +74,12 @@ Type CTWindow Implements CTAnimatable
     Method ReplaceContentView(newContentView:CTView)
         Assert newContentView Else "CTWindow.ReplaceContentView requires newContentView"
         ReplaceResponderWithNewResponder(CTResponder(Self.contentView), CTResponder(newContentView))
+
+        Local oldContentView:CTView = Self.contentView
         Self.contentView = newContentView
+
+        oldContentView.ViewDidResignWindowContentView()
+        newContentView.ViewDidBecomeWindowContentView()
     End Method
 
     Method MakeKey()

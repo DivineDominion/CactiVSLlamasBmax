@@ -94,7 +94,14 @@ Type CTView Implements CTDrawable, CTAnimatable
     Notifies the view that it was moved to or removed from a superview.
     Use #superview, which is now updated, to determine where it was moved.
     End Rem
-    Method ViewDidMoveToSuperview(); End Method
+    Method ViewDidMoveToSuperview()
+    End Method
+
+    Method ViewDidBecomeWindowContentView()
+    End Method
+
+    Method ViewDidResignWindowContentView()
+    End Method
     '#End Region
 
 
