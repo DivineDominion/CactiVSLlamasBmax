@@ -22,6 +22,10 @@ Type CTDamageEffectView Extends CTView
     Field elapsedTime# = 0
 
     Public
+    Method AutostartsAnimation:Int()
+        Return False
+    End Method
+
     Method UpdateAnimation(delta:Float)
         Super.UpdateAnimation(delta)
 
@@ -72,7 +76,7 @@ Type CTDamageEffectView Extends CTView
         Local alpha# = 1.0 - progressPercentage
 
         Local lineHeight:Int = TextHeight("x")
-        Local y% = dirtyRect.GetMaxY() - lineHeight - offset
+        Local y% = dirtyRect.GetHeight() - lineHeight - offset
         Local x% = (dirtyRect.GetWidth() - TextWidth(Self.damageLabel)) / 2
 
         Local oldBlend% = GetBlend()

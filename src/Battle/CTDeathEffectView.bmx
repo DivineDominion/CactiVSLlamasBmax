@@ -28,6 +28,10 @@ Type CTDeathEffectView Extends CTView
     Field backgroundAlpha# = 0
 
     Public
+    Method AutostartsAnimation:Int()
+        Return False
+    End Method
+
     Method UpdateAnimation(delta:Float)
         Super.UpdateAnimation(delta)
 

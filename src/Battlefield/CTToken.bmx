@@ -21,4 +21,12 @@ Type CTToken 'Abstract
     Method GetCharacter:CTCharacter()
         Return Self.character
     End Method
+
+
+    '#Region Character animation
+    Public
+    Method SetCharacterAnimator(animator:CTCharacterAnimator)
+        Self.character.SetAnimator(animator)
+    End Method
+    '#End Region
 End Type

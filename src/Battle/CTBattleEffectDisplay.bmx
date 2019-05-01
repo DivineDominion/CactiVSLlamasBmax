@@ -1,14 +1,14 @@
 SuperStrict
 
+Import "../Operation.bmx"
 Import "../Battlefield/CTBattlefield.bmx"
 Import "../Battlefield/CTBattlefieldView.bmx"
 Import "../Battlefield/CTTokenPosition.bmx"
 Import "../Army/CTCharacter.bmx"
-Import "../Util/CTInteger.bmx"
 Import "CTDamageEffectView.bmx"
 Import "CTDeathEffectView.bmx"
 
-Type CTBattleEffectDisplay
+Type CTBattleEffectDisplay Implements CTCharacterAnimator
     Private
     Field battlefield:CTBattlefield
     Field battlefieldView:CTBattlefieldView
@@ -22,21 +22,27 @@ Type CTBattleEffectDisplay
     End Method
 
 
-    '#Region Effects
+    '#Region CTCharacterAnimator
     Public
-    Method OnCharacterDidTakeDamage(character:CTCharacter, damagePayload:CTInteger)
+    Method CharacterTakingDamageAnimationOperation:CTOperation(character:CTCharacter, damage:Int)
         Local tokenBounds:CTRect = Self.TokenBoundsForCharacter(character)
-        If Not tokenBounds Then Return
-        Local damageLabel:CTDamageEffectView = New CTDamageEffectView("-" + damagePayload.ToString(), tokenBounds)
-        battlefieldView.AddSubview(damageLabel)
+        If Not tokenBounds Then Return New CTNullOperation()
+
+        Local damageEffectView:CTDamageEffectView = New CTDamageEffectView("-" + String(damage), tokenBounds)
+        battlefieldView.AddSubview(damageEffectView)
+
+        Return New CTAnimationOperation(damageEffectView)
     End Method
 
-    Method OnCharacterDidDie(character:CTCharacter)
+    Method CharacterDyingAnimationOperation:CTOperation(character:CTCharacter)
         Local tokenBounds:CTRect = Self.TokenBoundsForCharacter(character)
-        If Not tokenBounds Then Return
-        Local deathEffect:CTDeathEffectView = New CTDeathEffectView(tokenBounds)
-        deathEffect.bounds = tokenBounds
-        battlefieldView.AddSubview(deathEffect)
+        If Not tokenBounds Then Return New CTNullOperation()
+
+        Local deathEffectView:CTDeathEffectView = New CTDeathEffectView(tokenBounds)
+        deathEffectView.bounds = tokenBounds
+        battlefieldView.AddSubview(deathEffectView)
+
+        Return New CTAnimationOperation(deathEffectView)
     End Method
 
     Private
