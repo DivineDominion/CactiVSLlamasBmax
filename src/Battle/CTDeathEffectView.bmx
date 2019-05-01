@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTColor.bmx"
 Import "../View/CTView.bmx"
 Import "../View/DrawContrastText.bmx"
@@ -13,6 +14,8 @@ Type CTDeathEffectView Extends CTView
 
     '#Region CTAnimatable
     Private
+    Field isAnimating:Int = True
+
     ' Hard-coded random numbers for coordinate offsets and time deltas.
     ' Keep uneven for less repetition in 2-component offsets
     Field OFFSET_RNG:Int[] = [1,-1,2,1, 0,-1,0,-1, 1,0,1,2, 1,-1,0]
@@ -28,8 +31,11 @@ Type CTDeathEffectView Extends CTView
 
     Public
     Method UpdateAnimation(delta:Float)
+        If Not isAnimating Then Return
+
         Self.elapsedTime :+ delta
 
+        ' Update animation steps periodically
         If Self.elapsedTime >= Self.timeUntilNextStep
             Self.xOff = NextOffset()
             Self.yOff = NextOffset()
@@ -40,8 +46,15 @@ Type CTDeathEffectView Extends CTView
         Self.backgroundAlpha = progressPercentage
 
         If Self.elapsedTime >= Self.duration
-            Self.RemoveFromSuperview()
+            Self.isAnimating = False
+            Fire("AnimationDidComplete", Self)
         End If
+    End Method
+
+    ' FIXME: expect :CTAnimatable when <https://github.com/bmx-ng/bcc/issues/437> is implemented
+    Method OnAnimationDidComplete(animatable:Object)
+        If animatable <> Self Then Return
+        Self.RemoveFromSuperview()
     End Method
 
     Private
@@ -61,6 +74,18 @@ Type CTDeathEffectView Extends CTView
         If Self.offsetRNGIndex >= OFFSET_RNG.length Then Self.offsetRNGIndex = 0
 
         Return result
+    End Method
+    '#End Region
+
+
+    '#Region View hierarchy callbacks
+    Public
+    Method ViewWillMoveToSuperview(superview:CTView)
+        If superview
+            AddListener(Self)
+        Else
+            RemoveListener(Self)
+        End If
     End Method
     '#End Region
 
@@ -85,10 +110,10 @@ Type CTDeathEffectView Extends CTView
         Local oldAlpha# = GetAlpha()
         SetBlend(ALPHABLEND)
         SetAlpha(Self.backgroundAlpha)
-        
+
         backgroundColor.Set()
         dirtyRect.Fill()
-        
+
         SetAlpha(oldAlpha)
         SetBlend(oldBlend)
     End Method

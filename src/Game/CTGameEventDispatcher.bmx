@@ -22,7 +22,7 @@ Type CTGameEventDispatcher
 
     Method Fire(eventName:String, source:Object, payload:Object = Null)
         Local callbackName:String = "On" + eventName
-        DebugLog("Firing " + eventName)
+        DebugLog("Firing " + eventName + " from " + TTypeId.ForObject(source).Name())
         For Local listener:Object = EachIn Self.listeners
             Local callback:TMethod = TTypeId.ForObject(listener).FindMethod(callbackName)
             If callback

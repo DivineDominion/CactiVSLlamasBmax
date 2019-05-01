@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTColor.bmx"
 Import "../View/CTView.bmx"
 Import "../View/DrawContrastText.bmx"
@@ -17,15 +18,37 @@ Type CTDamageEffectView Extends CTView
 
     '#Region CTAnimatable
     Private
+    Field isAnimating:Int = True
     Field duration# = 1 * MSEC_PER_SEC
     Field elapsedTime# = 0
 
     Public
     Method UpdateAnimation(delta:Float)
+        If Not Self.isAnimating Then Return
+
         Self.elapsedTime :+ delta
 
         If Self.elapsedTime >= Self.duration
-            Self.RemoveFromSuperview()
+            Self.isAnimating = False
+            Fire("AnimationDidComplete", Self)
+        End If
+    End Method
+
+    ' FIXME: expect :CTAnimatable when <https://github.com/bmx-ng/bcc/issues/437> is implemented
+    Method OnAnimationDidComplete(animatable:Object)
+        If animatable <> Self Then Return
+        Self.RemoveFromSuperview()
+    End Method
+    '#End Region
+
+
+    '#Region View hierarchy callbacks
+    Public
+    Method ViewWillMoveToSuperview(superview:CTView)
+        If superview
+            AddListener(Self)
+        Else
+            RemoveListener(Self)
         End If
     End Method
     '#End Region

@@ -54,15 +54,19 @@ Type CTView Implements CTDrawable, CTAnimatable
     Public
     Method AddSubview:Int(subview:CTView)
         If subviews.Contains(subview) Then Return False
+        subview.ViewWillMoveToSuperview(Self)
         subviews.AddLast(subview)
         subview.superview = Self
+        subview.ViewDidMoveToSuperview()
         Return True
     End Method
 
     Method RemoveSubview:Int(subview:CTView)
         Local found:Int = subviews.Remove(subview)
         If found
+            subview.ViewWillMoveToSuperview(Null)
             subview.superview = Null
+            subview.ViewDidMoveToSuperview()
         End If
     End Method
 
@@ -80,6 +84,17 @@ Type CTView Implements CTDrawable, CTAnimatable
             Self.RemoveSubview(subview)
         Next
     End Method
+
+    Rem
+    Notifies the view that it is going to be moved to or removed from a superview.
+    End Rem
+    Method ViewWillMoveToSuperview(superview:CTView); End Method
+
+    Rem
+    Notifies the view that it was moved to or removed from a superview.
+    Use #superview, which is now updated, to determine where it was moved.
+    End Rem
+    Method ViewDidMoveToSuperview(); End Method
     '#End Region
 
 
