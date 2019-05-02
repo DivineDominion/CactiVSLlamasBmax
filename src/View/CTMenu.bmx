@@ -282,16 +282,20 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     Method DrawCursor(x%, y%)
         If Not CTMenu.cursorImage Then Return
 
+        Local oldBlend% = GetBlend()
         Local oldAlpha# = GetAlpha()
+        SetBlend(ALPHABLEND)
+
         If IsActive()
-            SetAlpha 1.0
+            SetAlpha(1.0)
         Else
-            SetAlpha 0.5
+            SetAlpha(0.5)
         End If
 
         DrawImage CTMenu.cursorImage, x, y
 
-        SetAlpha oldAlpha
+        SetAlpha(oldAlpha)
+        SetBlend(oldBlend)
     End Method
 
     Method DrawCheckmark(x%, y%)
