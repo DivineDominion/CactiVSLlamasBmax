@@ -86,7 +86,7 @@ Type CTOperation Abstract
 
     Method DependenciesHaveCompleted:Int()
         For Local dependency:CTOperation = EachIn Self.dependencies
-            If dependency.IsReady() Or dependency.IsExecuting() Then Return False
+            If Not (dependency.IsFinished() Or dependency.IsCancelled()) Then Return False
         Next
         Return True
     End Method
