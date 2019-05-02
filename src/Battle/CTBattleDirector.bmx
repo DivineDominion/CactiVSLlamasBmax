@@ -6,24 +6,45 @@ Import "CTSelectAction.bmx"
 Import "CTTargetedToken.bmx"
 Import "CTActionable.bmx"
 Import "../Game/CTPlayer.bmx"
+Import "CTBattleEffectDisplay.bmx"
+Import "../Event.bmx"
 
 Type CTBattleDirector Implements CTTurnDelegate
     Private
-    Field battlefieldWindowController:CTBattlefieldWindowController = Null
+    Field battlefield:CTBattlefield
+    Field battlefieldWindowController:CTBattlefieldWindowController
 
     Public
     Method New(battlefieldWinFrameRect:CTRect, battlefield:CTBattlefield)
+        Assert battlefield Else "CTBattleDirector requires battlefield"
+        Assert battlefieldWinFrameRect Else "CTBattleDirector requires battlefieldWinFrameRect"
+        Self.battlefield = battlefield
         Self.battlefieldWindowController = New CTBattlefieldWindowController(battlefieldWinFrameRect, battlefield)
     End Method
 
+
+    '#Region Battle lifecycle
+    Private
+    Field battleEffectDisplay:CTBattleEffectDisplay = Null
+
+    Public
     Method ShowBattlefield()
         Self.battlefieldWindowController.Show()
+
+        ' Hook service to display battle effects
+        Self.battleEffectDisplay = New CTBattleEffectDisplay(Self.battlefieldWindowController.battlefield, Self.battlefieldWindowController.BattlefieldView())
+        Self.battlefield.SetCharacterAnimator(Self.battleEffectDisplay)
+
         Self.NextTurn()
     End Method
 
     Method CloseBattlefield()
         If Self.turn Then turn.EndTurn()
         Self.battlefieldWindowController.Close()
+
+        ' Remove service to display battle effects
+        Self.battlefield.SetCharacterAnimator(Null)
+        Self.battleEffectDisplay = Null
     End Method
 
     Private
@@ -33,6 +54,7 @@ Type CTBattleDirector Implements CTTurnDelegate
         Self.turn = New CTTurn(battlefieldWindowController)
         Self.turn.StartWithDelegate(Self)
     End Method
+    '#End Region
 
 
     '#Region CTTurnDelegate

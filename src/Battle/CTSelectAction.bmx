@@ -41,7 +41,7 @@ Type CTSelectAction Implements CTActionMenuViewControllerDelegate
 
         Local character:CTCharacter = token.GetCharacter()
 
-        Local actions:CTActionable[] = CTActionFactory.FighterActions()
+        Local actions:CTActionable[] = CTActionFactory.FighterActionsForCharacter(character)
         Local window:CTWindow = Self.battlefieldWindowController.Window()
         Local rect:CTRect = window.FrameRect()
         Local menuFrameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(..

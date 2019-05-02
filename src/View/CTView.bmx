@@ -10,6 +10,9 @@ Treat `CTView` drawing as if it's the only thing on screen. The `dirtyRect`
 is supposed to start at (0,0) in a viewport, so you don't need to worry about offsets.
 
 Fills its interior with its `defaultBgColor` in `Draw(dirtyRect)` by default.
+
+Manage view hierarchies by sending `AddSubview` to the container view, and
+`RemoveFromSuperview` to the subview if it should remove itself.
 EndRem
 Type CTView Implements CTDrawable, CTAnimatable
     Public
@@ -46,16 +49,30 @@ Type CTView Implements CTDrawable, CTAnimatable
     '#Region View Hierarchy
     Private
     Field subviews:TList = New TList
+    Field superview:CTView = Null
 
     Public
     Method AddSubview:Int(subview:CTView)
         If subviews.Contains(subview) Then Return False
+        subview.ViewWillMoveToSuperview(Self)
         subviews.AddLast(subview)
+        subview.superview = Self
+        subview.ViewDidMoveToSuperview()
         Return True
     End Method
 
     Method RemoveSubview:Int(subview:CTView)
-        Return subviews.Remove(subview)
+        Local found:Int = subviews.Remove(subview)
+        If found
+            subview.ViewWillMoveToSuperview(Null)
+            subview.superview = Null
+            subview.ViewDidMoveToSuperview()
+        End If
+    End Method
+
+    Method RemoveFromSuperview:Int()
+        If Self.superview Then Return superview.RemoveSubview(Self)
+        Return False
     End Method
 
     Method AllSubviews:CTView[]()
@@ -63,7 +80,37 @@ Type CTView Implements CTDrawable, CTAnimatable
     End Method
 
     Method RemoveAllSubviews()
-        Self.subviews.Clear()
+        For Local subview:CTView = EachIn Self.subviews
+            Self.RemoveSubview(subview)
+        Next
+    End Method
+
+    Rem
+    Notifies the view that it is going to be moved to or removed from a superview.
+    End Rem
+    Method ViewWillMoveToSuperview(superview:CTView); End Method
+
+    Rem
+    Notifies the view that it was moved to or removed from a superview.
+    Use #superview, which is now updated, to determine where it was moved.
+
+    Default implementation starts the animation if #AutostartsAnimation() is True.
+    End Rem
+    Method ViewDidMoveToSuperview()
+        If Not Self.AutostartsAnimation() Then Return
+        If Self.superview
+            StartAnimation()
+        Else
+            StopAnimation()
+        End If
+    End Method
+
+    Method ViewDidBecomeWindowContentView()
+        If Self.AutostartsAnimation() Then StartAnimation()
+    End Method
+
+    Method ViewDidResignWindowContentView()
+        If Self.AutostartsAnimation() Then StopAnimation()
     End Method
     '#End Region
 
@@ -101,9 +148,33 @@ Type CTView Implements CTDrawable, CTAnimatable
 
 
     '#Region CTAnimatable
+    Private
+    Field _isAnimating:Int = False
+
     Public
+    Rem
+    Override to configure if adding the view to a superview or window will autostart its animation.
+    Returns: True by default.
+    End Rem
+    Method AutostartsAnimation:Int()
+        Return True
+    End Method
+
+    Method StartAnimation()
+        Self._isAnimating = True
+    End Method
+
+    Method IsAnimating:Int()
+        Return _isAnimating
+    End Method
+
     Method UpdateAnimation(delta:Float)
+        If Not IsAnimating() Then Return
         UpdateSubviewAnimations(delta)
+    End Method
+
+    Method StopAnimation()
+        Self._isAnimating = False
     End Method
 
     Private

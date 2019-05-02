@@ -27,7 +27,7 @@ Type CTColor
     End Method
 
 
-    '#Region Semantic Colors
+    '#Region Semantic Colors - UI
     Function WindowFrameColor:CTColor()
         Return White()
     End Function
@@ -42,6 +42,13 @@ Type CTColor
 
     Function DisabledMenuItemColor:CTColor()
         Return DarkGray()
+    End Function
+    '#End Region
+
+
+    '#Region Semantic Colors - Game
+    Function DamageColor:CTColor()
+        Return Red()
     End Function
     '#End Region
 

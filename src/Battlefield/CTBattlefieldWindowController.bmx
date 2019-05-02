@@ -18,11 +18,12 @@ End Rem
 Type CTBattlefieldWindowController
     Private
     Field frameRect:CTRect
-    Field battlefield:CTBattlefield
 
     Method New(); End Method
 
     Public
+    Field ReadOnly battlefield:CTBattlefield
+
     Method New(frameRect:CTRect, battlefield:CTBattlefield)
         Assert frameRect Else "CTBattlefieldWindowController requires frameRect"
         Assert battlefield Else "CTBattlefieldWindowController requires battlefield"
@@ -34,20 +35,29 @@ Type CTBattlefieldWindowController
     '#Region Window lifecycle management
     Private
     Field currentWindow:CTWindow = Null
-    Field battlefieldViewController:CTBattlefieldViewController = Null
+    Field currentBattlefieldViewController:CTBattlefieldViewController = Null
 
     Public
     Method Show()
         Assert Not Self.currentWindow Else "#Show called before closing the window"
 
-        Self.battlefieldViewController = New CTBattlefieldViewController(Self.battlefield)
-        Self.currentWindow = CTWindow.Create(Self.frameRect, Self.battlefieldViewController)
+        Self.currentBattlefieldViewController = New CTBattlefieldViewController(Self.battlefield)
+        Self.currentWindow = CTWindow.Create(Self.frameRect, Self.currentBattlefieldViewController)
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
     End Method
 
     Method UpdateBattlefield()
-        If Not Self.battlefieldViewController Then Return
-        Self.battlefieldViewController.UpdateBattlefield()
+        If Not Self.currentBattlefieldViewController Then Return
+        Self.currentBattlefieldViewController.UpdateBattlefield()
+    End Method
+
+    Method BattlefieldViewController:CTBattlefieldViewController()
+        Return Self.currentBattlefieldViewController
+    End Method
+
+    Method BattlefieldView:CTBattlefieldView()
+        If Not Self.currentBattlefieldViewController Then Return Null
+        Return Self.currentBattlefieldViewController.battlefieldView
     End Method
 
     Method Window:CTWindow()
@@ -60,20 +70,21 @@ Type CTBattlefieldWindowController
 
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
         Self.currentWindow = Null
-        Self.battlefieldViewController = Null
+        Self.currentBattlefieldViewController = Null
     End Method
     '#End Region
 
 
     '#Region Selection Management
+    Public
     Rem
     Start a new selection session that filters by tokens on the battlefield.
     Note: You can add different selections on top of each other. The latest has key status and triggers selection events.
     returns: Selection session to be used for #StopSelection(session).
     End Rem
     Method StartSelectingTokenWithDelegate:Object(delegate:CTTokenSelectionControllerDelegate)
-        Assert Self.battlefieldViewController Else "Call #Show before selecting"
-        Return Self.battlefieldViewController.StartSelectingTokenWithDelegate(delegate)
+        GuardIsVisible()
+        Return Self.currentBattlefieldViewController.StartSelectingTokenWithDelegate(delegate)
     End Method
 
     Rem
@@ -82,13 +93,18 @@ Type CTBattlefieldWindowController
     returns: Selection session to be used for #StopSelection(session).
     End Rem
     Method StartSelectingTokenPositionWithDelegate:Object(delegate:CTTokenPositionSelectionControllerDelegate)
-        Assert Self.battlefieldViewController Else "Call #Show before selecting"
-        Return Self.battlefieldViewController.StartSelectingTokenPositionWithDelegate(delegate)
+        GuardIsVisible()
+        Return Self.currentBattlefieldViewController.StartSelectingTokenPositionWithDelegate(delegate)
     End Method
 
     Method StopSelection(session:Object)
-        Assert Self.battlefieldViewController Else "#Show CTBattlefieldWindowController before selecting"
-        Self.battlefieldViewController.StopSelection(session)
+        GuardIsVisible()
+        Self.currentBattlefieldViewController.StopSelection(session)
+    End Method
+
+    Private
+    Method GuardIsVisible()
+        Assert Self.currentBattlefieldViewController Else "Call #Show before selecting"
     End Method
     '#End Region
 End Type

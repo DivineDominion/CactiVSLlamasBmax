@@ -2,8 +2,17 @@ SuperStrict
 
 Import "CTActionable.bmx"
 Import "CTDamageEffect.bmx"
+Import "../Army/CTCharacter.bmx"
 
 Type CTTackleAction Implements CTActionable, CTTargetableActionable
+    Private
+    Field damage:Int
+
+    Public
+    Method New(character:CTCharacter)
+        Self.damage = character.GetDamage()
+    End Method
+
     '#Region CTActionable
     Public
     Method GetLabel:String()
@@ -19,7 +28,7 @@ Type CTTackleAction Implements CTActionable, CTTargetableActionable
 
         If Not target Then Return
 
-        Local effect:CTTargetedEffect = New CTDamageEffect(123)
+        Local effect:CTTargetedEffect = New CTDamageEffect(Self.damage)
         driver.ApplyEffectToTarget(effect, target)
     End Method
     '#End Region

@@ -2,8 +2,10 @@ SuperStrict
 
 Import "View/CTWindowManager.bmx"
 Import "View/CTScreen.bmx"
+Import "Operation/CTOperationQueue.bmx"
 
 Function Update(delta:Float)
+    CTOperationQueue.Main().Update(delta)
     CTWindowManager.GetInstance().UpdateAllAnimations(delta)
 End Function
 
