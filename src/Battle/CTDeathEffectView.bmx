@@ -104,7 +104,7 @@ Type CTDeathEffectView Extends CTView
 
     Public
     Method Draw(dirtyRect:CTRect)
-        If Self.elapsedTime >= Self.duration Then Return
+        If Not Self.IsAnimating() Then Return
         DrawBackground(dirtyRect)
         DrawText(dirtyRect)
     End Method

@@ -67,7 +67,7 @@ Type CTDamageEffectView Extends CTView
 
     Public
     Method Draw(dirtyRect:CTRect)
-        If Self.elapsedTime >= Self.duration Then Return
+        If Not Self.IsAnimating() Then Return
 
         ' Animate alpha value and offset
         Local progressPercentage# = Self.elapsedTime / Self.duration
