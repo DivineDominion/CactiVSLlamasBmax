@@ -2,6 +2,9 @@ SuperStrict
 
 Import "../Army/CTCharacter.bmx"
 
+Rem
+A CTCharacter view model for placement on the battlefield.
+End Rem
 Type CTToken 'Abstract
     ' Private ' FIXME: abstract field inheritance doesn't work, see <https://github.com/bmx-ng/bcc/issues/417>
     Field character:CTCharacter
@@ -20,6 +23,10 @@ Type CTToken 'Abstract
 
     Method GetCharacter:CTCharacter()
         Return Self.character
+    End Method
+
+    Method CharacterIsAlive:Int()
+        Return Self.character.IsAlive()
     End Method
 
 

@@ -5,6 +5,7 @@ Import "CTBattlefield.bmx"
 Import "CTTokenPosition.bmx"
 
 Interface CTTokenSelectionControllerDelegate
+    Method TokenSelectionControllerFilterDeadCharacters:Int(controller:CTTokenSelectionController)
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
 End Interface
 
@@ -37,7 +38,9 @@ Type CTTokenSelectionController Extends CTBattlefieldSelectionController
         If Not Self.delegate Then Return
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         Local selectedToken:CTToken = SelectedTokenInBattlefield()
-        If selectedToken Then delegate.TokenSelectionControllerDidSelectToken(Self, selectedToken)
+        If Not selectedToken Then Return
+        If delegate.TokenSelectionControllerFilterDeadCharacters(Self) And Not selectedToken.CharacterIsAlive() Then Return
+        delegate.TokenSelectionControllerDidSelectToken(Self, selectedToken)
     End Method
     '#End Region
 End Type
