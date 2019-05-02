@@ -20,7 +20,7 @@ Type CTActionMenuViewController Extends CTController Implements CTMenuDelegate
     Field delegate:CTActionMenuViewControllerDelegate = Null
 
     Method New(actions:CTActionable[])
-        Self.menu = New CTMenu()
+        Self.menu = New CTMenu([])
         Self.menu.delegate = Self
         Self.actionMap = New TIntMap()
         Self.InsertMenuItemsFromActions(actions)

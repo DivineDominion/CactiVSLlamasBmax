@@ -32,10 +32,10 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
     Field delegate:CTSplitListViewDelegate = Null
 
     Method New()
-        Self.leftListMenu = New CTMenu()
+        Self.leftListMenu = New CTMenu([])
         Self.leftListMenu.delegate = Self
 
-        Self.rightListMenu = New CTMenu()
+        Self.rightListMenu = New CTMenu([])
         Self.rightListMenu.delegate = Self
 
         ' Bubble up key events from menus to this control but no further

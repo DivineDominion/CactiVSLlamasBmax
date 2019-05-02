@@ -86,7 +86,7 @@ End Type
 
 Private
 Function CTMenuForCharactersWithSelectedCharacters:CTMenu(characters:CTCharacter[], selectedCharacters:TList)
-    Local menu:CTMenu = New CTMenu()
+    Local menu:CTMenu = New CTMenu([])
     menu.displaysCheckmarks = True
     For Local character:CTCharacter = EachIn characters
         Local menuItem:CTMenuItem = CTMenuItemFromCharacter(character)

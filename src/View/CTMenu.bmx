@@ -48,7 +48,7 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
     End Rem
     Field delegate:CTMenuDelegate = Null
 
-    Method New(labels:String[] = [], isHorizontal:Int = False)
+    Method New(labels:String[], isHorizontal:Int = False)
         Self.backgroundColor = CTColor.Black()
         Self.isOpaque = True
 
