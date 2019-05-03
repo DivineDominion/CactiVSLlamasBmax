@@ -1,7 +1,6 @@
 SuperStrict
 
 Import "../View/CTView.bmx"
-Import "CTBattlefieldView.bmx"
 Import "CTTokenPosition.bmx"
 Import "CTToken.bmx"
 Import "CTCactusToken.bmx"
@@ -34,10 +33,6 @@ Type CTTokenView Extends CTView
         Self.token = token
         Self.bgColor = bgColor
         Self.nameColor = nameColor
-    End Method
-
-    Method PlaceAtPosition(position:CTTokenPosition)
-        Self.bounds = CTBattlefieldView.RectForTokenPosition(position)
     End Method
 
 
