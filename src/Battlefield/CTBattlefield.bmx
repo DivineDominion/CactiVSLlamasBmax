@@ -75,9 +75,9 @@ Type CTBattlefield
     '#Region Event Forwarding
     Public
     Method OnCharacterDidDie(character:CTCharacter)
-        For Local token:CTToken = EachIn _tokenPositionsTokens.Values()
-            token.OnCharacterDidDie(character)
-        Next
+        Local tokenPosition:CTTokenPosition = PositionOfTokenForCharacter(character)
+        If Not tokenPosition Then Return
+        RemoveTokenAtPosition(tokenPosition)
     End Method
     '#End Region
 End Type
