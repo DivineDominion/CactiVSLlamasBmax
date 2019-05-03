@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTRect.bmx"
 Import "../Battlefield/CTToken.bmx"
 Import "../Battlefield/CTTokenPosition.bmx"
@@ -8,6 +9,7 @@ Const BATTLEFIELD_COLUMNS% = 3
 Const BATTLEFIELD_ROWS% = 3
 
 Type CTBattlefield
+    '#Region Battlefield contents
     Private
     Field _tokenPositionsTokens:TMap = New TMap
 
@@ -22,16 +24,6 @@ Type CTBattlefield
             results.AddLast(token)
         Next
         Return results
-    End Method
-
-    Method PutTokenAtColumnRow(token:CTToken, column:Int, row:Int)
-        PutTokenAtPosition(token, New CTTokenPosition(column, row))
-    End Method
-
-    Method PutTokenAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
-        Assert token Else "PutTokenAtPosition requires token"
-        Assert tokenPosition Else "PutTokenAtPosition requires tokenPosition"
-        _tokenPositionsTokens.Insert(tokenPosition, token)
     End Method
 
     Method TokenAtPosition:CTToken(tokenPosition:CTTokenPosition)
@@ -49,13 +41,35 @@ Type CTBattlefield
         Next
         Return Null
     End Method
+    '#End Region
+
+
+    '#Region Changing tokens on battlefield
+    Public
+    Method PutTokenAtColumnRow(token:CTToken, column:Int, row:Int)
+        PutTokenAtPosition(token, New CTTokenPosition(column, row))
+    End Method
+
+    Method PutTokenAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
+        Assert token Else "PutTokenAtPosition requires token"
+        Assert tokenPosition Else "PutTokenAtPosition requires tokenPosition"
+        _tokenPositionsTokens.Insert(tokenPosition, token)
+        Self.FireChangeAtPosition(tokenPosition)
+    End Method
 
     Method RemoveTokenAtPosition:CTToken(tokenPosition:CTTokenPosition)
         If Not Self._tokenPositionsTokens.Contains(tokenPosition) Then Return Null
         Local token:CTToken = CTToken(Self._tokenPositionsTokens.ValueForKey(tokenPosition))
         Self._tokenPositionsTokens.Remove(tokenPosition)
+        Self.FireChangeAtPosition(tokenPosition)
         Return token
     End Method
+
+    Private
+    Method FireChangeAtPosition(tokenPosition:CTTokenPosition)
+        Fire("BattlefieldDidChange", Self, tokenPosition)
+    End Method
+    '#End Region
 
 
     '#Region Event Forwarding
