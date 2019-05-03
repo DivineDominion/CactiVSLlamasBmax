@@ -1,3 +1,18 @@
+# Overview 
+
+- `CTBattle` holds all components of a battle together, the `CTBattlefield` with its tokens on it, and a list of character parties involved. It manages model state transitions for various events.
+- `CTBattleDirector` is a service object that manages the flow of battle: showing the UI and taking turns.
+- `CTTurn` groups selecting an actor, then an action, and optionally a target of the action together in a single unit. It's better encapsulated there than in `CTBattleDirector` directly.
+- `CTDeathEffectView` and `CTDamageEffectView` are character effect animations. See how `CTCharacter` reacts to the `TakeDamage` message.
+
+Action-related:
+
+- `CTActionable` denotes something that can be done by an actor on the battlefield.
+- `CTTargetableActionable` adds target-based functionality.
+- `CTDrivesActions` consumes `CTActionable` and executes their wonders.
+- `CTTackleAction` is a targeted action that deal direct damage.
+- `CTActionFactory` helps populating the UI with actions available for each character.
+
 # How does attacking work?
 
 To understand how battle mechanics work, take inflicting physical damage for example, implemented in `CTTackleAction`. 
