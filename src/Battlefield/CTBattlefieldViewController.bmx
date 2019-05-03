@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTController.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldView.bmx"
@@ -23,7 +24,7 @@ Type CTBattlefieldViewController Extends CTController
         AddTokenSubviews()
     End Method
 
-    Method UpdateBattlefield()
+    Method OnBattlefieldDidChange(battlefield:CTBattlefield)
         RemoveTokenSubviews()
         AddTokenSubviews()
     End Method
