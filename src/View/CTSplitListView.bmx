@@ -173,8 +173,8 @@ Type CTSplitListView Extends CTControl Implements CTMenuDelegate
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
 
         Local columnWidth:Int = dirtyRect.GetWidth() / 2
 

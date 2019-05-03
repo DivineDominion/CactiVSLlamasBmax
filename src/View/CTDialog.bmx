@@ -68,8 +68,8 @@ Type CTDialog Extends CTControl Implements CTMenuDelegate
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
         Self.menu.Draw(dirtyRect)
     End Method
     '#End Region

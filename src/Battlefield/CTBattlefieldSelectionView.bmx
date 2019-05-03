@@ -47,7 +47,7 @@ Type CTBattlefieldSelectionView Extends CTControl
     Field strokeWidth:Int = 2
 
     Public
-    Method Draw(dirtyRect:CTRect)
+    Method DrawInterior(dirtyRect:CTRect)
         Local x%, y%, w%, h%
         dirtyRect.GetSize(w, h)
         Local cornerWidth% = dirtyRect.GetWidth() / 4

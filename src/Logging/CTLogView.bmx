@@ -22,8 +22,8 @@ Type CTLogView Extends CTView
         Return view
     End Function
 
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
         displayLog.Draw(1, 0, LINES)
     End Method
 

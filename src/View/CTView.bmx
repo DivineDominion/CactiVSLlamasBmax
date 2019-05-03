@@ -118,8 +118,12 @@ Type CTView Implements CTDrawable, CTAnimatable
     '#Region CTDrawable
     Public
     Method Draw(dirtyRect:CTRect)
+        Self.DrawInterior(dirtyRect)
+        Self.DrawSubviews(dirtyRect)
+    End Method
+
+    Method DrawInterior(dirtyRect:CTRect)
         DrawBackground(dirtyRect)
-        DrawSubviews(dirtyRect)
     End Method
 
     Private

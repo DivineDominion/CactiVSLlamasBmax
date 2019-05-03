@@ -87,7 +87,7 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
         Self.confirmationActions.SetIsEnabledForIndex(isEnabled, 0)
     End Method
     '#End Region
-    
+
 
     '#Region CTResponder
     ' Decorate responder stack access to the underlying controls
@@ -113,8 +113,8 @@ Type CTPartyPickerView Extends CTControl Implements CTSplitListViewDelegate, CTD
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
 
         ' Draw status at the top below window title
         Local labelRect:CTRect = dirtyRect.SettingHeight(statusLabel.GetTextHeight())

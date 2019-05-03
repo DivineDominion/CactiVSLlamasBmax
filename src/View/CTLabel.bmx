@@ -28,8 +28,8 @@ Type CTLabel Extends CTView
         Return Self.text And Self.text.length > 0
     End Method
 
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
 
         If Not HasText() Then Return
 

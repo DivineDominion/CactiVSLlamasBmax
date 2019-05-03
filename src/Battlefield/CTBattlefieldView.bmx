@@ -25,8 +25,8 @@ Type CTBattlefieldView Extends CTView
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
     End Method
     '#End Region
 End Type

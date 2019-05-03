@@ -103,8 +103,8 @@ Type CTDeathEffectView Extends CTView
     Field backgroundColor:CTColor = CTColor.Black()
 
     Public
-    Method Draw(dirtyRect:CTRect)
         If Not Self.IsAnimating() Then Return
+    Method DrawInterior(dirtyRect:CTRect)
         DrawBackground(dirtyRect)
         DrawText(dirtyRect)
     End Method

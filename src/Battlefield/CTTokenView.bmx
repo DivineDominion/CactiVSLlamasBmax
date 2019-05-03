@@ -43,7 +43,7 @@ Type CTTokenView Extends CTView
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
+    Method DrawInterior(dirtyRect:CTRect)
         bgColor.Set()
         dirtyRect.Inset(4, 4).Fill()
 

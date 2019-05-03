@@ -66,7 +66,7 @@ Type CTDamageEffectView Extends CTView
     Field labelColor:CTColor = CTColor.DamageColor()
 
     Public
-    Method Draw(dirtyRect:CTRect)
+    Method DrawInterior(dirtyRect:CTRect)
         If Not Self.IsAnimating() Then Return
 
         ' Animate alpha value and offset
