@@ -31,7 +31,6 @@ Type CTBattlefield
     Method PutTokenAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
         Assert token Else "PutTokenAtPosition requires token"
         Assert tokenPosition Else "PutTokenAtPosition requires tokenPosition"
-        token.SetCharacterAnimator(Self.characterAnimator)
         _tokenPositionsTokens.Insert(tokenPosition, token)
     End Method
 
@@ -55,22 +54,7 @@ Type CTBattlefield
         If Not Self._tokenPositionsTokens.Contains(tokenPosition) Then Return Null
         Local token:CTToken = CTToken(Self._tokenPositionsTokens.ValueForKey(tokenPosition))
         Self._tokenPositionsTokens.Remove(tokenPosition)
-        token.SetCharacterAnimator(Null)
         Return token
     End Method
 
-    '#Region Character animation
-    Private
-    Field characterAnimator:CTCharacterAnimator = Null
-
-    Public
-    Method SetCharacterAnimator(animator:CTCharacterAnimator)
-        Self.characterAnimator = animator
-
-        ' Update all tokens
-        For Local token:CTToken = EachIn _tokenPositionsTokens.Values()
-            token.SetCharacterAnimator(animator)
-        Next
-    End Method
-    '#End Region
 End Type

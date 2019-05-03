@@ -1,25 +1,26 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
+Import "../Game/CTPlayer.bmx"
 Import "CTTurn.bmx"
 Import "CTSelectAction.bmx"
 Import "CTTargetedToken.bmx"
 Import "CTActionable.bmx"
-Import "../Game/CTPlayer.bmx"
 Import "CTBattleEffectDisplay.bmx"
-Import "../Event.bmx"
+Import "CTBattle.bmx"
 
 Type CTBattleDirector Implements CTTurnDelegate
     Private
-    Field battlefield:CTBattlefield
+    Field battle:CTBattle
     Field battlefieldWindowController:CTBattlefieldWindowController
 
     Public
-    Method New(battlefieldWinFrameRect:CTRect, battlefield:CTBattlefield)
-        Assert battlefield Else "CTBattleDirector requires battlefield"
+    Method New(battlefieldWinFrameRect:CTRect, battle:CTBattle)
+        Assert battle Else "CTBattleDirector requires battle"
         Assert battlefieldWinFrameRect Else "CTBattleDirector requires battlefieldWinFrameRect"
-        Self.battlefield = battlefield
-        Self.battlefieldWindowController = New CTBattlefieldWindowController(battlefieldWinFrameRect, battlefield)
+        Self.battle = battle
+        Self.battlefieldWindowController = New CTBattlefieldWindowController(battlefieldWinFrameRect, Self.battle.battlefield)
     End Method
 
 
@@ -32,10 +33,13 @@ Type CTBattleDirector Implements CTTurnDelegate
         Self.battlefieldWindowController.Show()
 
         ' Hook service to display battle effects
-        Self.battleEffectDisplay = New CTBattleEffectDisplay(Self.battlefieldWindowController.battlefield, Self.battlefieldWindowController.BattlefieldView())
-        Self.battlefield.SetCharacterAnimator(Self.battleEffectDisplay)
+        Self.battleEffectDisplay = New CTBattleEffectDisplay(Self.battle.battlefield, Self.battlefieldWindowController.BattlefieldView())
 
         Self.NextTurn()
+    End Method
+
+    Method CharacterAnimator:CTCharacterAnimator()
+        Return Self.battleEffectDisplay
     End Method
 
     Method CloseBattlefield()
@@ -43,7 +47,6 @@ Type CTBattleDirector Implements CTTurnDelegate
         Self.battlefieldWindowController.Close()
 
         ' Remove service to display battle effects
-        Self.battlefield.SetCharacterAnimator(Null)
         Self.battleEffectDisplay = Null
     End Method
 
