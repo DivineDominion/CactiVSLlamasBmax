@@ -2,8 +2,9 @@ SuperStrict
 
 Import "../Event.bmx"
 Import "../View/CTRect.bmx"
-Import "../Battlefield/CTToken.bmx"
-Import "../Battlefield/CTTokenPosition.bmx"
+Import "CTToken.bmx"
+Import "CTTokenPosition.bmx"
+Import "CTBattlefieldChange.bmx"
 
 Const BATTLEFIELD_COLUMNS% = 3
 Const BATTLEFIELD_ROWS% = 3
@@ -54,6 +55,7 @@ Type CTBattlefield
         Assert token Else "PutTokenAtPosition requires token"
         Assert tokenPosition Else "PutTokenAtPosition requires tokenPosition"
         _tokenPositionsTokens.Insert(tokenPosition, token)
+        Self.FireAdditionAtPosition(token, tokenPosition)
         Self.FireChangeAtPosition(tokenPosition)
     End Method
 
@@ -61,11 +63,20 @@ Type CTBattlefield
         If Not Self._tokenPositionsTokens.Contains(tokenPosition) Then Return Null
         Local token:CTToken = CTToken(Self._tokenPositionsTokens.ValueForKey(tokenPosition))
         Self._tokenPositionsTokens.Remove(tokenPosition)
+        Self.FireRemovalAtPosition(token, tokenPosition)
         Self.FireChangeAtPosition(tokenPosition)
         Return token
     End Method
 
     Private
+    Method FireRemovalAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
+        Fire("BattlefieldDidRemoveToken", Self, New CTBattlefieldChange(token, tokenPosition))
+    End Method
+
+    Method FireAdditionAtPosition(token:CTToken, tokenPosition:CTTokenPosition)
+        Fire("BattlefieldDidAddToken", Self, New CTBattlefieldChange(token, tokenPosition))
+    End Method
+
     Method FireChangeAtPosition(tokenPosition:CTTokenPosition)
         Fire("BattlefieldDidChange", Self, tokenPosition)
     End Method
