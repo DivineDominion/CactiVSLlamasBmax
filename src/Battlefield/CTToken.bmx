@@ -25,15 +25,19 @@ Type CTToken 'Abstract
         Return Self.character
     End Method
 
-    Method CharacterIsAlive:Int()
-        Return Self.character.IsAlive()
+
+    '#Region Character Death
+    Private
+    Field _characterIsAlive:Int = True
+
+    Public
+    Method OnCharacterDidDie(character:CTCharacter)
+        If Self.character <> character Then Return
+        Self._characterIsAlive = False
     End Method
 
-
-    '#Region Character animation
-    Public
-    Method SetCharacterAnimator(animator:CTCharacterAnimator)
-        Self.character.SetAnimator(animator)
+    Method CharacterIsAlive:Int()
+        Return _characterIsAlive
     End Method
     '#End Region
 End Type

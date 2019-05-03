@@ -57,4 +57,13 @@ Type CTBattlefield
         Return token
     End Method
 
+
+    '#Region Event Forwarding
+    Public
+    Method OnCharacterDidDie(character:CTCharacter)
+        For Local token:CTToken = EachIn _tokenPositionsTokens.Values()
+            token.OnCharacterDidDie(character)
+        Next
+    End Method
+    '#End Region
 End Type
