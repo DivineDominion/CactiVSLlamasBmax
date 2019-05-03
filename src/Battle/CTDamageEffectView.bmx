@@ -10,9 +10,8 @@ Type CTDamageEffectView Extends CTView
     Field damageLabel:String
 
     Public
-    Method New(damageLabel:String, bounds:CTRect)
+    Method New(damageLabel:String)
         Self.damageLabel = damageLabel
-        Self.bounds = bounds
     End Method
 
 

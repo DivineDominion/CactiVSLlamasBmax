@@ -6,12 +6,6 @@ Import "../View/CTView.bmx"
 Import "../View/DrawContrastText.bmx"
 
 Type CTDeathEffectView Extends CTView
-    Public
-    Method New(bounds:CTRect)
-        Self.bounds = bounds
-    End Method
-
-
     '#Region CTAnimatable
     Private
     ' Hard-coded random numbers for coordinate offsets and time deltas.
