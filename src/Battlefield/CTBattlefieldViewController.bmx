@@ -66,7 +66,7 @@ Type CTBattlefieldViewController Extends CTController
 
     Public
     Method StartSelectingTokenWithDelegate:Object(delegate:CTTokenSelectionControllerDelegate)
-        Local selectionController:CTTokenSelectionController = New CTTokenSelectionController(battlefield)
+        Local selectionController:CTTokenSelectionController = CTTokenSelectionController.Create(battlefield)
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())
@@ -84,7 +84,7 @@ Type CTBattlefieldViewController Extends CTController
     End Method
 
     Method StartSelectingTokenPositionWithDelegate:Object(delegate:CTTokenPositionSelectionControllerDelegate)
-        Local selectionController:CTTokenPositionSelectionController = New CTTokenPositionSelectionController()
+        Local selectionController:CTTokenPositionSelectionController = CTTokenPositionSelectionController.Create()
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())

@@ -20,13 +20,22 @@ Type CTTokenSelectionController Extends CTBattlefieldSelectionController
     Public
     Field delegate:CTTokenSelectionControllerDelegate = Null
 
-    Method New(battlefield:CTBattlefield, initialTokenPosition:CTTokenPosition = Null)
-        Super.New(initialTokenPosition)
-        ' FIXME: use extra init method from constructor because of: https://github.com/bmx-ng/bcc/issues/417
-        Initialize(initialTokenPosition)
+    ' See `CTBattlefieldSelectionController`: overriding abstract initializers doesn't work
+    ' Method New(battlefield:CTBattlefield, initialTokenPosition:CTTokenPosition = Null)
+'         Super.New(initialTokenPosition)
+'         ' FIXME: use extra init method from constructor because of: https://github.com/bmx-ng/bcc/issues/417
+'         _Initialize(initialTokenPosition)
+'
+'         Self.battlefield = battlefield
+'     End Method
 
-        Self.battlefield = battlefield
-    End Method
+    Function Create:CTTokenSelectionController(battlefield:CTBattlefield, initialTokenPosition:CTTokenPosition = Null)
+        Local controller:CTTokenSelectionController = New CTTokenSelectionController()
+        ' FIXME: use extra init method from constructor because of: https://github.com/bmx-ng/bcc/issues/417
+        controller.battlefield = battlefield
+        controller._Initialize(initialTokenPosition)
+        Return controller
+    End Function
 
     Method SelectedTokenInBattlefield:CTToken()
         Return Self.battlefield.TokenAtPosition(Self.SelectedTokenPosition())
