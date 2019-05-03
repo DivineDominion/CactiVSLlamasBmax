@@ -2,6 +2,7 @@ SuperStrict
 
 Import "../View/CTView.bmx"
 Import "CTTokenPosition.bmx"
+Import "CTTokenView.bmx"
 
 Type CTBattlefieldView Extends CTView
     Const TILE_SIZE:Int = 50
@@ -21,6 +22,29 @@ Type CTBattlefieldView Extends CTView
     Function SizeForDimensions:CTRect(columns:Int, rows:Int)
         Return New CTRect(0, 0, columns * TILE_SIZE, rows * TILE_SIZE)
     End Function
+
+    Method AllTokenViewSubviews:TList()
+        Local result:TList = New TList()
+        For Local subview:CTView = EachIn Self.AllSubviews()
+            Local tokenView:CTTokenView = CTTokenView(subview)
+            If tokenView <> Null Then result.AddLast(tokenView)
+        Next
+        Return result
+    End Method
+
+    Method TokenViewForToken:CTTokenView(token:CTToken)
+        For Local tokenView:CTTokenView = EachIn Self.AllTokenViewSubviews()
+            If tokenView.token = token Then Return tokenView
+        Next
+        Return Null
+    End Method
+
+    Method TokenViewForTokenWithCharacter:CTTokenView(character:CTCharacter)
+        For Local tokenView:CTTokenView = EachIn Self.AllTokenViewSubviews()
+            If tokenView.token.GetCharacter() = character Then Return tokenView
+        Next
+        Return Null
+    End Method
 
 
     '#Region CTDrawable

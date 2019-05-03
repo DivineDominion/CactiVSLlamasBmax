@@ -7,13 +7,14 @@ Import "CTCactusToken.bmx"
 
 Type CTTokenView Extends CTView
     Private
-    Field token:CTToken
     Field bgColor:CTColor
     Field nameColor:CTColor
 
     Method New(); End Method
 
     Public
+    Field ReadOnly token:CTToken
+
     Function CreateTokenView:CTTokenView(token:CTToken)
         Local cactusToken:CTCactusToken = CTCactusToken(token)
         If cactusToken Then Return CreateCactusTokenView(cactusToken)
