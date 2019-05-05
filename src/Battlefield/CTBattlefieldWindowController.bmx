@@ -2,6 +2,7 @@ SuperStrict
 
 Import "../Event.bmx"
 Import "../View/CTWindowManager.bmx"
+Import "../View/CTWindowController.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldViewController.bmx"
 Import "CTToken.bmx"
@@ -16,7 +17,7 @@ Then start selection sessions on the battlefield as needed:
 You can combine both and have multiple selections active. The topmost selection
 processes key events only, though, and the others remain inactive.
 End Rem
-Type CTBattlefieldWindowController
+Type CTBattlefieldWindowController Extends CTWindowController
     Private
     Field frameRect:CTRect
 
@@ -35,7 +36,6 @@ Type CTBattlefieldWindowController
 
     '#Region Window lifecycle management
     Private
-    Field currentWindow:CTWindow = Null
     Field currentBattlefieldViewController:CTBattlefieldViewController = Null
 
     Public
@@ -55,10 +55,6 @@ Type CTBattlefieldWindowController
     Method BattlefieldView:CTBattlefieldView()
         If Not Self.currentBattlefieldViewController Then Return Null
         Return Self.currentBattlefieldViewController.battlefieldView
-    End Method
-
-    Method Window:CTWindow()
-        Return currentWindow
     End Method
 
     Method Close()

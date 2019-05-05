@@ -2,11 +2,11 @@ SuperStrict
 
 Import "CTActionMenuViewController.bmx"
 Import "../View/CTRect.bmx"
-Import "../View/CTWindow.bmx"
+Import "../View/CTWindowController.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "CTActionFactory.bmx"
 
-Type CTActionMenuWindowController
+Type CTActionMenuWindowController Extends CTWindowController
     Private
     Field frameRect:CTRect
     Field characterName:String
@@ -25,7 +25,6 @@ Type CTActionMenuWindowController
 
     '#Region Menu Window Lifecycle
     Private
-    Field currentWindow:CTWindow = Null
     Field actionMenuController:CTActionMenuViewController = Null
 
     Public

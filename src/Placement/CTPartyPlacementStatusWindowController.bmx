@@ -1,12 +1,13 @@
 SuperStrict
 
+Import "../View/CTWindowController.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "CTPartyPlacementStatusViewController.bmx"
 
 Rem
 Controls the placement status label inside a window frame.
 End Rem
-Type CTPartyPlacementStatusWindowController
+Type CTPartyPlacementStatusWindowController Extends CTWindowController
     Private
     Field frameRect:CTRect
     Field maxCount:Int
@@ -28,7 +29,6 @@ Type CTPartyPlacementStatusWindowController
 
     '#Region Window lifecycle management
     Private
-    Field currentWindow:CTWindow = Null
     Field statusViewController:CTPartyPlacementStatusViewController = Null
 
     Public

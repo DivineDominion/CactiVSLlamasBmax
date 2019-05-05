@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "CTWindowController.bmx"
 Import "CTDialog.bmx"
 Import "CTWindowManager.bmx"
 Import "CTRect.bmx"
@@ -9,7 +10,7 @@ Interface CTDialogWindowControllerDelegate
     Method DialogWindowControllerDidConfirm(controller:CTDialogWindowController, didConfirm:Int)
 End Interface
 
-Type CTDialogWindowController Implements CTDialogDelegate
+Type CTDialogWindowController Extends CTWindowController Implements CTDialogDelegate
     Private
     Field title:String
     Field dialog:CTDialog
@@ -24,10 +25,9 @@ Type CTDialogWindowController Implements CTDialogDelegate
     End Method
 
 
-    '#Region Dialog window lifecycle
+    '#Region Dialog currentWindow lifecycle
     Private
     Field delegate:CTDialogWindowControllerDelegate = Null
-    Field window:CTWindow = Null
 
     Public
     Method ShowDialog()
@@ -35,7 +35,7 @@ Type CTDialogWindowController Implements CTDialogDelegate
     End Method
 
     Method ShowDialogWithDelegate(delegate:CTDialogWindowControllerDelegate)
-        Assert Not window Else "#ShowDialogWithDelegate cannot be called while window is shown"
+        Assert Not currentWindow Else "#ShowDialogWithDelegate cannot be called while currentWindow is shown"
 
         ' Works without delegate. Still block the UI with the dialog options.
         Self.delegate = delegate
@@ -44,15 +44,15 @@ Type CTDialogWindowController Implements CTDialogDelegate
         Local offset:Int = 20
         Local width:Int = CTScreen.main.GetWidth() - (offset * 2)
         Local frameRect:CTRect = CTWindow.FrameRectFittingLinesAndTitle(offset, 0, width, 1, Self.title)
-        Self.window = CTWindow.Create(frameRect, Self.dialog, Self.title)
-        Self.window.Center()
-        CTWindowManager.GetInstance().AddWindowAndMakeKey(Self.window)
+        Self.currentWindow = CTWindow.Create(frameRect, Self.dialog, Self.title)
+        Self.currentWindow.Center()
+        CTWindowManager.GetInstance().AddWindowAndMakeKey(Self.currentWindow)
     End Method
 
     Method CloseDialog()
         Self.delegate = Null
         Self.dialog.delegate = Null ' Break cycle
-        CTWindowManager.GetInstance().RemoveWindow(Self.window)
+        CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
     End Method
     '#End Region
 
