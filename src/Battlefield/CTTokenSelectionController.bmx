@@ -6,6 +6,7 @@ Import "CTTokenPosition.bmx"
 
 Interface CTTokenSelectionControllerDelegate
     Method TokenSelectionControllerFilterDeadCharacters:Int(controller:CTTokenSelectionController)
+    Method TokenSelectionControllerDidChangeHighlightedToken(controller:CTTokenSelectionController, token:CTToken)
     Method TokenSelectionControllerDidSelectToken(controller:CTTokenSelectionController, token:CTToken)
 End Interface
 
@@ -40,6 +41,12 @@ Type CTTokenSelectionController Extends CTBattlefieldSelectionController
     Method SelectedTokenInBattlefield:CTToken()
         Return Self.battlefield.TokenAtPosition(Self.SelectedTokenPosition())
     End Method
+
+    Method TokenSelectionDidMove() Override
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.TokenSelectionControllerDidChangeHighlightedToken(Self, Self.SelectedTokenInBattlefield())
+    End Method
+
 
     '#Region CTKeyInterpreter
     Public

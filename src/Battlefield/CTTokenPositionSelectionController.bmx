@@ -25,6 +25,8 @@ Type CTTokenPositionSelectionController Extends CTBattlefieldSelectionController
         Return controller
     End Function
 
+    Method TokenSelectionDidMove(); End Method
+
 
     '#Region CTController
     Public

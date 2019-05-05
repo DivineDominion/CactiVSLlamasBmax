@@ -3,12 +3,13 @@ SuperStrict
 Import "../Event.bmx"
 Import "../Battlefield/CTBattlefieldWindowController.bmx"
 Import "../Game/CTPlayer.bmx"
+Import "CTBattle.bmx"
 Import "CTTurn.bmx"
-Import "CTSelectAction.bmx"
 Import "CTTargetedToken.bmx"
 Import "CTActionable.bmx"
 Import "CTBattleEffectDisplay.bmx"
-Import "CTBattle.bmx"
+Import "CTSelectAction.bmx"
+Import "CTShowTurnStatus.bmx"
 
 Type CTBattleDirector Implements CTTurnDelegate
     Private
@@ -58,6 +59,8 @@ Type CTBattleDirector Implements CTTurnDelegate
 
     Protected
     Method NextTurn()
+        Self.ResetShowTurnStatus()
+
         If Self.turn Then turn.EndTurn()
 
         ' TODO: take turns
@@ -80,6 +83,18 @@ Type CTBattleDirector Implements CTTurnDelegate
 
     Method TurnDidSelectActor(turn:CTTurn, actorToken:CTToken)
         ShowActionsForToken(actorToken)
+    End Method
+
+    Method TurnDidChangeHighlightedActor(turn:CTTurn, token:CTToken)
+        If token
+            Self.ShowActorStatus(token)
+        Else
+            Self.HideActorStatus()
+        End If
+    End Method
+
+    Method TurnDidChangeHighlightedTargetForAction(turn:CTTurn, token:CTToken, action:CTActionable)
+        Self.ShowActionStatus(action)
     End Method
 
     Method InitialTargetTokenPositionForTurnAndAction:CTTokenPosition(turn:CTTurn, action:CTTargetableActionable)
@@ -105,6 +120,40 @@ Type CTBattleDirector Implements CTTurnDelegate
         Local target:CTTargetedToken = New CTTargetedToken(targetToken)
         action.ExecuteInDriverWithTarget(Self.turn, target)
         Self.NextTurn()
+    End Method
+    '#End Region
+
+
+    '#Region Selection status
+    Private
+    Field turnStatus:CTShowTurnStatus = Null
+
+    Public
+    Method ShowActorStatus(token:CTToken)
+        PrepareShowTurnStatus()
+        Self.turnStatus.ShowActorStatus(token.GetCharacter())
+    End Method
+
+    Method HideActorStatus()
+        PrepareShowTurnStatus()
+        Self.turnStatus.HideActorStatus()
+    End Method
+
+    Method ShowActionStatus(action:CTActionable)
+        PrepareShowTurnStatus()
+        Self.turnStatus.ShowActionStatus(action)
+    End Method
+
+    Private
+    Method PrepareShowTurnStatus()
+        If Self.turnStatus Then Return
+        Self.turnStatus = New CTShowTurnStatus.CreateBelowWindowController(battlefieldWindowController)
+    End Method
+
+    Method ResetShowTurnStatus()
+        If Not Self.turnStatus Then Return
+        Self.turnStatus.HideActorStatus()
+        Self.turnStatus.HideActionStatus()
     End Method
     '#End Region
 End Type

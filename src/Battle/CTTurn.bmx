@@ -8,6 +8,10 @@ Import "CTActionable.bmx"
 Interface CTTurnDelegate
     Method InitialActorTokenPositionForTurn:CTTokenPosition(turn:CTTurn)
     Method TurnDidSelectActor(turn:CTTurn, actorToken:CTToken)
+
+    Method TurnDidChangeHighlightedActor(turn:CTTurn, token:CTToken)
+    Method TurnDidChangeHighlightedTargetForAction(turn:CTTurn, token:CTToken, action:CTActionable)
+
     Method InitialTargetTokenPositionForTurnAndAction:CTTokenPosition(turn:CTTurn, action:CTTargetableActionable)
     Method TurnDidSelectTargetForActionOfActor(turn:CTTurn, targetToken:CTToken, action:CTTargetableActionable, actorToken:CTToken)
 End Interface
@@ -61,9 +65,22 @@ Type CTTurn Implements CTDrivesActions, CTTurnSelectionsDelegate
 
     '#Region CTTurnSelectionsDelegate
     Public
+    Method TurnSelectionsDidChangeHighlightedActor(service:CTTurnSelections, actorToken:CTToken)
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.TurnDidChangeHighlightedActor(Self, actorToken)
+    End Method
+
     Method TurnSelectionsDidSelectActor(service:CTTurnSelections, actorToken:CTToken)
         ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
         If Self.delegate Then delegate.TurnDidSelectActor(Self, actorToken)
+    End Method
+
+    Method TurnSelectionsDidChangeHighlightedTarget(service:CTTurnSelections, targetToken:CTToken)
+        If Not Self.currentAction Then Return
+        Local action:CTActionable = CTActionable(Self.currentAction)
+        Assert action Else "Expected CTTargetableActionable to be convertible to CTActionble (cannot inherit interfaces)"
+        ' FIXME: Cannot call delegate with `Self.` prefix, see: <https://github.com/bmx-ng/bcc/issues/428>
+        If Self.delegate Then delegate.TurnDidChangeHighlightedTargetForAction(Self, targetToken, action)
     End Method
 
     Method TurnSelectionsDidSelectTarget(service:CTTurnSelections, targetToken:CTToken)

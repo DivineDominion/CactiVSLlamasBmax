@@ -52,7 +52,7 @@ Type CTWindow
         Return window
     End Function
 
-    Function Create:CTWindow(frameRect:CTRect, contentView:CTView = Null, title:String = Null)
+    Function Create:CTWindow(frameRect:CTRect, contentView:CTView, title:String = Null)
         Local win:CTWindow = New CTWindow
 
         If title Then win.titleLabel = New CTLabel(title, True)
@@ -69,6 +69,23 @@ Type CTWindow
 
     Method GetContentView:CTView()
         Return Self.contentView
+    End Method
+
+    Method ChangeTitle(newTitle:String)
+        If newTitle And newTitle.length > 0
+            If Self.titleLabel
+                ' Update existing title
+                Self.titleLabel.text = newTitle
+            Else
+                ' Add new title
+                Self.titleLabel = New CTLabel(newTitle, True)
+                UpdateContentViewports()
+            End If
+        Else
+            Local hadTitleLabel:Int = Self.titleLabel <> Null
+            Self.titleLabel = Null
+            If hadTitleLabel Then UpdateContentViewports()
+        End If
     End Method
 
     Method ReplaceContentView(newContentView:CTView)

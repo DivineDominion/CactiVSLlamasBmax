@@ -52,22 +52,28 @@ Type CTBattlefieldSelectionController Extends CTController Abstract
     Method MoveUp()
         _selectedTokenPosition = _selectedTokenPosition.MovedUp(BATTLEFIELD_ROWS)
         UpdateTokenHighlighter()
+        TokenSelectionDidMove()
     End Method
 
     Method MoveDown()
         _selectedTokenPosition = _selectedTokenPosition.MovedDown(BATTLEFIELD_ROWS)
         UpdateTokenHighlighter()
+        TokenSelectionDidMove()
     End Method
 
     Method MoveLeft()
         _selectedTokenPosition = _selectedTokenPosition.MovedLeft(BATTLEFIELD_COLUMNS)
         UpdateTokenHighlighter()
+        TokenSelectionDidMove()
     End Method
 
     Method MoveRight()
         _selectedTokenPosition = _selectedTokenPosition.MovedRight(BATTLEFIELD_COLUMNS)
         UpdateTokenHighlighter()
+        TokenSelectionDidMove()
     End Method
+
+    Method TokenSelectionDidMove() Abstract
 
     Private
     Method UpdateTokenHighlighter()
