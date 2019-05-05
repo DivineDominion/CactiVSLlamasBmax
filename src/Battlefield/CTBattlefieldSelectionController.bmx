@@ -15,15 +15,12 @@ Type CTBattlefieldSelectionController Extends CTController Abstract
     Field selectionView:CTBattlefieldSelectionView
     Field _selectedTokenPosition:CTTokenPosition
 
+    Protected
+    ' Abstract constructors just don't work at the moment. Use #Create instead and call #_Initialize() afterwards. Also, cannot have both a private parameter-less initializer and a public one with default params, see: https://github.com/bmx-ng/bcc/issues/439
     Method New(); End Method
 
     Public
-    Method New(initialTokenPosition:CTTokenPosition = Null)
-        ' FIXME: use extra init method from constructor because of: https://github.com/bmx-ng/bcc/issues/417
-        Initialize(initialTokenPosition)
-    End Method
-
-    Method Initialize(initialTokenPosition:CTTokenPosition)
+    Method _Initialize(initialTokenPosition:CTTokenPosition)
         _selectedTokenPosition = initialTokenPosition
         If Not _selectedTokenPosition Then _selectedTokenPosition = CTTokenPosition.Origin()
 

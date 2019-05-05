@@ -25,31 +25,25 @@ Type CTBattleEffectDisplay Implements CTCharacterAnimator
     '#Region CTCharacterAnimator
     Public
     Method CharacterTakingDamageAnimationOperation:CTOperation(character:CTCharacter, damage:Int)
-        Local tokenBounds:CTRect = Self.TokenBoundsForCharacter(character)
-        If Not tokenBounds Then Return New CTNullOperation()
+        Local characterTokenView:CTTokenView = Self.battlefieldView.TokenViewForTokenWithCharacter(character)
+        Assert characterTokenView
+        If Not characterTokenView Then Return New CTNullOperation()
 
-        Local damageEffectView:CTDamageEffectView = New CTDamageEffectView("-" + String(damage), tokenBounds)
-        battlefieldView.AddSubview(damageEffectView)
+        Local damageEffectView:CTDamageEffectView = New CTDamageEffectView("-" + String(damage))
+        characterTokenView.AddSubview(damageEffectView)
 
         Return New CTAnimationOperation(damageEffectView)
     End Method
 
     Method CharacterDyingAnimationOperation:CTOperation(character:CTCharacter)
-        Local tokenBounds:CTRect = Self.TokenBoundsForCharacter(character)
-        If Not tokenBounds Then Return New CTNullOperation()
+        Local characterTokenView:CTTokenView = Self.battlefieldView.TokenViewForTokenWithCharacter(character)
+        Assert characterTokenView
+        If Not characterTokenView Then Return New CTNullOperation()
 
-        Local deathEffectView:CTDeathEffectView = New CTDeathEffectView(tokenBounds)
-        deathEffectView.bounds = tokenBounds
-        battlefieldView.AddSubview(deathEffectView)
+        Local deathEffectView:CTDeathEffectView = New CTDeathEffectView()
+        characterTokenView.AddSubview(deathEffectView)
 
         Return New CTAnimationOperation(deathEffectView)
-    End Method
-
-    Private
-    Method TokenBoundsForCharacter:CTRect(character:CTCharacter)
-        Local tokenPosition:CTTokenPosition = Self.battlefield.PositionOfTokenForCharacter(character)
-        If Not tokenPosition Then Return Null
-        Return Self.battlefieldView.RectForTokenPosition(tokenPosition)
     End Method
     '#End Region
 End Type

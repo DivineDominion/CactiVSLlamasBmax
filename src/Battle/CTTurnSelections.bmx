@@ -68,5 +68,10 @@ Type CTTurnSelections Implements CTTokenSelectionControllerDelegate
             delegate.TurnSelectionsDidSelectTarget(Self, token)
         End If
     End Method
+
+    Method TokenSelectionControllerFilterDeadCharacters:Int(controller:CTTokenSelectionController)
+        ' Dead tokens are useless at the moment, no revival, sry
+        Return True
+    End Method
     '#End Region
 End Type

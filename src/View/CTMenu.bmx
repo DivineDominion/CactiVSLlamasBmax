@@ -256,8 +256,8 @@ Type CTMenu Extends CTControl Implements CTMenuDrawingBase
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
-        Super.Draw(dirtyRect)
+    Method DrawInterior(dirtyRect:CTRect)
+        Super.DrawInterior(dirtyRect)
 
         If IsEmpty()
             DrawEmptinessIndicator(dirtyRect)

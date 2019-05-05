@@ -1,20 +1,20 @@
 SuperStrict
 
 Import "../View/CTView.bmx"
-Import "CTBattlefieldView.bmx"
 Import "CTTokenPosition.bmx"
 Import "CTToken.bmx"
 Import "CTCactusToken.bmx"
 
 Type CTTokenView Extends CTView
     Private
-    Field token:CTToken
     Field bgColor:CTColor
     Field nameColor:CTColor
 
     Method New(); End Method
 
     Public
+    Field ReadOnly token:CTToken
+
     Function CreateTokenView:CTTokenView(token:CTToken)
         Local cactusToken:CTCactusToken = CTCactusToken(token)
         If cactusToken Then Return CreateCactusTokenView(cactusToken)
@@ -36,14 +36,10 @@ Type CTTokenView Extends CTView
         Self.nameColor = nameColor
     End Method
 
-    Method PlaceAtPosition(position:CTTokenPosition)
-        Self.bounds = CTBattlefieldView.RectForTokenPosition(position)
-    End Method
-
 
     '#Region CTDrawable
     Public
-    Method Draw(dirtyRect:CTRect)
+    Method DrawInterior(dirtyRect:CTRect)
         bgColor.Set()
         dirtyRect.Inset(4, 4).Fill()
 

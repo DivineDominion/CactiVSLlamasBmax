@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldViewController.bmx"
@@ -44,11 +45,7 @@ Type CTBattlefieldWindowController
         Self.currentBattlefieldViewController = New CTBattlefieldViewController(Self.battlefield)
         Self.currentWindow = CTWindow.Create(Self.frameRect, Self.currentBattlefieldViewController)
         CTWindowManager.GetInstance().AddWindowAndMakeKey(currentWindow)
-    End Method
-
-    Method UpdateBattlefield()
-        If Not Self.currentBattlefieldViewController Then Return
-        Self.currentBattlefieldViewController.UpdateBattlefield()
+        AddListener(Self.currentBattlefieldViewController)
     End Method
 
     Method BattlefieldViewController:CTBattlefieldViewController()
@@ -70,6 +67,8 @@ Type CTBattlefieldWindowController
 
         CTWindowManager.GetInstance().RemoveWindow(Self.currentWindow)
         Self.currentWindow = Null
+
+        RemoveListener(Self.currentBattlefieldViewController)
         Self.currentBattlefieldViewController = Null
     End Method
     '#End Region

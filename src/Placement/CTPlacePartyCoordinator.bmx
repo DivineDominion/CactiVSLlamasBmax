@@ -62,6 +62,8 @@ Implements CTTokenPositionSelectionControllerDelegate, ..
 
         ' Start selecting
         Self.selectionSession = Self.battlefieldWindowController.StartSelectingTokenPositionWithDelegate(Self)
+
+        AddListener(Self)
     End Method
 
     Method CloseWindows()
@@ -75,6 +77,8 @@ Implements CTTokenPositionSelectionControllerDelegate, ..
         Self.statusWindowController = Null
 
         Self.delegate = Null
+
+        RemoveListener(Self)
     End Method
     '#End Region
 
@@ -114,7 +118,6 @@ Implements CTTokenPositionSelectionControllerDelegate, ..
     Method SelectCharacterFromPartyDidSelectCharacter(service:CTSelectCharacterFromParty, character:CTCharacter)
         Assert Self.currentSelectedPositon Else "Expected currentSelectedPositon to be set while selecting characters"
         PlaceCharacterAtPosition(character, Self.currentSelectedPositon)
-        UpdateWindowControllers()
         CloseCharacterSelection()
         ShowConfirmationIfPossible()
     End Method
@@ -142,9 +145,13 @@ Implements CTTokenPositionSelectionControllerDelegate, ..
         Next
         Return Null
     End Method
+    '#End Region
 
-    Method UpdateWindowControllers()
-        Self.battlefieldWindowController.UpdateBattlefield()
+
+    '#Region Battlefield changes
+    Public
+    Method OnBattlefieldDidChange(battlefield:CTBattlefield)
+        If Self.battlefield <> battlefield Then Return
         Local tokenCount:Int = Self.battlefield.AllTokens.Count()
         Self.statusWindowController.UpdatePlacementCount(tokenCount)
     End Method

@@ -10,9 +10,8 @@ Type CTDamageEffectView Extends CTView
     Field damageLabel:String
 
     Public
-    Method New(damageLabel:String, bounds:CTRect)
+    Method New(damageLabel:String)
         Self.damageLabel = damageLabel
-        Self.bounds = bounds
     End Method
 
 
@@ -66,7 +65,7 @@ Type CTDamageEffectView Extends CTView
     Field labelColor:CTColor = CTColor.DamageColor()
 
     Public
-    Method Draw(dirtyRect:CTRect)
+    Method DrawInterior(dirtyRect:CTRect)
         If Not Self.IsAnimating() Then Return
 
         ' Animate alpha value and offset

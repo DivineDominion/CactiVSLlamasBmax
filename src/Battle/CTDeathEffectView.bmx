@@ -6,12 +6,6 @@ Import "../View/CTView.bmx"
 Import "../View/DrawContrastText.bmx"
 
 Type CTDeathEffectView Extends CTView
-    Public
-    Method New(bounds:CTRect)
-        Self.bounds = bounds
-    End Method
-
-
     '#Region CTAnimatable
     Private
     ' Hard-coded random numbers for coordinate offsets and time deltas.
@@ -53,13 +47,11 @@ Type CTDeathEffectView Extends CTView
         If Self.elapsedTime >= Self.duration
             Self.StopAnimation()
             Fire("AnimationDidComplete", Self)
+            ' Don't remove the "Death Effect" because it visually hides the
+            ' token underneath. Keep it in the view hierarchy until its
+            ' parent is removed.
+            ' Self.RemoveFromSuperview()
         End If
-    End Method
-
-    ' FIXME: expect :CTAnimatable when <https://github.com/bmx-ng/bcc/issues/437> is implemented
-    Method OnAnimationDidComplete(animatable:Object)
-        If animatable <> Self Then Return
-        Self.RemoveFromSuperview()
     End Method
 
     Private
@@ -83,18 +75,6 @@ Type CTDeathEffectView Extends CTView
     '#End Region
 
 
-    '#Region View hierarchy callbacks
-    Public
-    Method ViewWillMoveToSuperview(superview:CTView)
-        If superview
-            AddListener(Self)
-        Else
-            RemoveListener(Self)
-        End If
-    End Method
-    '#End Region
-
-
     '#Region CTDrawable
     Private
     Const TEXT:String = "DEATH!"
@@ -103,8 +83,11 @@ Type CTDeathEffectView Extends CTView
     Field backgroundColor:CTColor = CTColor.Black()
 
     Public
-    Method Draw(dirtyRect:CTRect)
-        If Not Self.IsAnimating() Then Return
+    Method DrawInterior(dirtyRect:CTRect)
+        ' Usually, you'd want to remove effects, but the "Death Effect" visually
+        ' hides the token underneath until it's removed.
+        If Self.elapsedTime = 0 Then Return ' Don't show before animation started
+        ' If Not Self.IsAnimating() Then Return
         DrawBackground(dirtyRect)
         DrawText(dirtyRect)
     End Method

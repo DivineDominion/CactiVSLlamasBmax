@@ -1,5 +1,6 @@
 SuperStrict
 
+Import "../Event.bmx"
 Import "../View/CTController.bmx"
 Import "CTBattlefield.bmx"
 Import "CTBattlefieldView.bmx"
@@ -20,29 +21,37 @@ Type CTBattlefieldViewController Extends CTController
         Self.battlefield = battlefield
         Self.battlefieldView = New CTBattlefieldView()
 
-        AddTokenSubviews()
+        AddAllTokenSubviews()
     End Method
 
-    Method UpdateBattlefield()
-        RemoveTokenSubviews()
-        AddTokenSubviews()
+    Method OnBattlefieldDidRemoveToken(battlefield:CTBattlefield, battlefieldChange:CTBattlefieldChange)
+        RemoveTokenSubviewForToken(battlefieldChange.token)
+    End Method
+
+    Method OnBattlefieldDidAddToken(battlefield:CTBattlefield, battlefieldChange:CTBattlefieldChange)
+        AddTokenSubviewForTokenAtTokenPosition(battlefieldChange.token, battlefieldChange.tokenPosition)
     End Method
 
     Private
-    Method AddTokenSubviews()
+    Method AddAllTokenSubviews()
         For Local node:TKeyValue = EachIn Self.battlefield.TokenPositionsTokens()
             Local token:CTToken = CTToken(node.Value())
-            Local position:CTTokenPosition = CTTokenPosition(node.Key())
-            Local tokenView:CTTokenView = CTTokenView.CreateTokenView(token)
-            tokenView.PlaceAtPosition(position)
-            Self.View.AddSubview(tokenView)
+            Local tokenPosition:CTTokenPosition = CTTokenPosition(node.Key())
+            Self.AddTokenSubviewForTokenAtTokenPosition(token, tokenPosition)
         Next
     End Method
 
-    Method RemoveTokenSubviews()
-        For Local view:CTView = EachIn Self.View.AllSubviews()
-            If CTTokenView(view) <> Null Then Self.View().RemoveSubview(view)
-        Next
+    Method RemoveTokenSubviewForToken(token:CTToken)
+        Local tokenView:CTTokenView = Self.battlefieldView.TokenViewForToken(token)
+        If Not tokenView Then Return
+        tokenView.TearDown()
+        tokenView.RemoveFromSuperview()
+    End Method
+
+    Method AddTokenSubviewForTokenAtTokenPosition(token:CTToken, tokenPosition:CTTokenPosition)
+        Local tokenView:CTTokenView = CTTokenView.CreateTokenView(token)
+        tokenView.bounds = CTBattlefieldView.RectForTokenPosition(tokenPosition)
+        Self.battlefieldView.AddSubview(tokenView)
     End Method
 
 
@@ -65,7 +74,7 @@ Type CTBattlefieldViewController Extends CTController
 
     Public
     Method StartSelectingTokenWithDelegate:Object(delegate:CTTokenSelectionControllerDelegate)
-        Local selectionController:CTTokenSelectionController = New CTTokenSelectionController(battlefield)
+        Local selectionController:CTTokenSelectionController = CTTokenSelectionController.Create(battlefield)
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())
@@ -83,7 +92,7 @@ Type CTBattlefieldViewController Extends CTController
     End Method
 
     Method StartSelectingTokenPositionWithDelegate:Object(delegate:CTTokenPositionSelectionControllerDelegate)
-        Local selectionController:CTTokenPositionSelectionController = New CTTokenPositionSelectionController()
+        Local selectionController:CTTokenPositionSelectionController = CTTokenPositionSelectionController.Create()
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())

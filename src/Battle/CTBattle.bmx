@@ -27,6 +27,7 @@ Type CTBattle
     Method StartWithCharacterAnimator(animator:CTCharacterAnimator)
         AddListener(cactusParty)
         AddListener(llamaParty)
+        AddListener(battlefield)
         Self.SetCharacterAnimator(animator)
     End Method
 
@@ -34,6 +35,7 @@ Type CTBattle
         Self.SetCharacterAnimator(Null)
         RemoveListener(cactusParty)
         RemoveListener(llamaParty)
+        RemoveListener(battlefield)
     End Method
 
     Private
