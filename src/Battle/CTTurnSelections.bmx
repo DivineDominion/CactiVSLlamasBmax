@@ -37,10 +37,9 @@ Type CTTurnSelections Implements CTTokenSelectionControllerDelegate
     Field actorSelectionSession:Object = Null
 
     Public
-    Method SelectActor()
+    Method SelectActor(initialTokenPosition:CTTokenPosition)
         Assert Not actorSelectionSession Else "#SelectActor cannot be called twice"
-        ' TODO select token based on Self.player
-        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+        Self.actorSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegateAndInitialPosition(Self, initialTokenPosition)
     End Method
     '#End Region
 
@@ -50,10 +49,10 @@ Type CTTurnSelections Implements CTTokenSelectionControllerDelegate
     Field targetSelectionSession:Object = Null
 
     Public
-    Method SelectTarget()
+    Method SelectTarget(initialTokenPosition:CTTokenPosition)
         Assert Not targetSelectionSession Else "#SelectActor cannot be called twice"
         ' TODO select token based on Self.player + action target (opponent or own party)
-        Self.targetSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegate(Self)
+        Self.targetSelectionSession = Self.battlefieldWindowController.StartSelectingTokenWithDelegateAndInitialPosition(Self, initialTokenPosition)
     End Method
     '#End Region
 

@@ -42,6 +42,34 @@ Type CTBattlefield
         Next
         Return Null
     End Method
+
+    Method PositionOfToken:CTTokenPosition(token:CTToken)
+        For Local node:TKeyValue = EachIn Self._tokenPositionsTokens
+            Local currentToken:CTToken = CTToken(node.Value())
+            If currentToken = token Then Return CTTokenPosition(node.Key())
+        Next
+        Return Null
+    End Method
+
+    Method FirstTokenInCharacterList:CTToken(characters:TList)
+        Local resultNode:TKeyValue = Null
+        For Local node:TKeyValue = EachIn Self._tokenPositionsTokens
+            Local currentToken:CTToken = CTToken(node.Value())
+            If characters.Contains(currentToken.character) And currentToken.character.IsAlive()
+                If resultNode <> Null
+                    Local oldTokenPosition:CTTokenPosition = CTTokenPosition(resultNode.Key())
+                    Local currentTokenPosition:CTTokenPosition = CTTokenPosition(node.Key())
+                    If currentTokenPosition.Compare(resultNode) = -1
+                        resultNode = node
+                    End If
+                Else
+                    resultNode = node
+                End If
+            End If
+        Next
+        If Not resultNode Then Return Null
+        Return CTToken(resultNode.Value())
+    End Method
     '#End Region
 
 

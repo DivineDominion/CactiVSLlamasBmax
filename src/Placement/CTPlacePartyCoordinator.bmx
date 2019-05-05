@@ -61,7 +61,7 @@ Implements CTTokenPositionSelectionControllerDelegate, ..
         Self.statusWindowController.Show()
 
         ' Start selecting
-        Self.selectionSession = Self.battlefieldWindowController.StartSelectingTokenPositionWithDelegate(Self)
+        Self.selectionSession = Self.battlefieldWindowController.StartSelectingTokenPositionWithDelegateAndInitialPosition(Self, Null)
 
         AddListener(Self)
     End Method

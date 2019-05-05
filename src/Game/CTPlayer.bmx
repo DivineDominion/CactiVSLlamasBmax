@@ -37,5 +37,11 @@ Type CTPlayer
             New CTLlama("Alpaca 2"),..
             New CTLlama("Alpaca 3")..
         ]))
+
+    Method Opponent:CTPlayer()
+        If Self = CTPlayer.cactusPlayer Then Return CTPlayer.llamaPlayer
+        If Self = CTPlayer.llamaPlayer  Then Return CTPlayer.cactusPlayer
+        RuntimeError "Unknown player object"
+    End Method
     '#End Region
 End Type

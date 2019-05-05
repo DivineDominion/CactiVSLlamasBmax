@@ -81,9 +81,11 @@ Type CTBattlefieldWindowController
     Note: You can add different selections on top of each other. The latest has key status and triggers selection events.
     returns: Selection session to be used for #StopSelection(session).
     End Rem
-    Method StartSelectingTokenWithDelegate:Object(delegate:CTTokenSelectionControllerDelegate)
+    Method StartSelectingTokenWithDelegateAndInitialPosition:Object(..
+            delegate:CTTokenSelectionControllerDelegate,..
+            initialTokenPosition:CTTokenPosition)
         GuardIsVisible()
-        Return Self.currentBattlefieldViewController.StartSelectingTokenWithDelegate(delegate)
+        Return Self.currentBattlefieldViewController.StartSelectingTokenWithDelegateAndInitialPosition(delegate, initialTokenPosition)
     End Method
 
     Rem
@@ -91,9 +93,11 @@ Type CTBattlefieldWindowController
     Note: You can add different selections on top of each other. The latest has key status and triggers selection events.
     returns: Selection session to be used for #StopSelection(session).
     End Rem
-    Method StartSelectingTokenPositionWithDelegate:Object(delegate:CTTokenPositionSelectionControllerDelegate)
+    Method StartSelectingTokenPositionWithDelegateAndInitialPosition:Object(..
+            delegate:CTTokenPositionSelectionControllerDelegate,..
+            initialTokenPosition:CTTokenPosition)
         GuardIsVisible()
-        Return Self.currentBattlefieldViewController.StartSelectingTokenPositionWithDelegate(delegate)
+        Return Self.currentBattlefieldViewController.StartSelectingTokenPositionWithDelegateAndInitialPosition(delegate, initialTokenPosition)
     End Method
 
     Method StopSelection(session:Object)

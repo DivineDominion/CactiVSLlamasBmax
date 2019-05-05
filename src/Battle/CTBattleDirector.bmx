@@ -49,10 +49,19 @@ Type CTBattleDirector Implements CTTurnDelegate
         ' Remove service to display battle effects
         Self.battleEffectDisplay = Null
     End Method
+    '#End Region
 
+
+    '#Region Taking Turns
     Private
+    Field currentPlayer:CTPlayer = Null
+
+    Protected
     Method NextTurn()
         If Self.turn Then turn.EndTurn()
+
+        ' TODO: take turns
+        If Not Self.currentPlayer Then Self.currentPlayer = CTPlayer.cactusPlayer
 
         Self.turn = New CTTurn(battlefieldWindowController)
         Self.turn.StartWithDelegate(Self)
@@ -65,8 +74,16 @@ Type CTBattleDirector Implements CTTurnDelegate
     Field turn:CTTurn
 
     Public
+    Method InitialActorTokenPositionForTurn:CTTokenPosition(turn:CTTurn)
+        Return Self.FirstTokenPositionForPlayer(Self.currentPlayer)
+    End Method
+
     Method TurnDidSelectActor(turn:CTTurn, actorToken:CTToken)
         ShowActionsForToken(actorToken)
+    End Method
+
+    Method InitialTargetTokenPositionForTurnAndAction:CTTokenPosition(turn:CTTurn, action:CTTargetableActionable)
+        Return Self.FirstTokenPositionForPlayer(Self.currentPlayer.Opponent())
     End Method
 
     Method TurnDidSelectTargetForActionOfActor(turn:CTTurn, targetToken:CTToken, action:CTTargetableActionable, actorToken:CTToken)
@@ -74,6 +91,12 @@ Type CTBattleDirector Implements CTTurnDelegate
     End Method
 
     Private
+    Method FirstTokenPositionForPlayer:CTTokenPosition(player:CTPlayer)
+        Local token:CTToken = Self.battle.battlefield.FirstTokenInCharacterList(New TList.FromArray(player.army.characters))
+        If Not token Then Return Null
+        Return Self.battle.battlefield.PositionOfToken(token)
+    End Method
+
     Method ShowActionsForToken(token:CTToken)
         CTSelectAction.ShowActions(battlefieldWindowController, token, Self.turn)
     End Method

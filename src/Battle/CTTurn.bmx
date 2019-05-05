@@ -1,11 +1,14 @@
 SuperStrict
 
 Import "../Game/CTPlayer.bmx"
+Import "../Battlefield/CTTokenPosition.bmx"
 Import "CTTurnSelections.bmx"
 Import "CTActionable.bmx"
 
 Interface CTTurnDelegate
+    Method InitialActorTokenPositionForTurn:CTTokenPosition(turn:CTTurn)
     Method TurnDidSelectActor(turn:CTTurn, actorToken:CTToken)
+    Method InitialTargetTokenPositionForTurnAndAction:CTTokenPosition(turn:CTTurn, action:CTTargetableActionable)
     Method TurnDidSelectTargetForActionOfActor(turn:CTTurn, targetToken:CTToken, action:CTTargetableActionable, actorToken:CTToken)
 End Interface
 
@@ -18,7 +21,6 @@ Type CTTurn Implements CTDrivesActions, CTTurnSelectionsDelegate
         Assert battlefieldWindowController Else "CTTurn requires battlefieldWindowController"
         Self.battlefieldWindowController = battlefieldWindowController
     End Method
-
 
 
     '#Region Turn Lifecycle
@@ -36,7 +38,7 @@ Type CTTurn Implements CTDrivesActions, CTTurnSelectionsDelegate
 
         Self.selection = New CTTurnSelections(Self.battlefieldWindowController)
         Self.selection.delegate = Self
-        Self.selection.SelectActor()
+        Self.SelectActor()
     End Method
 
     Method EndTurn()
@@ -73,10 +75,16 @@ Type CTTurn Implements CTDrivesActions, CTTurnSelectionsDelegate
 
     '#Region CTDrivesActions
     Public
+    Method SelectActor()
+        Local initialActorPosition:CTTokenPosition = Self.delegate.InitialActorTokenPositionForTurn(Self)
+        Self.selection.SelectActor(initialActorPosition)
+    End Method
+
     Method SelectEffectTargetForAction(action:CTTargetableActionable)
+        Local initialTargetPosition:CTTokenPosition = Self.delegate.InitialTargetTokenPositionForTurnAndAction(Self, action)
         ' Cache pending action
         Self.currentAction = action
-        Self.selection.SelectTarget()
+        Self.selection.SelectTarget(initialTargetPosition)
     End Method
 
     Method ApplyEffectToTarget(effect:CTTargetedEffect, target:CTEffectTarget)

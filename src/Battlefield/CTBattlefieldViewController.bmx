@@ -73,8 +73,10 @@ Type CTBattlefieldViewController Extends CTController
     Field selectionControllers:TList = New TList
 
     Public
-    Method StartSelectingTokenWithDelegate:Object(delegate:CTTokenSelectionControllerDelegate)
-        Local selectionController:CTTokenSelectionController = CTTokenSelectionController.Create(battlefield)
+    Method StartSelectingTokenWithDelegateAndInitialPosition:Object(..
+            delegate:CTTokenSelectionControllerDelegate,..
+            initialTokenPosition:CTTokenPosition = Null)
+        Local selectionController:CTTokenSelectionController = CTTokenSelectionController.Create(battlefield, initialTokenPosition)
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())
@@ -91,8 +93,10 @@ Type CTBattlefieldViewController Extends CTController
         Self.RemoveSelectionController(selectionController)
     End Method
 
-    Method StartSelectingTokenPositionWithDelegate:Object(delegate:CTTokenPositionSelectionControllerDelegate)
-        Local selectionController:CTTokenPositionSelectionController = CTTokenPositionSelectionController.Create()
+    Method StartSelectingTokenPositionWithDelegateAndInitialPosition:Object(..
+            delegate:CTTokenPositionSelectionControllerDelegate,..
+            initialTokenPosition:CTTokenPosition = Null)
+        Local selectionController:CTTokenPositionSelectionController = CTTokenPositionSelectionController.Create(initialTokenPosition)
         selectionController.delegate = delegate
 
         Self.View().AddSubview(selectionController.View())
