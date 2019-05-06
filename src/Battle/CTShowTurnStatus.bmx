@@ -4,22 +4,15 @@ Import "../View/CTWindowController.bmx"
 Import "../View/CTWindowManager.bmx"
 Import "../Army/CTCharacter.bmx"
 Import "CTActionable.bmx"
+Import "CTActionStatusWindowController.bmx"
 
 Type CTShowTurnStatus
     Private
-    Field statusFrameRectTemplate:CTRect
+    Field referenceFrameRect:CTRect
 
     Public
-    Function CreateBelowWindowController:CTShowTurnStatus(windowController:CTWindowController)
-        Assert windowController Else "CreateBelowWindowController requires windowController"
-        Local referenceFrameRect:CTRect = windowController.Window().FrameRect()
-        Local statusFrameRectTemplate:CTRect = referenceFrameRect..
-            .Translating(0, referenceFrameRect.GetMaxY() + 2)..
-        Return New CTShowTurnStatus(statusFrameRectTemplate)
-    End Function
-
-    Method New(statusFrameRectTemplate:CTRect)
-        Self.statusFrameRectTemplate = statusFrameRectTemplate
+    Method New(referenceFrameRect:CTRect)
+        Self.referenceFrameRect = referenceFrameRect
     End Method
 
 
@@ -43,10 +36,12 @@ Type CTShowTurnStatus
 
     Private
     Method PrepareActorStatus()
-        If Self.actionStatusWindow Then Return
-        Local frameRect:CTRect = CTWindow.FrameRectFittingLines(..
-            statusFrameRectTemplate.GetX(), statusFrameRectTemplate.GetY(), ..
-            statusFrameRectTemplate.GetWidth(), 1)
+        If Self.actorStatusWindow Then Return
+        Local frameRect:CTRect = CTWindow..
+            .FrameRectFittingLines(..
+                Self.referenceFrameRect.GetX(), Self.referenceFrameRect.GetMaxY(), ..
+                Self.referenceFrameRect.GetWidth(), 1)..
+            .Translating(0, 2)
         Self.actorStatusWindow = New CTWindow.Create(frameRect, New CTLabel())
         CTWindowManager.GetInstance().AddWindow(Self.actorStatusWindow)
     End Method
@@ -55,30 +50,30 @@ Type CTShowTurnStatus
 
     '#Region Action Status
     Private
-    Field actionStatusWindow:CTWindow = Null
+    ' Lazy instance, access via #ActionStatusWindowController()
+    Field _actionStatusWindowController:CTActionStatusWindowController = Null
+
+    Method ActionStatusWindowController:CTActionStatusWindowController()
+        If Not Self._actionStatusWindowController
+            Self._actionStatusWindowController = New CTActionStatusWindowController(Self.referenceFrameRect)
+        End If
+        Return Self._actionStatusWindowController
+    End Method
 
     Public
     Method ShowActionStatus(action:CTActionable)
         HideActorStatus()
         PrepareActionStatus()
-        Local label:CTLabel = CTLabel(Self.actorStatusWindow.GetContentView())
-        label.text = action.GetLabel()
+        Self.ActionStatusWindowController().SetStatusText(action.GetLabel())
     End Method
 
     Method HideActionStatus()
-        If Not Self.actionStatusWindow Then Return
-        CTWindowManager.GetInstance().RemoveWindow(Self.actionStatusWindow)
-        Self.actionStatusWindow = Null
+        Self.ActionStatusWindowController().Close()
     End Method
 
     Private
     Method PrepareActionStatus()
-        If Self.actionStatusWindow Then Return
-        Local frameRect:CTRect = CTWindow.FrameRectFittingLines(..
-            statusFrameRectTemplate.GetX(), statusFrameRectTemplate.GetY(), ..
-            statusFrameRectTemplate.GetWidth(), 1)
-        Self.actionStatusWindow = New CTWindow.Create(frameRect, New CTLabel())
-        CTWindowManager.GetInstance().AddWindow(Self.actionStatusWindow)
+        Self.ActionStatusWindowController().Show()
     End Method
     '#End Region
 End Type

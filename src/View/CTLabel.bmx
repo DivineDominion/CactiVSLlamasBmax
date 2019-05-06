@@ -9,7 +9,7 @@ Type CTLabel Extends CTView
 
     Public
     Field text:String = ""
-    Field textColor:CTColor = CTColor.Yellow()
+    Field textColor:CTColor = CTColor.DefaultTextColor()
     Field isCentered:Int
 
     Method New(text:String, isCentered:Int = False)

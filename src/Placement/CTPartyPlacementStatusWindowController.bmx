@@ -17,7 +17,6 @@ Type CTPartyPlacementStatusWindowController Extends CTWindowController
     Public
     Method New(referenceFrameRect:CTRect, maxCount:Int)
         ' Place the window right below referenceFrameRect
-        Local lineHeight% = TextHeight("x")
         Self.frameRect = CTWindow..
             .FrameRectFittingLinesAndTitle(..
                 referenceFrameRect.GetX(), referenceFrameRect.GetMaxY(), ..

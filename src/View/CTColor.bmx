@@ -29,7 +29,7 @@ Type CTColor
 
     '#Region Semantic Colors - UI
     Function WindowFrameColor:CTColor()
-        Return White()
+        Return OffWhite()
     End Function
 
     Function DefaultMenuItemColor:CTColor()
@@ -42,6 +42,14 @@ Type CTColor
 
     Function DisabledMenuItemColor:CTColor()
         Return DarkGray()
+    End Function
+
+    Function DefaultTextColor:CTColor()
+        Return OffWhite()
+    End Function
+
+    Function ShadowColor:CTColor()
+        Return Black()
     End Function
     '#End Region
 
@@ -56,6 +64,10 @@ Type CTColor
     '#Region Names Colors
     Function White:CTColor()
         Return CTColor.Create(255, 255, 255)
+    End Function
+
+    Function OffWhite:CTColor()
+        Return CTColor.Create(250, 250, 230)
     End Function
 
     Function LightGray:CTColor()

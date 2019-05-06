@@ -147,7 +147,7 @@ Type CTBattleDirector Implements CTTurnDelegate
     Private
     Method PrepareShowTurnStatus()
         If Self.turnStatus Then Return
-        Self.turnStatus = New CTShowTurnStatus.CreateBelowWindowController(battlefieldWindowController)
+        Self.turnStatus = New CTShowTurnStatus(battlefieldWindowController.Window().FrameRect())
     End Method
 
     Method ResetShowTurnStatus()

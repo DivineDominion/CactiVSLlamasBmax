@@ -24,5 +24,5 @@ End Function
 Private
 ' Store the default colors as private globals so we don't have to create
 ' new objects for every operation.
-Global _defaultShadowColor:CTColor = CTColor.Black()
-Global _defaultTextColor:CTColor = CTColor.White()
+Global _defaultShadowColor:CTColor = CTColor.ShadowColor()
+Global _defaultTextColor:CTColor = CTColor.DefaultTextColor()
