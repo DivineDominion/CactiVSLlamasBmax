@@ -7,7 +7,9 @@ Type CTLlama Extends CTCharacter
     Method New(name:String)
         Super.New(name)
 
-        Self.hp = 200
+        Self.maxHP = 200
+        Self.hp = Self.maxHP
+
         Self.hitChance = 40.0
         Self.damage = (100.0 / 6)
     End Method

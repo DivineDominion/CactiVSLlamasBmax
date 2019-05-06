@@ -7,7 +7,9 @@ Type CTCactus Extends CTCharacter
     Method New(name:String)
         Super.New(name)
 
-        Self.hp = 100
+        Self.maxHP = 100
+        Self.hp = Self.maxHP
+
         Self.hitChance = 80.0
         ' Make opponent survive more than 1 round of 6 concentrated hits
         Self.damage = (100.0 / 9)
