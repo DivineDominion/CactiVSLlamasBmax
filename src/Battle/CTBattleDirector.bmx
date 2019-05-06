@@ -87,9 +87,9 @@ Type CTBattleDirector Implements CTTurnDelegate
 
     Method TurnDidChangeHighlightedActor(turn:CTTurn, token:CTToken)
         If token
-            Self.ShowActorStatus(token)
+            Self.ShowCharacterStatus(token)
         Else
-            Self.HideActorStatus()
+            Self.HideCharacterStatus()
         End If
     End Method
 
@@ -129,14 +129,14 @@ Type CTBattleDirector Implements CTTurnDelegate
     Field turnStatus:CTShowTurnStatus = Null
 
     Public
-    Method ShowActorStatus(token:CTToken)
+    Method ShowCharacterStatus(token:CTToken)
         PrepareShowTurnStatus()
-        Self.turnStatus.ShowActorStatus(token.GetCharacter())
+        Self.turnStatus.ShowCharacterStatus(token.GetCharacter())
     End Method
 
-    Method HideActorStatus()
+    Method HideCharacterStatus()
         PrepareShowTurnStatus()
-        Self.turnStatus.HideActorStatus()
+        Self.turnStatus.HideCharacterStatus()
     End Method
 
     Method ShowActionStatus(action:CTActionable)
@@ -152,8 +152,7 @@ Type CTBattleDirector Implements CTTurnDelegate
 
     Method ResetShowTurnStatus()
         If Not Self.turnStatus Then Return
-        Self.turnStatus.HideActorStatus()
-        Self.turnStatus.HideActionStatus()
+        Self.turnStatus.CloseAllStatusWindows()
     End Method
     '#End Region
 End Type
